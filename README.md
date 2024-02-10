@@ -1,1 +1,1 @@
-# hotelapp
+# hotelapp: react-native app for hotel management
