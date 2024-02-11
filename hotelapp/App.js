@@ -2,9 +2,13 @@
 import { StyleSheet, Text, View } from "react-native";
 //import { StartingScreen } from "./src/screens/StartingScreen";
 import { StartingStack } from "./src/navigation/startingStack";
+import { DrawerStack } from "./src/navigation/Drawer";
+import { AppRegistry } from "react-native";
+import { name as appName } from "./app.json";
+//import "react-native-gesture-handler";
 
 export default function App() {
-  return <StartingStack />;
+  return <DrawerStack />;
 }
 
 const styles = StyleSheet.create({
@@ -15,3 +19,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+
+AppRegistry.registerComponent(appName, () => App);

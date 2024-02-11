@@ -13,18 +13,15 @@ export const StartingStack = () => {
   //const theme = useTheme();
   //const navigationTheme = theme.dark ? DarkTheme : DefaultTheme;
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName="StartingScreen"
-        screenOptions={{
-          headerMode: "screen",
-          headerShown: false,
-        }}
-      >
-        <Stack.Screen name="StartingScreen" component={StartingScreen} />
-        <Stack.Screen name="TestScreen" component={TestScreen} />
-        
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Stack.Navigator
+      initialRouteName="StartingScreen"
+      screenOptions={{
+        headerMode: "screen",
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen name="StartingScreen" component={StartingScreen} />
+      <Stack.Screen name="TestScreen" component={TestScreen} />
+    </Stack.Navigator>
   );
 };
