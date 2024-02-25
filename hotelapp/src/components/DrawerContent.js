@@ -4,12 +4,14 @@ import { DrawerItem, DrawerContentScrollView } from "@react-navigation/drawer";
 import { Drawer } from "react-native-paper";
 
 export const DrawerContent = (props) => {
-  const { navigation } = props;
+  //const { navigation } = props;
   return (
     <DrawerContentScrollView {...props}>
       <View style={styles.drawerContent}>
-        <Drawer.Section style={styles.drawerSection}>
-
+        <Drawer.Section style={styles.drawerSection} title="Settings">
+          <View style={styles.preference}>
+            <Text>Open settings</Text>
+          </View>
         </Drawer.Section>
         <Drawer.Section title="Preferences">
           <View style={styles.preference}>

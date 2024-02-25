@@ -5,10 +5,26 @@ import { StartingStack } from "./src/navigation/startingStack";
 import { DrawerStack } from "./src/navigation/Drawer";
 import { AppRegistry } from "react-native";
 import { name as appName } from "./app.json";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 //import "react-native-gesture-handler";
+import { I18nextProvider } from "react-i18next";
+import i18n from './i18n';
 
+/*export default function App() {
+  return (
+    <SafeAreaProvider>
+      <StartingStack />
+    </SafeAreaProvider>
+  );
+}*/
 export default function App() {
-  return <DrawerStack />;
+  return (
+    <I18nextProvider i18n={i18n}>
+      <SafeAreaProvider>
+        <StartingStack />
+      </SafeAreaProvider>
+    </I18nextProvider>
+  );
 }
 
 const styles = StyleSheet.create({

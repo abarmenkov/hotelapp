@@ -22,8 +22,8 @@ export const StartingScreen = ({ route, navigation }) => {
         Hotel App
       </Headline>
       <Caption style={styles.caption}>Run and manage your hotel</Caption>
-      <Pressable onPress={() => navigation.navigate("TestScreen")}>
-        <Text>Move to Testscreen</Text>
+      <Pressable onPress={() => navigation.navigate("RootStack")}>
+        <Text>Move to Appscreen</Text>
       </Pressable>
     </View>
   );
