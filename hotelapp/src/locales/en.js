@@ -9,7 +9,9 @@ const en = {
             settings: 'Settings',
             
         }
-    }
+    },
+    code: "en",
+    locale: "English",
 }
 
 export default en;

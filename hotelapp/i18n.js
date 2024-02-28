@@ -4,8 +4,8 @@ import { initReactI18next } from "react-i18next";
 import ru from "./src/locales/ru";
 import en from "./src/locales/en";
 
-/*import i18n as i18next from 'i18next';
-const i18n = i18next.createInstance();*/
+//import i18n as i18next from 'i18next';
+const i18next = i18n.createInstance();
 
 const LanguageDetector = {
   type: "languageDetector",
@@ -20,7 +20,7 @@ const LanguageDetector = {
   cacheUserLanguage: () => {},
 };
 
-i18n
+i18next
   // detect user language
   // learn more: https://github.com/i18next/i18next-browser-languageDetector
   .use(LanguageDetector)
@@ -29,9 +29,9 @@ i18n
 
   .init({
     compatibilityJSON: "v3",
-    debug: false,
-    fallbackLng: ["ru", "en"],
-    lng: "en",
+    debug: true,
+    fallbackLng: "ru",
+    lng: "ru",
     interpolation: {
       escapeValue: false, // not needed for react as it escapes by default
     },
@@ -39,6 +39,7 @@ i18n
       ru,
       en,
     },
+    supportedLngs: ["en", "ru"],
   });
 
-export default i18n;
+export default i18next;

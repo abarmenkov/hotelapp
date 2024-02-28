@@ -1,10 +1,25 @@
 import React, { useState } from "react";
-import { View, TextInput, Alert, Button } from "react-native";
+import {
+  View,
+  TextInput,
+  Alert,
+  Button,
+  TouchableOpacity,
+  FlatList,
+  Text,
+} from "react-native";
 //import { TestScreen } from "./TestScreen";
 import { useTranslation } from "react-i18next";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const LoginScreen = ({ navigation }) => {
   const { t } = useTranslation();
+  const { i18n } = useTranslation();
+  //const supportedLngs = Object.keys(i18n.services.resourceStore.data);
+  const supportedLngs = i18n.services.resourceStore.data;
+  const languageKeys = Object.keys(supportedLngs);
+  //console.log(languageKeys);
+
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const buttonDisabled = name.length > 0 && password.length > 0 ? false : true;
@@ -35,12 +50,35 @@ export const LoginScreen = ({ navigation }) => {
         placeholderTextColor="gray"
         value={password}
         onChangeText={setPassword}
-        placeholder="Enter your password"
+        placeholder={t("LoginScreen.password_placeholder")}
       />
       <Button title="Enter" onPress={onButtonPress} disabled={buttonDisabled} />
+      <FlatList
+        data={languageKeys}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            onPress={() => {
+              i18n.changeLanguage(item);
+              AsyncStorage.setItem("@language", item);
+            }}
+          >
+            <Text>{supportedLngs[item].locale}</Text>
+          </TouchableOpacity>
+        )}
+      />
     </View>
   );
 };
+
+/*      <FlatList
+        data={supportedLngs}
+        renderItem={({ item }) => (
+          <TouchableOpacity onPress={() => i18n.changeLanguage(item)}>
+            <Text>{item}</Text>
+          </TouchableOpacity>
+        )}
+      />
+*/
 
 /*export const LoginScreen = ({ navigation }) => {
   //const { t } = useTranslation();
