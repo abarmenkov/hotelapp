@@ -11,6 +11,17 @@ const Drawer = createDrawerNavigator();
 
 export const RootStack = () => {
   const [token, setToken] = useState(false);
+  return (
+    <Drawer.Navigator
+      drawerContent={(props) => <DrawerContent {...props} />}
+      screenOptions={{ headerShown: true }}
+    >
+      <Drawer.Screen name="Home" component={TestScreen} />
+    </Drawer.Navigator>
+  );
+};
+/*export const RootStack = () => {
+  const [token, setToken] = useState(false);
   return token ? (
     <Drawer.Navigator
       drawerContent={(props) => <DrawerContent {...props} />}
@@ -23,4 +34,4 @@ export const RootStack = () => {
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
     </Stack.Navigator>
   );
-};
+};*/

@@ -7,7 +7,7 @@ export const TestScreen = ({ route, navigation }) => {
       <Text>Hotel App</Text>
 
       <Pressable onPress={() => Alert.alert('pressed')}>
-        <Text>Move to starting page</Text>
+        <Text>Login Successfull</Text>
       </Pressable>
     </View>
   );

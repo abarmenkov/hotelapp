@@ -7,6 +7,10 @@ const ru = {
     DrawerContent: {
       settings: "Настройки",
     },
+    Settings: {
+      add_hotel: "Добавить отель",
+      select_language: "Выбрать язык по умолчанию",
+    },
   },
   code: "ru",
   locale: "Русский",
