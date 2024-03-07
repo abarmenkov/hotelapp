@@ -16,7 +16,7 @@ const LanguageDetector = {
     try {
       await AsyncStorage.getItem("@language").then((language) => {
         if (language) {
-          console.log(language);
+          //console.log(language);
           return callback(language);
         } else {
           return callback(Localization.getLocales()[0]);
@@ -24,6 +24,8 @@ const LanguageDetector = {
       });
     } catch (error) {
       console.log("error reading language");
+      console.log(Localization.getLocales()[0]);
+      callback('ru');
     }
   },
   cacheUserLanguage: async function (language) {
@@ -62,7 +64,6 @@ i18next
       en,
     },
     supportedLngs: ["en", "ru"],
-
   });
 
 export default i18next;
