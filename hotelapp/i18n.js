@@ -24,7 +24,7 @@ const LanguageDetector = {
       });
     } catch (error) {
       console.log("error reading language");
-      console.log(Localization.getLocales()[0]);
+      //console.log(Localization.getLocales()[0]);
       callback('ru');
     }
   },
@@ -32,7 +32,7 @@ const LanguageDetector = {
     try {
       await AsyncStorage.setItem("@language", language);
     } catch (error) {
-      console.log("error saving lang");
+      console.log("error saving language");
     }
   },
   // async detection

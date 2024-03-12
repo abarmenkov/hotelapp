@@ -1,4 +1,4 @@
-import { Dimensions } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
 
 export const appDarkColors = {
   colors: {
@@ -91,3 +91,55 @@ export const appDefaultColors = {
 };
 
 export const WIDTH = Dimensions.get("window").width;
+
+export const AppStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent:'center'
+  },
+  btnText: {
+    fontSize: 18,
+    fontWeight: "700",
+  },
+  button: {
+    width: WIDTH * 0.8,
+    height: 56,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 12,
+  },
+  profilePressable: {
+    width: WIDTH * 0.9,
+    height: 72,
+    paddingHorizontal: 16,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    alignSelf: "center",
+    borderRadius: 12,
+    marginBottom: 12,
+  },
+  itemTitle: {
+    fontSize: 14,
+    fontWeight: "400",
+  },
+  itemInfo: {
+    fontSize: 16,
+    fontWeight: "400",
+  },
+  infoModal: {
+    width: WIDTH * 0.7,
+    padding: 20,
+    alignSelf: "center",
+    borderRadius: 12,
+  },
+  codeInput: {
+    height: 64,
+    width: 64,
+    borderRadius: 12,
+    marginHorizontal: 12,
+    textAlign: "center",
+  },
+});

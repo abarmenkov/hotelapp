@@ -21,6 +21,7 @@ import {
 } from "react-native-paper";
 import { appDarkColors, appDefaultColors } from "./src/utils/constants";
 import { PreferencesContext } from "./src/context/PreferencesContext";
+import { UserContext } from "./src/context/UserContext";
 import { name as appName } from "./app.json";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 //import "react-native-gesture-handler";
@@ -49,7 +50,10 @@ const CombinedDarkTheme = {
 
 export default function App() {
   const [isThemeDark, setIsThemeDark] = useState(null);
-  const [language, setLanguage] = useState(null);
+  //const [language, setLanguage] = useState(null);
+  const [user, setUser] = useState(null);
+  const [userIsLoading, setUserIsLoading] = useState(false);
+  const [themeIsLoading, setThemeIsLoading] = useState(false);
 
   useEffect(() => {
     const getTheme = async () => {
@@ -59,12 +63,20 @@ export default function App() {
     getTheme();
   }, []);
 
-  useState(() => {
-    const getLanguage = async () => {
-      const value = await AsyncStorage.getItem("@language");
-      setLanguage(value);
+  useEffect(() => {
+    const getUser = async () => {
+      setUserIsLoading(true);
+      const value = await AsyncStorage.getItem("@user");
+      console.log(JSON.parse(value));
+      if (value) {
+        setUser(JSON.parse(value));
+        setUserIsLoading(false);
+      } else {
+        setUser({ userName: "test", userPassword: "test1" });
+        setUserIsLoading(false);
+      }
     };
-    getLanguage();
+    getUser();
   }, []);
 
   let theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme;
@@ -80,16 +92,22 @@ export default function App() {
     }),
     [toggleTheme, isThemeDark]
   );
+
+  if (userIsLoading) {
+    return <ActivityIndicator size="large" color="green" />;
+  }
   return (
     <Suspense fallback={<ActivityIndicator size="large" color="red" />}>
       <PreferencesContext.Provider value={preferences}>
-        <PaperProvider theme={theme}>
-          <I18nextProvider i18n={i18next}>
-            <SafeAreaProvider>
-              <StartingStack />
-            </SafeAreaProvider>
-          </I18nextProvider>
-        </PaperProvider>
+        <UserContext.Provider value={user}>
+          <PaperProvider theme={theme}>
+            <I18nextProvider i18n={i18next}>
+              <SafeAreaProvider>
+                <StartingStack />
+              </SafeAreaProvider>
+            </I18nextProvider>
+          </PaperProvider>
+        </UserContext.Provider>
       </PreferencesContext.Provider>
     </Suspense>
   );

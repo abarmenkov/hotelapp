@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   TextInput,
@@ -13,32 +13,51 @@ import { useTranslation } from "react-i18next";
 
 import * as Localization from "expo-localization";
 import { useTheme } from "react-native-paper";
+import { UserContext } from "../context/UserContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AppStyles } from "../utils/constants";
 
 export const LoginScreen = ({ navigation }) => {
+  const { userName, userPassword } = useContext(UserContext);
+  //console.log( userName);
+  //console.log( userPassword );
   const { t } = useTranslation();
   const theme = useTheme();
 
-  const [name, setName] = useState("");
-  const [password, setPassword] = useState("");
+  const [name, setName] = useState(userName);
+  const [password, setPassword] = useState(userPassword);
+  //useEffect(() => setName(userName), [name]);
 
   const buttonDisabled = name.length > 0 && password.length > 0 ? false : true;
+  const saveUser = async (value) => {
+    try {
+      await AsyncStorage.setItem("@user", JSON.stringify(value));
+    } catch (e) {
+      console.log("error saving user to AsyncStorage");
+    }
+  };
 
   const onButtonPress = () => {
-    return password === "1"
+    if (password === "1") {
+      navigation.navigate("RootStack");
+      saveUser({ userName: name, userPassword: password });
+    } else if (name === "admin" && password === "admin") {
+      navigation.navigate("Settings");
+    } else {
+      Alert.alert("Wrong password!");
+    }
+    /*return password === "1"
       ? navigation.navigate("RootStack")
       : name === "admin" && password === "admin"
       ? navigation.navigate("Settings")
-      : Alert.alert("Wrong password!");
+      : Alert.alert("Wrong password!");*/
   };
 
   return (
     <View
       style={{
-        flex: 1,
-        paddingVertical: 200,
-        backgroundColor: theme.colors.primary,
-        alignItems: "center",
-        justifyContent: "center",
+        ...AppStyles.container,
+        backgroundColor: theme.colors.onSecondary,
       }}
     >
       <TextInput

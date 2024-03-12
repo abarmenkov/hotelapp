@@ -6,6 +6,15 @@ const ru = {
     },
     DrawerContent: {
       settings: "Настройки",
+      darkTheme: "Тёмная тема",
+      select_language: "Выбрать язык",
+      reservations: "Бронирование",
+      fast_post: "Быстрое начисление",
+      cleanings: "Список уборок",
+      services_control: "Отпуск услуг",
+      tasks: "Задачи",
+      service_requests: "Сервисные заявки",
+      logout: " Выход",
     },
     Settings: {
       add_hotel: "Добавить отель",
