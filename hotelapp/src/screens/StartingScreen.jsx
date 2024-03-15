@@ -22,7 +22,7 @@ export const StartingScreen = ({ route, navigation }) => {
         Hotel App
       </Headline>
       <Caption style={styles.caption}>Run and manage your hotel</Caption>
-      <Pressable onPress={() => navigation.navigate("RootStack")}>
+      <Pressable onPress={()=> console.log('pressed')}>
         <Text>Move to Appscreen</Text>
       </Pressable>
     </View>

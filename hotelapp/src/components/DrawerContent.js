@@ -1,6 +1,10 @@
 import React, { useContext, useEffect, useState, useRef } from "react";
-import { View, StyleSheet, Image } from "react-native";
-import { DrawerItem, DrawerContentScrollView } from "@react-navigation/drawer";
+import { View, StyleSheet, Image, useWindowDimensions } from "react-native";
+import {
+  DrawerItem,
+  DrawerContentScrollView,
+  DrawerItemList,
+} from "@react-navigation/drawer";
 import {
   useTheme,
   Avatar,
@@ -20,9 +24,19 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Picker } from "@react-native-picker/picker";
 //import { useTheme } from "react-native-paper";
 //import { useAuth } from "../hooks/useAuth";
+import { WIDTH } from "../utils/constants";
+//import { width } from "../utils/constants";
+import {
+  getFocusedRouteNameFromRoute,
+  useIsFocused,
+  useRoute,
+} from "@react-navigation/native";
 
 export const DrawerContent = (props) => {
-  const { navigation } = props;
+  const { fontScale, width } = useWindowDimensions();
+  const { navigation, isFocused } = props;
+  const initialRouteName = getFocusedRouteNameFromRoute(props);
+  console.log(initialRouteName);
   const { t } = useTranslation();
   const { i18n } = useTranslation();
   const theme = useTheme();
@@ -67,188 +81,218 @@ export const DrawerContent = (props) => {
     /*source={require("../../assets/images/Avatar.png")}*/
   }
   return (
-    <DrawerContentScrollView {...props}>
-      <View style={styles.drawerContent}>
-        <View style={styles.userInfoSection}>
-          <View style={styles.headerRow}>
-            <Image
-              source={require("../../assets/images/Logo.png")}
-              style={styles.logo}
-            />
-            <Title style={styles.title}>HotelApp</Title>
-          </View>
+    <View style={styles.container}>
+      <DrawerContentScrollView {...props}>
+        <View style={styles.drawerContent}>
+          <View style={styles.userInfoSection}>
+            <View style={styles.headerRow}>
+              <Image
+                source={require("../../assets/images/Logo.png")}
+                style={styles.logo}
+              />
+              <Title style={styles.title}>HotelApp</Title>
+            </View>
 
-          <Caption style={styles.caption}>{userName}</Caption>
-          <View style={styles.row}>
-            <View style={styles.section}>
-              <Paragraph style={[styles.paragraph, styles.caption]}>
-                202
-              </Paragraph>
-              <Caption style={styles.caption}>Following</Caption>
-            </View>
-            <View style={styles.section}>
-              <Paragraph style={[styles.paragraph, styles.caption]}>
-                159
-              </Paragraph>
-              <Caption style={styles.caption}>Followers</Caption>
+            <Caption style={styles.caption}>{userName}</Caption>
+            <View style={styles.row}>
+              <View style={styles.section}>
+                <Paragraph style={[styles.paragraph, styles.caption]}>
+                  202
+                </Paragraph>
+                <Caption style={styles.caption}>Following</Caption>
+              </View>
+              <View style={styles.section}>
+                <Paragraph style={[styles.paragraph, styles.caption]}>
+                  159
+                </Paragraph>
+                <Caption style={styles.caption}>Followers</Caption>
+              </View>
             </View>
           </View>
-        </View>
-        <Drawer.Section style={styles.drawerSection}>
-          <DrawerItem
-            labelStyle={styles.drawerItem}
-            icon={({ color, size }) => (
-              <MaterialCommunityIcons
-                name="account-outline"
-                color={color}
-                size={size}
-              />
-            )}
-            label={t("DrawerContent.reservations")}
-            onPress={() => {
-              console.log("Pressed profile");
-            }}
-          />
-          <DrawerItem
-            labelStyle={styles.drawerItem}
-            icon={({ color, size }) => (
-              <MaterialIcons
-                name="cleaning-services"
-                color={color}
-                size={size}
-              />
-            )}
-            label={t("DrawerContent.cleanings")}
-            onPress={() => {}}
-          />
-          <DrawerItem
-            labelStyle={styles.drawerItem}
-            icon={({ color, size }) => (
-              <MaterialCommunityIcons
-                name="credit-card-plus"
-                color={color}
-                size={size}
-              />
-            )}
-            label={t("DrawerContent.fast_post")}
-            onPress={() => {}}
-          />
-          <DrawerItem
-            labelStyle={styles.drawerItem}
-            icon={({ color, size }) => (
-              <MaterialCommunityIcons
-                name="cash-check"
-                color={color}
-                size={size}
-              />
-            )}
-            label={t("DrawerContent.services_control")}
-            onPress={() => {}}
-          />
-          <DrawerItem
-            labelStyle={styles.drawerItem}
-            icon={({ color, size }) => (
-              <MaterialCommunityIcons
-                name="room-service"
-                color={color}
-                size={size}
-              />
-            )}
-            label={t("DrawerContent.service_requests")}
-            onPress={() => {}}
-          />
-          <DrawerItem
-            labelStyle={styles.drawerItem}
-            icon={({ color, size }) => (
-              <MaterialIcons name="task" color={color} size={size} />
-            )}
-            label={t("DrawerContent.tasks")}
-            onPress={() => {}}
-          />
-          <DrawerItem
-            labelStyle={styles.drawerItem}
-            icon={({ color, size }) => (
-              <MaterialIcons name="settings" color={color} size={size} />
-            )}
-            label={t("DrawerContent.settings")}
-            onPress={() => {}}
-          />
-        </Drawer.Section>
-        <Drawer.Section title={t("DrawerContent.settings")}>
-          <TouchableRipple
-            onPress={() => {
-              toggleTheme();
-              setDark(!dark);
-            }}
-          >
-            <View style={styles.preference}>
-              <Text>{t("DrawerContent.darkTheme")}</Text>
-              <View>
-                <Switch
-                  color={theme.colors.primary}
-                  value={isThemeDark}
-                  onValueChange={() => {
-                    toggleTheme();
-                    setDark(!dark);
-                  }}
+          <Drawer.Section style={styles.drawerSection}>
+            <DrawerItemList {...props} />
+            <DrawerItem
+              labelStyle={{
+                fontSize: width > 768 ? 18 / fontScale : 14 / fontScale,
+              }}
+              icon={({ color, size }) => (
+                <MaterialCommunityIcons
+                  name="account-outline"
+                  color={color}
+                  size={size}
                 />
+              )}
+              label={t("DrawerContent.reservations")}
+              onPress={() => {
+                navigation.navigate("Reservations");
+              }}
+            />
+            <DrawerItem
+              labelStyle={{
+                fontSize: width > 768 ? 18 / fontScale : 14 / fontScale,
+              }}
+              icon={({ color, size }) => (
+                <MaterialIcons
+                  name="cleaning-services"
+                  color={color}
+                  size={size}
+                />
+              )}
+              label={t("DrawerContent.cleanings")}
+              onPress={() => {
+                navigation.navigate("Starting");
+              }}
+            />
+            <DrawerItem
+              labelStyle={{
+                fontSize: width > 768 ? 18 / fontScale : 14 / fontScale,
+              }}
+              icon={({ color, size }) => (
+                <MaterialCommunityIcons
+                  name="credit-card-plus"
+                  color={color}
+                  size={size}
+                />
+              )}
+              label={t("DrawerContent.fast_post")}
+              onPress={() => {}}
+            />
+            <DrawerItem
+              labelStyle={{
+                fontSize: width > 768 ? 18 / fontScale : 14 / fontScale,
+              }}
+              icon={({ color, size }) => (
+                <MaterialCommunityIcons
+                  name="cash-check"
+                  color={color}
+                  size={size}
+                />
+              )}
+              label={t("DrawerContent.services_control")}
+              onPress={() => {}}
+            />
+            <DrawerItem
+              labelStyle={{
+                fontSize: width > 768 ? 18 / fontScale : 14 / fontScale,
+              }}
+              icon={({ color, size }) => (
+                <MaterialCommunityIcons
+                  name="room-service"
+                  color={color}
+                  size={size}
+                />
+              )}
+              label={t("DrawerContent.service_requests")}
+              onPress={() => {}}
+            />
+            <DrawerItem
+              labelStyle={{
+                fontSize: width > 768 ? 18 / fontScale : 14 / fontScale,
+              }}
+              icon={({ color, size }) => (
+                <MaterialIcons name="task" color={color} size={size} />
+              )}
+              label={t("DrawerContent.tasks")}
+              onPress={() => {}}
+            />
+            <DrawerItem
+              labelStyle={{
+                fontSize: width > 768 ? 18 / fontScale : 14 / fontScale,
+              }}
+              icon={({ color, size }) => (
+                <MaterialIcons name="settings" color={color} size={size} />
+              )}
+              label={t("DrawerContent.settings")}
+              onPress={() => {}}
+            />
+          </Drawer.Section>
+          <Drawer.Section title={t("DrawerContent.settings")}>
+            <TouchableRipple
+              onPress={() => {
+                toggleTheme();
+                setDark(!dark);
+              }}
+            >
+              <View style={styles.preference}>
+                <Text>{t("DrawerContent.darkTheme")}</Text>
+                <View>
+                  <Switch
+                    color={theme.colors.primary}
+                    value={isThemeDark}
+                    onValueChange={() => {
+                      toggleTheme();
+                      setDark(!dark);
+                    }}
+                  />
+                </View>
               </View>
-            </View>
-          </TouchableRipple>
-          <TouchableRipple
-            onPress={() => {
-              openPicker();
-            }}
-          >
-            <View style={styles.preference}>
-              <Text>{t("DrawerContent.select_language")}</Text>
-              <View>
-                <Picker
-                  ref={pickerRef}
-                  mode="dropdown"
-                  //mode="dialog"
-                  selectedValue={selectedLanguage}
-                  onValueChange={handleLanguageChange}
-                  style={styles.pickerStyles}
-                  dropdownIconColor={"red"}
-                  dropdownIconRippleColor={"yellow"}
-                  prompt="Выберите язык" // header окна в режиме dialog
-                >
-                  {sortedLanguages.map((item) => (
-                    <Picker.Item
-                      key={supportedLngs[item].code}
-                      label={supportedLngs[item].locale}
-                      value={item}
-                      style={{
-                        color:
-                          appLanguage === supportedLngs[item].code
-                            ? "red"
-                            : "blue",
-                      }}
-                    />
-                  ))}
-                </Picker>
+            </TouchableRipple>
+            <TouchableRipple
+              onPress={() => {
+                openPicker();
+              }}
+            >
+              <View style={styles.preference}>
+                <Text>{t("DrawerContent.select_language")}</Text>
+                <View>
+                  <Picker
+                    ref={pickerRef}
+                    mode="dropdown"
+                    //mode="dialog"
+                    selectedValue={selectedLanguage}
+                    onValueChange={handleLanguageChange}
+                    style={styles.pickerStyles}
+                    dropdownIconColor={"red"}
+                    dropdownIconRippleColor={"yellow"}
+                    prompt="Выберите язык" // header окна в режиме dialog
+                  >
+                    {sortedLanguages.map((item) => (
+                      <Picker.Item
+                        key={supportedLngs[item].code}
+                        label={supportedLngs[item].locale}
+                        value={item}
+                        style={{
+                          color:
+                            appLanguage === supportedLngs[item].code
+                              ? "red"
+                              : "blue",
+                        }}
+                      />
+                    ))}
+                  </Picker>
+                </View>
               </View>
-            </View>
-          </TouchableRipple>
-        </Drawer.Section>
-        <Drawer.Section style={styles.drawerSection}>
-          <DrawerItem
-            icon={({ color, size }) => (
-              <MaterialCommunityIcons name="logout" color={color} size={size} />
-            )}
-            label={t("DrawerContent.logout")}
-            onPress={() => {
-              console.log("Pressed Logout");
-            }}
-          />
-        </Drawer.Section>
-      </View>
-    </DrawerContentScrollView>
+            </TouchableRipple>
+          </Drawer.Section>
+          <Drawer.Section style={styles.drawerSection}>
+            <DrawerItem
+              icon={({ color, size }) => (
+                <MaterialCommunityIcons
+                  name="logout"
+                  color={color}
+                  size={size}
+                />
+              )}
+              label={t("DrawerContent.logout")}
+              onPress={() => {
+                console.log("Pressed Logout");
+              }}
+            />
+          </Drawer.Section>
+        </View>
+      </DrawerContentScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  drawer: {
+    width: WIDTH * 0.4,
+  },
+  container: {
+    flex: 1,
+    //width: WIDTH * 0.4,
+  },
   drawerContent: {
     flex: 1,
   },

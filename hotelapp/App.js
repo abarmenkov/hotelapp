@@ -24,7 +24,7 @@ import { PreferencesContext } from "./src/context/PreferencesContext";
 import { UserContext } from "./src/context/UserContext";
 import { name as appName } from "./app.json";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-//import "react-native-gesture-handler";
+import "react-native-gesture-handler";
 import { I18nextProvider } from "react-i18next";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import i18next from "./i18n";
