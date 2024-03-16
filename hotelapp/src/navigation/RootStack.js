@@ -7,6 +7,13 @@ import { WIDTH } from "../utils/constants";
 import { useWindowDimensions, Text } from "react-native";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
+import { ReservationsStackNavigator } from "./ReservationsScreenStack";
+import { HousekeepingStackNavigator } from "./HousekeepingScreenStack";
+import { FastPostStackNavigator } from "./FastPostScreenStack";
+import { ServicesControlStackNavigator } from "./ServicesControlScreenStack";
+import { ServiceRequestsStackNavigator } from "./ServiceRequestsScreenStack";
+import { TasksStackNavigator } from "./TasksScreenStack";
+import { SettingsStackNavigator } from "./SettingsScreenStack";
 
 const Drawer = createDrawerNavigator();
 
@@ -14,30 +21,32 @@ export const RootStack = () => {
   const [token, setToken] = useState(false);
   const { t } = useTranslation();
   const { fontScale, width } = useWindowDimensions();
-  const iconSize = width > 768 ? 24 / fontScale : 14 / fontScale;
+  const iconSize = width > 768 ? 24 / fontScale : 18 / fontScale;
+  const labelFontSize = width > 768 ? 18 / fontScale : 16 / fontScale;
+
   return (
     <Drawer.Navigator
-      initialRouteName='Reservations'
-      //drawerContentOptions={{}}
+      initialRouteName="Reservations"
       drawerContent={(props) => <DrawerContent {...props} />}
       screenOptions={{
         headerShown: true,
         drawerStyle: {
           width: width > 768 ? width * 0.5 : width * 0.7,
         },
+        drawerActiveTintColor: "green",
         //drawerActiveBackgroundColor: "red",
       }}
     >
       <Drawer.Screen
-        name='Reservations'
-        component={TestScreen}
+        name="Reservations"
+        component={ReservationsStackNavigator}
         options={{
-          drawerActiveTintColor: "red", // цвет активной вкладки иконки и текста
+          //drawerActiveTintColor: "red", // цвет активной вкладки иконки и текста для конкретного элемента
           drawerLabel: ({ color }) => (
             <Text
               style={{
                 color,
-                fontSize: width > 768 ? 18 / fontScale : 14 / fontScale,
+                fontSize: labelFontSize,
               }}
             >
               {t("DrawerContent.reservations")}
@@ -50,33 +59,159 @@ export const RootStack = () => {
               size={iconSize}
             />
           ),
-          drawerItemStyle: {
-            //backgroundColor: "yellow",
-            //color: "orange",
-          },
-          drawerLabelStyle: {
-            color: "green",
-            fontSize: width > 768 ? 18 / fontScale : 14 / fontScale,
-          },
-          //title: 'test' //header
+
+          title: "Reservations", //header
+          headerTitle: () => <Text>{t("DrawerContent.reservations")}</Text>,
         }}
       />
       <Drawer.Screen
-        name="Starting"
-        component={StartingScreen}
+        name="Housekeeping"
+        component={HousekeepingStackNavigator}
         options={{
-          drawerLabelStyle: {
-            //color: "green",
-            fontSize: width > 768 ? 18 / fontScale : 14 / fontScale,
-          },
-          drawerActiveTintColor: "red",
-          drawerIcon: ({ color, size }) => (
-            <MaterialCommunityIcons
-              name="account-outline"
+          drawerLabel: ({ color }) => (
+            <Text
+              style={{
+                color,
+                fontSize: labelFontSize,
+              }}
+            >
+              {t("DrawerContent.cleanings")}
+            </Text>
+          ),
+          /*drawerLabelStyle: {
+            fontSize: width > 768 ? 18 / fontScale : 16 / fontScale,
+          },*/
+          drawerIcon: ({ color }) => (
+            <MaterialIcons
+              name="cleaning-services"
               color={color}
               size={iconSize}
             />
           ),
+          title: "Housekeeping", //header
+          headerTitle: () => <Text>{t("DrawerContent.cleanings")}</Text>,
+        }}
+      />
+      <Drawer.Screen
+        name="FastPost"
+        component={FastPostStackNavigator}
+        options={{
+          drawerLabel: ({ color }) => (
+            <Text
+              style={{
+                color,
+                fontSize: labelFontSize,
+              }}
+            >
+              {t("DrawerContent.fast_post")}
+            </Text>
+          ),
+
+          drawerIcon: ({ color }) => (
+            <MaterialCommunityIcons
+              name="credit-card-plus"
+              color={color}
+              size={iconSize}
+            />
+          ),
+          title: "FastPost", //header
+          headerTitle: () => <Text>{t("DrawerContent.fast_post")}</Text>,
+        }}
+      />
+      <Drawer.Screen
+        name="ServicesControl"
+        component={ServicesControlStackNavigator}
+        options={{
+          drawerLabel: ({ color }) => (
+            <Text
+              style={{
+                color,
+                fontSize: labelFontSize,
+              }}
+            >
+              {t("DrawerContent.services_control")}
+            </Text>
+          ),
+
+          drawerIcon: ({ color }) => (
+            <MaterialCommunityIcons
+              name="cash-check"
+              color={color}
+              size={iconSize}
+            />
+          ),
+          title: "ServicesControl", //header
+          headerTitle: () => <Text>{t("DrawerContent.services_control")}</Text>,
+        }}
+      />
+      <Drawer.Screen
+        name="ServiceRequests"
+        component={ServiceRequestsStackNavigator}
+        options={{
+          drawerLabel: ({ color }) => (
+            <Text
+              style={{
+                color,
+                fontSize: labelFontSize,
+              }}
+            >
+              {t("DrawerContent.service_requests")}
+            </Text>
+          ),
+
+          drawerIcon: ({ color }) => (
+            <MaterialCommunityIcons
+              name="room-service"
+              color={color}
+              size={iconSize}
+            />
+          ),
+          title: "ServiceRequests", //header
+          headerTitle: () => <Text>{t("DrawerContent.service_requests")}</Text>,
+        }}
+      />
+      <Drawer.Screen
+        name="Tasks"
+        component={TasksStackNavigator}
+        options={{
+          drawerLabel: ({ color }) => (
+            <Text
+              style={{
+                color,
+                fontSize: labelFontSize,
+              }}
+            >
+              {t("DrawerContent.tasks")}
+            </Text>
+          ),
+
+          drawerIcon: ({ color }) => (
+            <MaterialIcons name="task" color={color} size={iconSize} />
+          ),
+          title: "Tasks", //header
+          headerTitle: () => <Text>{t("DrawerContent.tasks")}</Text>,
+        }}
+      />
+      <Drawer.Screen
+        name="Settings"
+        component={SettingsStackNavigator}
+        options={{
+          drawerLabel: ({ color }) => (
+            <Text
+              style={{
+                color,
+                fontSize: labelFontSize,
+              }}
+            >
+              {t("DrawerContent.settings")}
+            </Text>
+          ),
+
+          drawerIcon: ({ color }) => (
+            <MaterialIcons name="settings" color={color} size={iconSize} />
+          ),
+          title: "Settings", //header
+          headerTitle: () => <Text>{t("DrawerContent.settings")}</Text>,
         }}
       />
     </Drawer.Navigator>

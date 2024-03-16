@@ -92,119 +92,17 @@ export const DrawerContent = (props) => {
               />
               <Title style={styles.title}>HotelApp</Title>
             </View>
-
-            <Caption style={styles.caption}>{userName}</Caption>
             <View style={styles.row}>
               <View style={styles.section}>
                 <Paragraph style={[styles.paragraph, styles.caption]}>
-                  202
+                  User name
                 </Paragraph>
-                <Caption style={styles.caption}>Following</Caption>
-              </View>
-              <View style={styles.section}>
-                <Paragraph style={[styles.paragraph, styles.caption]}>
-                  159
-                </Paragraph>
-                <Caption style={styles.caption}>Followers</Caption>
+                <Caption style={styles.caption}>{userName}</Caption>
               </View>
             </View>
           </View>
           <Drawer.Section style={styles.drawerSection}>
             <DrawerItemList {...props} />
-            <DrawerItem
-              labelStyle={{
-                fontSize: width > 768 ? 18 / fontScale : 14 / fontScale,
-              }}
-              icon={({ color, size }) => (
-                <MaterialCommunityIcons
-                  name="account-outline"
-                  color={color}
-                  size={size}
-                />
-              )}
-              label={t("DrawerContent.reservations")}
-              onPress={() => {
-                navigation.navigate("Reservations");
-              }}
-            />
-            <DrawerItem
-              labelStyle={{
-                fontSize: width > 768 ? 18 / fontScale : 14 / fontScale,
-              }}
-              icon={({ color, size }) => (
-                <MaterialIcons
-                  name="cleaning-services"
-                  color={color}
-                  size={size}
-                />
-              )}
-              label={t("DrawerContent.cleanings")}
-              onPress={() => {
-                navigation.navigate("Starting");
-              }}
-            />
-            <DrawerItem
-              labelStyle={{
-                fontSize: width > 768 ? 18 / fontScale : 14 / fontScale,
-              }}
-              icon={({ color, size }) => (
-                <MaterialCommunityIcons
-                  name="credit-card-plus"
-                  color={color}
-                  size={size}
-                />
-              )}
-              label={t("DrawerContent.fast_post")}
-              onPress={() => {}}
-            />
-            <DrawerItem
-              labelStyle={{
-                fontSize: width > 768 ? 18 / fontScale : 14 / fontScale,
-              }}
-              icon={({ color, size }) => (
-                <MaterialCommunityIcons
-                  name="cash-check"
-                  color={color}
-                  size={size}
-                />
-              )}
-              label={t("DrawerContent.services_control")}
-              onPress={() => {}}
-            />
-            <DrawerItem
-              labelStyle={{
-                fontSize: width > 768 ? 18 / fontScale : 14 / fontScale,
-              }}
-              icon={({ color, size }) => (
-                <MaterialCommunityIcons
-                  name="room-service"
-                  color={color}
-                  size={size}
-                />
-              )}
-              label={t("DrawerContent.service_requests")}
-              onPress={() => {}}
-            />
-            <DrawerItem
-              labelStyle={{
-                fontSize: width > 768 ? 18 / fontScale : 14 / fontScale,
-              }}
-              icon={({ color, size }) => (
-                <MaterialIcons name="task" color={color} size={size} />
-              )}
-              label={t("DrawerContent.tasks")}
-              onPress={() => {}}
-            />
-            <DrawerItem
-              labelStyle={{
-                fontSize: width > 768 ? 18 / fontScale : 14 / fontScale,
-              }}
-              icon={({ color, size }) => (
-                <MaterialIcons name="settings" color={color} size={size} />
-              )}
-              label={t("DrawerContent.settings")}
-              onPress={() => {}}
-            />
           </Drawer.Section>
           <Drawer.Section title={t("DrawerContent.settings")}>
             <TouchableRipple
@@ -324,12 +222,12 @@ const styles = StyleSheet.create({
   },
   section: {
     flexDirection: "row",
-    alignItems: "center",
+    alignItems: "space-between",
     marginRight: 15,
   },
   paragraph: {
     fontWeight: "bold",
-    marginRight: 3,
+    marginRight: 20,
   },
   drawerSection: {
     marginTop: 15,

@@ -10,7 +10,7 @@ import { useTranslation } from "react-i18next";
 //import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Picker } from "@react-native-picker/picker";
 
-export const Settings = () => {
+export const SettingsScreen = () => {
   const { t } = useTranslation();
   const { i18n } = useTranslation();
 
@@ -35,7 +35,13 @@ export const Settings = () => {
   return (
     <View style={{ alignItems: "center" }}>
       <Text>{t("Settings.add_hotel")}</Text>
-      <View style={{ flexDirection: "row", backgroundColor: "red" , alignItems: 'center'}}>
+      <View
+        style={{
+          flexDirection: "row",
+          backgroundColor: "red",
+          alignItems: "center",
+        }}
+      >
         <Text>{t("Settings.select_language")}</Text>
         <View style={styles.container}>
           <Picker

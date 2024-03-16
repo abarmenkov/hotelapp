@@ -7,7 +7,7 @@ import {
 } from "@react-navigation/native";
 import { StartingScreen } from "../screens/StartingScreen";
 import { LoginScreen } from "../screens/LoginScreen";
-import { Settings } from "../screens/SettingsScreen";
+import { SettingsScreen } from "../screens/SettingsScreen";
 //import { TestScreen } from "../screens/TestScreen";
 import { DrawerStack } from "./Drawer";
 //import { RootNavigator } from "./rootNavigator";
@@ -51,7 +51,7 @@ export const StartingStack = () => {
         }}
       >
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
-        <Stack.Screen name="Settings" component={Settings} />
+        <Stack.Screen name="Settings" component={SettingsScreen} />
         <Stack.Screen name="RootStack" component={RootStack} />
       </Stack.Navigator>
     </NavigationContainer>
