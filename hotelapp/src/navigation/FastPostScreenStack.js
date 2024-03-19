@@ -1,6 +1,6 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import { FastPostScreen } from "../screens/FastPostScreen";
+import { FastPostScreen } from "../screens/FastPost/FastPostScreen";
 
 const Stack = createStackNavigator();
 

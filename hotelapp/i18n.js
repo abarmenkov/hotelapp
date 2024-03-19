@@ -54,7 +54,7 @@ i18next
 
   .init({
     compatibilityJSON: "v3",
-    debug: true,
+    debug: false,
     fallbackLng: "ru",
     interpolation: {
       escapeValue: false, // not needed for react as it escapes by default

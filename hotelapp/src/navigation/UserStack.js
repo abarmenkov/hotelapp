@@ -14,21 +14,27 @@ import { ServicesControlStackNavigator } from "./ServicesControlScreenStack";
 import { ServiceRequestsStackNavigator } from "./ServiceRequestsScreenStack";
 import { TasksStackNavigator } from "./TasksScreenStack";
 import { SettingsStackNavigator } from "./SettingsScreenStack";
+import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 
 const Drawer = createDrawerNavigator();
 
-export const RootStack = () => {
+export const UserStack = ({ navigation, route }) => {
   const [token, setToken] = useState(false);
+  //const routeName = getFocusedRouteNameFromRoute(route);
   const { t } = useTranslation();
   const { fontScale, width } = useWindowDimensions();
   const iconSize = width > 768 ? 24 / fontScale : 18 / fontScale;
   const labelFontSize = width > 768 ? 18 / fontScale : 16 / fontScale;
+  //console.log(route);
+  //console.log(routeName);
 
   return (
     <Drawer.Navigator
       initialRouteName="Reservations"
+      //backBehavior="none"
       drawerContent={(props) => <DrawerContent {...props} />}
       screenOptions={{
+        //backBehavior: "initialRoute",
         headerShown: true,
         drawerStyle: {
           width: width > 768 ? width * 0.5 : width * 0.7,
@@ -41,6 +47,7 @@ export const RootStack = () => {
         name="Reservations"
         component={ReservationsStackNavigator}
         options={{
+          //headerShown: true,
           //drawerActiveTintColor: "red", // цвет активной вкладки иконки и текста для конкретного элемента
           drawerLabel: ({ color }) => (
             <Text
@@ -61,7 +68,11 @@ export const RootStack = () => {
           ),
 
           title: "Reservations", //header
-          headerTitle: () => <Text>{t("DrawerContent.reservations")}</Text>,
+          headerTitle: () => (
+            <Text style={{ fontSize: 20 }}>
+              {t("DrawerContent.reservations")}
+            </Text>
+          ),
         }}
       />
       <Drawer.Screen
@@ -75,7 +86,7 @@ export const RootStack = () => {
                 fontSize: labelFontSize,
               }}
             >
-              {t("DrawerContent.cleanings")}
+              {t("DrawerContent.housekeeping")}
             </Text>
           ),
           /*drawerLabelStyle: {
@@ -89,7 +100,7 @@ export const RootStack = () => {
             />
           ),
           title: "Housekeeping", //header
-          headerTitle: () => <Text>{t("DrawerContent.cleanings")}</Text>,
+          headerTitle: () => <Text>{t("DrawerContent.housekeeping")}</Text>,
         }}
       />
       <Drawer.Screen

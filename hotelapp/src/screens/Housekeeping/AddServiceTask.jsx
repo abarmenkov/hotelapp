@@ -1,13 +1,13 @@
 import React from "react";
 import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 
-export const ReservationsScreen = ({ route, navigation }) => {
+export const AddServiceTaskScreen = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
-      <Text>Reservations</Text>
+      <Text>Fast Post</Text>
 
       <Pressable onPress={() => Alert.alert("pressed")}>
-        <Text>Reservations</Text>
+        <Text>Fast Post</Text>
       </Pressable>
     </View>
   );

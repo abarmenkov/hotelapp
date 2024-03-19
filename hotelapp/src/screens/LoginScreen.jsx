@@ -39,10 +39,10 @@ export const LoginScreen = ({ navigation }) => {
 
   const onButtonPress = () => {
     if (password === "1") {
-      navigation.navigate("RootStack");
+      navigation.navigate("UserStack");
       saveUser({ userName: name, userPassword: password });
     } else if (name === "admin" && password === "admin") {
-      navigation.navigate("Settings");
+      navigation.navigate("AdminStack");
     } else {
       Alert.alert("Wrong password!");
     }

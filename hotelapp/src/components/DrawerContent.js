@@ -36,7 +36,7 @@ export const DrawerContent = (props) => {
   const { fontScale, width } = useWindowDimensions();
   const { navigation, isFocused } = props;
   const initialRouteName = getFocusedRouteNameFromRoute(props);
-  console.log(initialRouteName);
+  //console.log(initialRouteName);
   const { t } = useTranslation();
   const { i18n } = useTranslation();
   const theme = useTheme();

@@ -10,7 +10,7 @@ const en = {
       select_language: "Select language",
       reservations: "Reservations",
       fast_post: "Fast Post",
-      cleanings: "List of cleanings",
+      housekeeping: "Housekeeping",
       services_control: "Services usage Control",
       tasks: "Tasks",
       service_requests: "Service Requests",

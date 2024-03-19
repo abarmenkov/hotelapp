@@ -10,7 +10,7 @@ const ru = {
       select_language: "Выбрать язык",
       reservations: "Бронирование",
       fast_post: "Быстрое начисление",
-      cleanings: "Список уборок",
+      housekeeping: "Уборки",
       services_control: "Отпуск услуг",
       tasks: "Задачи",
       service_requests: "Сервисные заявки",

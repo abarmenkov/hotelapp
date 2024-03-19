@@ -1,6 +1,6 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import { ServiceRequestsScreen } from "../screens/ServiceRequestsScreen";
+import { ServiceRequestsScreen } from "../screens/ServiceRequests/ServiceRequestsScreen";
 
 const Stack = createStackNavigator();
 

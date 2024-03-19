@@ -5,20 +5,16 @@ import {
   DefaultTheme,
   DarkTheme,
 } from "@react-navigation/native";
-import { StartingScreen } from "../screens/StartingScreen";
+
 import { LoginScreen } from "../screens/LoginScreen";
-import { SettingsScreen } from "../screens/SettingsScreen";
-//import { TestScreen } from "../screens/TestScreen";
-import { DrawerStack } from "./Drawer";
-//import { RootNavigator } from "./rootNavigator";
-//import { DefaultTheme, DarkTheme } from "@react-navigation/native";
-//import { useTheme } from "react-native-paper";
-import { RootStack } from "./RootStack";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+//import { SettingsScreen } from "../screens/SettingsScreen";
+import { UserStack } from "./UserStack";
+import { AdminStack } from "./AdminStack";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "react-native-paper";
+//import { AddReservationScreen } from "../screens/AddReservationScreen";
 //import { DefaultTheme, DarkTheme } from "@react-navigation/native";
-import { PreferencesContext } from "../context/PreferencesContext";
+//import { PreferencesContext } from "../context/PreferencesContext";
 
 const Stack = createStackNavigator();
 
@@ -51,8 +47,9 @@ export const StartingStack = () => {
         }}
       >
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
-        <Stack.Screen name="Settings" component={SettingsScreen} />
-        <Stack.Screen name="RootStack" component={RootStack} />
+        <Stack.Screen name="AdminStack" component={AdminStack} />
+        <Stack.Screen name="UserStack" component={UserStack} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );
