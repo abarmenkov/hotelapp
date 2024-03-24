@@ -4,13 +4,16 @@ import { ServiceRequestsScreen } from "../screens/ServiceRequests/ServiceRequest
 
 const Stack = createStackNavigator();
 
-export const ServiceRequestsStackNavigator = () => {
+export const ServiceRequestsStackNavigator = ({ route }) => {
   return (
     <Stack.Navigator
       initialRouteName="ServiceRequestsScreen"
       screenOptions={{ headerShown: false }}
     >
-      <Stack.Screen name="ServiceRequestsScreen" component={ServiceRequestsScreen} />
+      <Stack.Screen
+        name="ServiceRequestsScreen"
+        component={ServiceRequestsScreen}
+      />
     </Stack.Navigator>
   );
 };

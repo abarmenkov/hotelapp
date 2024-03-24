@@ -15,20 +15,25 @@ import { ServiceRequestsStackNavigator } from "./ServiceRequestsScreenStack";
 import { TasksStackNavigator } from "./TasksScreenStack";
 import { SettingsStackNavigator } from "./SettingsScreenStack";
 import { Text, useTheme } from "react-native-paper";
+import { ReservationsScreen } from "../screens/Reservations/ReservationsScreen";
+import { HousekeepingScreen } from "../screens/Housekeeping/HousekeepingScreen";
+import { FastPostScreen } from "../screens/FastPost/FastPostScreen";
+import { CleaningScreen } from "../screens/Housekeeping/CleaningScreen";
+import { AddServiceTaskScreen } from "../screens/Housekeeping/AddServiceTask";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 
 const Drawer = createDrawerNavigator();
 
-export const UserStack = ({ navigation, route }) => {
+export const TestStack = ({ navigation, route }) => {
   const [token, setToken] = useState(false);
-  const routeName = getFocusedRouteNameFromRoute(route) ?? 'Reservations';
+  //const routeName = getFocusedRouteNameFromRoute(route);
   const { t } = useTranslation();
   const { fontScale, width } = useWindowDimensions();
   const iconSize = width > 768 ? 24 / fontScale : 18 / fontScale;
   const labelFontSize = width > 768 ? 18 / fontScale : 16 / fontScale;
   const theme = useTheme();
   //console.log(route);
-  console.log(routeName);
+  //console.log(routeName);
 
   return (
     <Drawer.Navigator
@@ -56,7 +61,7 @@ export const UserStack = ({ navigation, route }) => {
     >
       <Drawer.Screen
         name="Reservations"
-        component={ReservationsStackNavigator}
+        component={ReservationsScreen}
         options={{
           //headerShown: true,
           //drawerActiveTintColor: "red", // цвет активной вкладки иконки и текста для конкретного элемента
@@ -86,7 +91,7 @@ export const UserStack = ({ navigation, route }) => {
       />
       <Drawer.Screen
         name="Housekeeping"
-        component={HousekeepingStackNavigator}
+        component={HousekeepingScreen}
         options={{
           drawerLabel: ({ color }) => (
             <Text
@@ -116,7 +121,7 @@ export const UserStack = ({ navigation, route }) => {
       />
       <Drawer.Screen
         name="FastPost"
-        component={FastPostStackNavigator}
+        component={FastPostScreen}
         options={{
           drawerLabel: ({ color }) => (
             <Text
@@ -139,114 +144,6 @@ export const UserStack = ({ navigation, route }) => {
           title: "FastPost", //header
           headerTitle: () => (
             <Text variant="titleMedium">{t("DrawerContent.fast_post")}</Text>
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="ServicesControl"
-        component={ServicesControlStackNavigator}
-        options={{
-          drawerLabel: ({ color }) => (
-            <Text
-              style={{
-                color,
-                fontSize: labelFontSize,
-              }}
-            >
-              {t("DrawerContent.services_control")}
-            </Text>
-          ),
-
-          drawerIcon: ({ color }) => (
-            <MaterialCommunityIcons
-              name="cash-check"
-              color={color}
-              size={iconSize}
-            />
-          ),
-          title: "ServicesControl", //header
-          headerTitle: () => (
-            <Text variant="titleMedium">
-              {t("DrawerContent.services_control")}
-            </Text>
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="ServiceRequests"
-        component={ServiceRequestsStackNavigator}
-        options={{
-          drawerLabel: ({ color }) => (
-            <Text
-              style={{
-                color,
-                fontSize: labelFontSize,
-              }}
-            >
-              {t("DrawerContent.service_requests")}
-            </Text>
-          ),
-
-          drawerIcon: ({ color }) => (
-            <MaterialCommunityIcons
-              name="room-service"
-              color={color}
-              size={iconSize}
-            />
-          ),
-          title: "ServiceRequests", //header
-          headerTitle: () => (
-            <Text variant="titleMedium">
-              {t("DrawerContent.service_requests")}
-            </Text>
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="Tasks"
-        component={TasksStackNavigator}
-        options={{
-          drawerLabel: ({ color }) => (
-            <Text
-              style={{
-                color,
-                fontSize: labelFontSize,
-              }}
-            >
-              {t("DrawerContent.tasks")}
-            </Text>
-          ),
-
-          drawerIcon: ({ color }) => (
-            <MaterialIcons name="task" color={color} size={iconSize} />
-          ),
-          title: "Tasks", //header
-          headerTitle: () => (
-            <Text variant="titleMedium">{t("DrawerContent.tasks")}</Text>
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="Settings"
-        component={SettingsStackNavigator}
-        options={{
-          drawerLabel: ({ color }) => (
-            <Text
-              style={{
-                color,
-                fontSize: labelFontSize,
-              }}
-            >
-              {t("DrawerContent.settings")}
-            </Text>
-          ),
-
-          drawerIcon: ({ color }) => (
-            <MaterialIcons name="settings" color={color} size={iconSize} />
-          ),
-          title: "Settings", //header
-          headerTitle: () => (
-            <Text variant="titleMedium">{t("DrawerContent.settings")}</Text>
           ),
         }}
       />

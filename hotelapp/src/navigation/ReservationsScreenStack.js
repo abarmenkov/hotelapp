@@ -5,7 +5,8 @@ import { AddReservationScreen } from "../screens/Reservations/AddReservationScre
 
 const Stack = createStackNavigator();
 
-export const ReservationsStackNavigator = () => {
+export const ReservationsStackNavigator = ({ route }) => {
+  //console.log(route.name);
   return (
     <Stack.Navigator
       initialRouteName="ReservationsScreen"

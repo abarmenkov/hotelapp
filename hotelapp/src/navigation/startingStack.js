@@ -12,6 +12,7 @@ import { UserStack } from "./UserStack";
 import { AdminStack } from "./AdminStack";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "react-native-paper";
+import { TestStack } from "./TestStack";
 //import { AddReservationScreen } from "../screens/AddReservationScreen";
 //import { DefaultTheme, DarkTheme } from "@react-navigation/native";
 //import { PreferencesContext } from "../context/PreferencesContext";
@@ -49,7 +50,6 @@ export const StartingStack = () => {
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
         <Stack.Screen name="AdminStack" component={AdminStack} />
         <Stack.Screen name="UserStack" component={UserStack} />
-
       </Stack.Navigator>
     </NavigationContainer>
   );

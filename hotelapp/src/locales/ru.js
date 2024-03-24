@@ -20,6 +20,11 @@ const ru = {
       add_hotel: "Добавить отель",
       select_language: "Выбрать язык по умолчанию",
     },
+    SearchBar: {
+      ReservationsScreen: "ФИО, номер комнаты",
+      HousekeepingScreen: "Имя гостя, номер комнаты",
+      fastpost_screen: "ФИО, номер комнаты",
+    },
   },
   code: "ru",
   locale: "Русский",

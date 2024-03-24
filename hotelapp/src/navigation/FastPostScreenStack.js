@@ -4,7 +4,8 @@ import { FastPostScreen } from "../screens/FastPost/FastPostScreen";
 
 const Stack = createStackNavigator();
 
-export const FastPostStackNavigator = () => {
+export const FastPostStackNavigator = ({ route }) => {
+  //console.log(route);
   return (
     <Stack.Navigator
       initialRouteName="FastPostScreen"

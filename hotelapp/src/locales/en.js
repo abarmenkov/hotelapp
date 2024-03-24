@@ -20,6 +20,11 @@ const en = {
       add_hotel: "Add hotel",
       select_language: "Select default language",
     },
+    SearchBar: {
+      ReservationsScreen: "Enter name or room number",
+      HousekeepingScreen: "Enter guest name or room number",
+      fastpost_screen: "Enter name or room number",
+    },
   },
   code: "en",
   locale: "English",

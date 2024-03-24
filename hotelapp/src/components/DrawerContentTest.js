@@ -1,5 +1,11 @@
 import React, { useContext, useEffect, useState, useRef } from "react";
-import { View, StyleSheet, Image, useWindowDimensions, Keyboard } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Image,
+  useWindowDimensions,
+  Keyboard,
+} from "react-native";
 import {
   DrawerItem,
   DrawerContentScrollView,
@@ -101,7 +107,45 @@ export const DrawerContent = (props) => {
             </View>
           </View>
           <Drawer.Section style={styles.drawerSection}>
-            <DrawerItemList {...props} />
+            <Drawer.Item
+              icon={({ color, size }) => (
+                <MaterialCommunityIcons
+                  name="account-outline"
+                  color={color}
+                  size={size}
+                />
+              )}
+              label="Reservations"
+              onPress={() => {
+                navigation.navigate("Reservations");
+              }}
+            />
+            <Drawer.Item
+              icon={({ color, size }) => (
+                <MaterialCommunityIcons
+                  name="cleaning-services"
+                  color={color}
+                  size={size}
+                />
+              )}
+              label="Housekeeping"
+              onPress={() => {
+                navigation.navigate("Housekeeping");
+              }}
+            />
+            <DrawerItem
+              icon={({ color, size }) => (
+                <MaterialCommunityIcons
+                  name="credit-card-plus"
+                  color={color}
+                  size={size}
+                />
+              )}
+              label="FastPost"
+              onPress={() => {
+                navigation.navigate("FastPost");
+              }}
+            />
           </Drawer.Section>
           <Drawer.Section title={t("DrawerContent.settings")}>
             <TouchableRipple

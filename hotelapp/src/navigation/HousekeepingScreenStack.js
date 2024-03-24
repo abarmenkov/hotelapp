@@ -3,10 +3,13 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { HousekeepingScreen } from "../screens/Housekeeping/HousekeepingScreen";
 import { AddServiceTaskScreen } from "../screens/Housekeeping/AddServiceTask";
 import { CleaningScreen } from "../screens/Housekeeping/CleaningScreen";
+import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 
 const Stack = createStackNavigator();
 
-export const HousekeepingStackNavigator = () => {
+export const HousekeepingStackNavigator = ({ route }) => {
+  //const routeName = getFocusedRouteNameFromRoute(route) ?? "HousekeepingScreen";
+  //console.log(routeName);
   return (
     <Stack.Navigator
       initialRouteName="HousekeepingScreen"

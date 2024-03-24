@@ -12,6 +12,7 @@ import {
   AppRegistry,
   ActivityIndicator,
 } from "react-native";
+import "react-native-gesture-handler";
 import { StartingStack } from "./src/navigation/startingStack";
 import { DarkTheme, DefaultTheme } from "@react-navigation/native";
 import {
@@ -24,7 +25,7 @@ import { PreferencesContext } from "./src/context/PreferencesContext";
 import { UserContext } from "./src/context/UserContext";
 import { name as appName } from "./app.json";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import "react-native-gesture-handler";
+
 import { I18nextProvider } from "react-i18next";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import i18next from "./i18n";

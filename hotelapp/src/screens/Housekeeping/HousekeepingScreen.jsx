@@ -1,9 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
+import { SearchbarComponent } from "../../components/SearchBar";
+//import { NavigationState } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
-export const HousekeepingScreen = ({ route, navigation }) => {
+export const HousekeepingScreen = ({ navigation }) => {
+  //const { navigation } = useNavigation();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [clicked, setClicked] = useState(false);
+  //console.log(props);
+  //console.log(useRoute());
+
   return (
     <View style={styles.container}>
+      <SearchbarComponent
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        searchLoading={searchLoading}
+        clicked={clicked}
+        setClicked={setClicked}
+      />
       <Text>Housekeeping</Text>
 
       <Pressable
