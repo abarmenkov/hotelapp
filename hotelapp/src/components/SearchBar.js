@@ -36,6 +36,8 @@ export const SearchbarComponent = ({
         clearIcon={"sword-cross"} // по умолчанию cross, пишем только когда хотим свою иконку
         style={{ width: clicked ? "90%" : "100%" }}
         onFocus={() => setClicked(true)}
+        keyboardType="email-address"
+        //onSubmitEditing={() => Keyboard.dismiss()}
       />
       {clicked && (
         <Button

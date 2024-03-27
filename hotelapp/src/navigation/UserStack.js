@@ -21,7 +21,7 @@ const Drawer = createDrawerNavigator();
 
 export const UserStack = ({ navigation, route }) => {
   const [token, setToken] = useState(false);
-  const routeName = getFocusedRouteNameFromRoute(route) ?? 'Reservations';
+  const routeName = getFocusedRouteNameFromRoute(route) ?? "Reservations";
   const { t } = useTranslation();
   const { fontScale, width } = useWindowDimensions();
   const iconSize = width > 768 ? 24 / fontScale : 18 / fontScale;
@@ -112,6 +112,8 @@ export const UserStack = ({ navigation, route }) => {
           headerTitle: () => (
             <Text variant="titleMedium">{t("DrawerContent.housekeeping")}</Text>
           ),
+          //1й вариант скинуть фильтр при навигации и возврате на страницу, 2й - добавить листенер(focus) на страницу
+          //unmountOnBlur: true,
         }}
       />
       <Drawer.Screen

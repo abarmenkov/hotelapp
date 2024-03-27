@@ -1,19 +1,80 @@
-import React, { useState } from "react";
-import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  Alert,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  ActivityIndicator,
+  TouchableWithoutFeedback,
+  Keyboard,
+  ScrollView,
+} from "react-native";
 import { SearchbarComponent } from "../../components/SearchBar";
 //import { NavigationState } from "@react-navigation/native";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { Cleanings } from "../../utils/data";
+import { CleaningsList } from "../../components/CleaningsList";
 
 export const HousekeepingScreen = ({ navigation }) => {
-  //const { navigation } = useNavigation();
   const [searchQuery, setSearchQuery] = useState("");
   const [searchLoading, setSearchLoading] = useState(false);
   const [clicked, setClicked] = useState(false);
-  //console.log(props);
-  //console.log(useRoute());
+  const [fakeData, setFakeData] = useState(true);
 
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      setSearchQuery("");
+      setClicked(false);
+    });
+
+    return () => {
+      unsubscribe;
+    };
+  }, [navigation]);
+
+  // get data from the pi
+  /*useEffect(() => {
+    const getData = async () => {
+      const apiResponse = await fetch(
+        "https://my-json-server.typicode.com/kevintomas1995/logRocket_searchBar/languages"
+      );
+      const data = await apiResponse.json();
+      setFakeData(data);
+    };
+    getData();
+  }, []);*/
   return (
-    <View style={styles.container}>
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss();
+      }}
+      accessible={false}
+    >
+      <SafeAreaView style={styles.root}>
+        {!clicked && <Text style={styles.title}>Housekeeping List</Text>}
+
+        <SearchbarComponent
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          searchLoading={searchLoading}
+          clicked={clicked}
+          setClicked={setClicked}
+        />
+        {!fakeData ? (
+          <ActivityIndicator size="large" />
+        ) : (
+          <CleaningsList
+            searchQuery={searchQuery}
+            data={Cleanings}
+            setClicked={setClicked}
+          />
+        )}
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
+
+    /*<View style={styles.container}>
       <SearchbarComponent
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
@@ -33,22 +94,20 @@ export const HousekeepingScreen = ({ navigation }) => {
       >
         <Text>Housekeeping go to Cleaning</Text>
       </Pressable>
-    </View>
+    </View>*/
   );
 };
-/*      <Pressable
-        onPress={() =>
-          navigation.navigate("Reservations", {
-            screen: "AddReservationScreen",
-            initial: false,
-          })
-        }
-      >*/
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
+  root: {
     justifyContent: "center",
+    alignItems: "center",
+  },
+  title: {
+    width: "100%",
+    marginTop: 20,
+    fontSize: 25,
+    fontWeight: "bold",
+    marginLeft: "10%",
   },
 });
