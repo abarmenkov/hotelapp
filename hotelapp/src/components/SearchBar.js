@@ -3,7 +3,10 @@ import { Searchbar, Button } from "react-native-paper";
 import { View, Keyboard } from "react-native";
 import { WIDTH } from "../utils/constants";
 import { useTranslation } from "react-i18next";
-import { useRoute } from "@react-navigation/native";
+import {
+  useRoute,
+  getFocusedRouteNameFromRoute,
+} from "@react-navigation/native";
 
 export const SearchbarComponent = ({
   searchLoading,
@@ -15,13 +18,15 @@ export const SearchbarComponent = ({
   const searchBarRef = useRef();
   const { t } = useTranslation();
   const route = useRoute();
+  //const routeName = getFocusedRouteNameFromRoute(route) ?? "Test2";
+  //console.log(routeName);
   return (
     <View
       style={{
-        width: WIDTH * 0.9,
+        width: WIDTH * 0.95,
         flexDirection: "row",
-        justifyContent: "space-between",
         alignItems: "center",
+        //marginLeft: 50,
       }}
     >
       <Searchbar
@@ -37,6 +42,9 @@ export const SearchbarComponent = ({
         style={{ width: clicked ? "90%" : "100%" }}
         onFocus={() => setClicked(true)}
         keyboardType="email-address"
+        keyboardAppearance="dark"
+        returnKeyType="next"
+        returnKeyLabel="next"
         //onSubmitEditing={() => Keyboard.dismiss()}
       />
       {clicked && (

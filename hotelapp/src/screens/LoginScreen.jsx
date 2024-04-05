@@ -27,6 +27,17 @@ export const LoginScreen = ({ navigation }) => {
   const [name, setName] = useState(userName);
   const [password, setPassword] = useState(userPassword);
   //useEffect(() => setName(userName), [name]);
+  /*useEffect(() => {
+    const getData = async () => {
+      const apiResponse = await fetch(
+        "https://api-hms.logus.pro/api/Account?userName=installer&password=pass"
+      );
+      const data = await apiResponse.json();
+      console.log(data.Token);
+      //setToken(data.Token);
+    };
+    getData();
+  }, []);*/
 
   const buttonDisabled = name.length > 0 && password.length > 0 ? false : true;
   const saveUser = async (value) => {

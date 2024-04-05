@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   Alert,
   Pressable,
@@ -6,45 +6,105 @@ import {
   Text,
   View,
   SafeAreaView,
-  ActivityIndicator,
   TouchableWithoutFeedback,
   Keyboard,
-  ScrollView,
 } from "react-native";
 import { SearchbarComponent } from "../../components/SearchBar";
-//import { NavigationState } from "@react-navigation/native";
-import { useNavigation, useRoute } from "@react-navigation/native";
-import { Cleanings } from "../../utils/data";
+import { useTranslation } from "react-i18next";
 import { CleaningsList } from "../../components/CleaningsList";
+import { LoadingIndicator } from "../../components/LoadingIndicator";
+import { fetchData } from "../../API/FetchData";
+import { token, baseUrl } from "../../API/route";
+import { useFocusEffect } from "@react-navigation/native";
+import { useDrawerStatus } from "@react-navigation/drawer";
 
 export const HousekeepingScreen = ({ navigation }) => {
+  const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [searchLoading, setSearchLoading] = useState(false);
   const [clicked, setClicked] = useState(false);
-  const [fakeData, setFakeData] = useState(true);
+  const [items, setItems] = useState();
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasError, setErrorFlag] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [updateData, setUpdateData] = useState(false);
 
-  useEffect(() => {
+  const isDrawerOpen = useDrawerStatus() === "open";
+  if (isDrawerOpen) Keyboard.dismiss();
+
+  const endPoint = "Cleanings";
+
+  //при возврате на страницу сбрасываем данные фильтра
+  /*useEffect(() => {
     const unsubscribe = navigation.addListener("focus", () => {
       setSearchQuery("");
       setClicked(false);
+      setErrorFlag(false);
     });
 
     return () => {
       unsubscribe;
     };
-  }, [navigation]);
+  }, [navigation]);*/
 
-  // get data from the pi
-  /*useEffect(() => {
-    const getData = async () => {
-      const apiResponse = await fetch(
-        "https://my-json-server.typicode.com/kevintomas1995/logRocket_searchBar/languages"
+  useFocusEffect(
+    useCallback(() => {
+      const controller = new AbortController();
+      const configurationObject = {
+        method: "get",
+        url: `${baseUrl}${endPoint}`,
+        signal: controller.signal,
+        headers: {
+          Authorization: `Token ${token}`,
+          "Content-Type": "application/json",
+        },
+        params: {
+          propertyId: 1,
+        },
+      };
+      fetchData(
+        setIsLoading,
+        setItems,
+        configurationObject,
+        setErrorFlag,
+        setRefreshing,
+        refreshing,
+        controller
       );
-      const data = await apiResponse.json();
-      setFakeData(data);
+      return () => {
+        setSearchQuery("");
+        setClicked(false);
+        setErrorFlag(false);
+        setItems();
+        controller.abort("Data fetching cancelled");
+      };
+    }, [updateData])
+  );
+  /*useEffect(() => {
+    const controller = new AbortController();
+    const configurationObject = {
+      method: "get",
+      url: `${baseUrl}${endPoint}`,
+      signal: controller.signal,
+      headers: {
+        Authorization: `Token ${token}`,
+        "Content-Type": "application/json",
+      },
+      params: {
+        propertyId: 1,
+      },
     };
-    getData();
-  }, []);*/
+    fetchData(
+      setIsLoading,
+      setItems,
+      configurationObject,
+      setErrorFlag,
+      setRefreshing,
+      refreshing
+    );
+    return () => controller.abort("Data fetching cancelled");
+  }, [updateData]);*/
+
   return (
     <TouchableWithoutFeedback
       onPress={() => {
@@ -53,8 +113,6 @@ export const HousekeepingScreen = ({ navigation }) => {
       accessible={false}
     >
       <SafeAreaView style={styles.root}>
-        {!clicked && <Text style={styles.title}>Housekeeping List</Text>}
-
         <SearchbarComponent
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
@@ -62,39 +120,23 @@ export const HousekeepingScreen = ({ navigation }) => {
           clicked={clicked}
           setClicked={setClicked}
         />
-        {!fakeData ? (
-          <ActivityIndicator size="large" />
+        {isLoading ? (
+          <LoadingIndicator text={t("Loading.loading")} />
         ) : (
           <CleaningsList
             searchQuery={searchQuery}
-            data={Cleanings}
+            data={items}
             setClicked={setClicked}
+            refreshing={refreshing}
+            setRefreshing={setRefreshing}
+            updateData={updateData}
+            setUpdateData={setUpdateData}
           />
         )}
+
+        {!isLoading && hasError && <Text>{t("Loading.error")}</Text>}
       </SafeAreaView>
     </TouchableWithoutFeedback>
-
-    /*<View style={styles.container}>
-      <SearchbarComponent
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        searchLoading={searchLoading}
-        clicked={clicked}
-        setClicked={setClicked}
-      />
-      <Text>Housekeeping</Text>
-
-      <Pressable
-        onPress={() =>
-          navigation.navigate("CleaningScreen", {
-            roomNumber: 106,
-            roomDescription: "Одноместный",
-          })
-        }
-      >
-        <Text>Housekeeping go to Cleaning</Text>
-      </Pressable>
-    </View>*/
   );
 };
 

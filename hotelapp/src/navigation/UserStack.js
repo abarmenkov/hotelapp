@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { DrawerContent } from "../components/DrawerContent";
-import { TestScreen } from "../screens/TestScreen";
+//import { TestScreen } from "../screens/TestScreen";
 import { StartingScreen } from "../screens/StartingScreen";
 import { WIDTH } from "../utils/constants";
 import { useWindowDimensions } from "react-native";
@@ -16,6 +16,7 @@ import { TasksStackNavigator } from "./TasksScreenStack";
 import { SettingsStackNavigator } from "./SettingsScreenStack";
 import { Text, useTheme } from "react-native-paper";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
+import { ReservationsTopBarStack } from "./ReservationsTopTabStack";
 
 const Drawer = createDrawerNavigator();
 
@@ -28,7 +29,8 @@ export const UserStack = ({ navigation, route }) => {
   const labelFontSize = width > 768 ? 18 / fontScale : 16 / fontScale;
   const theme = useTheme();
   //console.log(route);
-  console.log(routeName);
+  //console.log(routeName);
+
 
   return (
     <Drawer.Navigator
@@ -84,6 +86,7 @@ export const UserStack = ({ navigation, route }) => {
           ),
         }}
       />
+
       <Drawer.Screen
         name="Housekeeping"
         component={HousekeepingStackNavigator}

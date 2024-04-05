@@ -21,9 +21,19 @@ const ru = {
       select_language: "Выбрать язык по умолчанию",
     },
     SearchBar: {
-      ReservationsScreen: "ФИО, номер комнаты",
+      ReservationsScreen: "ФИО, номер комнаты или бронирования",
       HousekeepingScreen: "Имя гостя, номер комнаты",
       fastpost_screen: "ФИО, номер комнаты",
+    },
+    Loading: {
+      loading: "Загрузка данных...",
+      error: "Ошибка загрузки данных",
+    },
+    ReservationsTabViewScreen: {
+      Arrivals: "Заезд",
+      Inhouse: "Проживающие",
+      Departures: "Выезд",
+      All: "ВСЕ",
     },
   },
   code: "ru",

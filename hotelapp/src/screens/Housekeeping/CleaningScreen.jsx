@@ -1,9 +1,12 @@
 import React, { useEffect } from "react";
 import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { Cleanings } from "../../utils/data";
 
 export const CleaningScreen = ({ navigation, route }) => {
-  //const navigation = useNavigation();
+  const filteredData = Cleanings.filter((item) => item.Id === route.params.id);
+  //console.log(filteredData);
+  //убрать заголовок Drawer
   useEffect(() => {
     navigation.getParent()?.setOptions({
       headerShown: false,
@@ -13,10 +16,12 @@ export const CleaningScreen = ({ navigation, route }) => {
         headerShown: true,
       });
   }, [navigation]);
+
   useEffect(() => {
+    //const filteredData = Cleanings.filter((item) => item.Id === route.params.id);
     navigation.setOptions({
-      title: route.params?.roomNumber ? route.params.roomNumber : "Some title",
-      headerRight: () => <Text>{route.params.roomDescription}</Text>,
+      title: filteredData[0].Room.Name,
+      headerRight: () => <Text>{filteredData[0].RoomType.Name}</Text>,
     });
   }, [navigation]);
   return (

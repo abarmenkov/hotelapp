@@ -22,10 +22,18 @@ const Stack = createStackNavigator();
 export const StartingStack = () => {
   const theme = useTheme();
   const navigationTheme = theme.dark ? DarkTheme : DefaultTheme;
-  //const { t } = useTranslation();
   const { i18n } = useTranslation();
-  //const { language } = useContext(PreferencesContext);
-  //console.log(language);
+  /*useEffect(() => {
+    const getData = async () => {
+      const apiResponse = await fetch(
+        "https://api-hms.logus.pro/api/Account?userName=installer&password=pass"
+      );
+      const data = await apiResponse.json();
+      console.log(data.Token);
+      //setToken(data.Token);
+    };
+    getData();
+  }, []);*/
 
   /*useState(() => {
     const setLanguage = async () => {

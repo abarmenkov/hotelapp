@@ -21,9 +21,19 @@ const en = {
       select_language: "Select default language",
     },
     SearchBar: {
-      ReservationsScreen: "Enter name or room number",
+      ReservationsScreen: "Enter name, room or reservation number",
       HousekeepingScreen: "Enter guest name or room number",
       fastpost_screen: "Enter name or room number",
+    },
+    Loading: {
+      loading: "Loading data is in process...",
+      error: "Failed to fetch data",
+    },
+    ReservationsTabViewScreen: {
+      Arrivals: "Arrivals",
+      Inhouse: "InHouse",
+      Departures: "Departures",
+      All: "All",
     },
   },
   code: "en",

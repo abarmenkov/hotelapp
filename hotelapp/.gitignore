@@ -1,5 +1,10 @@
 # Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
 
+#token
+src/API/route.js
+src/screens/TestScreens
+
+
 # dependencies
 node_modules/
 
