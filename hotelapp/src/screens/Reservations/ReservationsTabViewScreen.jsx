@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   useWindowDimensions,
@@ -17,6 +17,7 @@ import { WIDTH } from "../../utils/constants";
 import { token, baseUrl } from "../../API/route";
 import ReservationsList from "./ReservationsList";
 import { useDrawerStatus } from "@react-navigation/drawer";
+import { useFocusEffect } from "@react-navigation/native";
 
 export const ReservationsTabViewScreen = ({ navigation }) => {
   const { t } = useTranslation();
@@ -29,7 +30,7 @@ export const ReservationsTabViewScreen = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [updateData, setUpdateData] = useState(false);
   const [index, setIndex] = useState(0);
-  const layout = useWindowDimensions();
+  //const layout = useWindowDimensions();
 
   //чтобы при открытии Drawer, если на странице открыта Keyboard, она закрывалась автоматически
   const isDrawerOpen = useDrawerStatus() === "open";
@@ -44,53 +45,53 @@ export const ReservationsTabViewScreen = ({ navigation }) => {
 
   const endPoint = "Reservation/QuickSearch";
 
-  //при возврате на страницу сбрасываем данные фильтра
-  useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
-      setSearchQuery("");
-      setClicked(false);
-      setErrorFlag(false);
-    });
+  useFocusEffect(
+    useCallback(() => {
+      const ArrivalDateTo = new Date();
 
-    return () => {
-      unsubscribe;
-    };
-  }, [navigation]);
+      const controller = new AbortController();
+      ///прервать загрузку если сервер не отвечает
+      const newAbortSignal = (timeoutMs) => {
+        //const abortController = new AbortController();
+        setTimeout(() => controller.abort(), timeoutMs || 0);
 
-  useEffect(() => {
-    const ArrivalDateTo = new Date();
-    setSearchQuery("");
-    setClicked(false);
-    setErrorFlag(false);
-    setItems([]);
-    const controller = new AbortController();
-    const configurationObject = {
-      method: "post",
-      url: `${baseUrl}${endPoint}`,
-      signal: controller.signal,
-      headers: {
-        Authorization: `Token ${token}`,
-        "Content-Type": "application/json",
-      },
-      data: JSON.stringify({
-        Statuses: [{ Code: "IN" }, { Code: "RES" }],
-        ArrivalDateTo: ArrivalDateTo.toDateString(),
-        //DepartureDateTo: "2024-04-04T12:00:00+03:00",
-      }),
-    };
+        return controller.signal;
+      };
+      const configurationObject = {
+        method: "post",
+        url: `${baseUrl}${endPoint}`,
+        signal: newAbortSignal(5000),
+        headers: {
+          Authorization: `Token ${token}`,
+          "Content-Type": "application/json",
+        },
+        data: JSON.stringify({
+          Statuses: [{ Code: "IN" }, { Code: "RES" }],
+          ArrivalDateTo: ArrivalDateTo.toDateString(),
+          //DepartureDateTo: "2024-04-04T12:00:00+03:00",
+        }),
+      };
 
-    fetchData(
-      setIsLoading,
-      setItems,
-      configurationObject,
-      setErrorFlag,
-      setRefreshing,
-      refreshing,
-      controller
-    );
+      fetchData(
+        setIsLoading,
+        setItems,
+        configurationObject,
+        setErrorFlag,
+        setRefreshing,
+        refreshing,
+        controller
+      );
 
-    return () => controller.abort("Data fetching cancelled");
-  }, [updateData, index]);
+      return () => {
+        setSearchQuery("");
+        setClicked(false);
+        setErrorFlag(false);
+        setItems([]);
+
+        controller.abort("Data fetching cancelled");
+      };
+    }, [updateData, index])
+  );
 
   const renderScene = ({ route }) => {
     switch (route.key) {
@@ -108,6 +109,8 @@ export const ReservationsTabViewScreen = ({ navigation }) => {
             updateData={updateData}
             setUpdateData={setUpdateData}
             routeKey={route.key}
+            isLoading={isLoading}
+            hasError={hasError}
           />
         );
       default:
@@ -120,7 +123,12 @@ export const ReservationsTabViewScreen = ({ navigation }) => {
       {...props}
       activeColor={"white"}
       inactiveColor={"black"}
-      style={{ marginTop: 10, backgroundColor: "red" }}
+      //style={{  }}
+      contentContainerStyle={{
+        backgroundColor: "orange",
+        justifyContent: "space-evenly",
+      }}
+      tabStyle={{ width: "auto" }}
       getLabelText={({ route }) =>
         t(`ReservationsTabViewScreen.${route.title}`)
       }
@@ -144,6 +152,7 @@ export const ReservationsTabViewScreen = ({ navigation }) => {
             setClicked={setClicked}
           />
         </View>
+
         {isLoading ? (
           <LoadingIndicator text={t("Loading.loading")} />
         ) : (
@@ -151,14 +160,14 @@ export const ReservationsTabViewScreen = ({ navigation }) => {
             navigationState={{ index, routes }}
             renderScene={renderScene}
             onIndexChange={setIndex}
-            initialLayout={{ width: layout.width }}
+            initialLayout={{ width: WIDTH }}
+            //style={{ backgroundColor: "red" }}
             renderTabBar={renderTabBar}
             swipeEnabled={false}
-            lazy
+            animationEnabled={true}
+            //lazy
           />
         )}
-
-        {!isLoading && hasError && <Text>{t("Loading.error")}</Text>}
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );
@@ -167,61 +176,6 @@ export const ReservationsTabViewScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    //justifyContent: "center",
+    marginVertical: 20,
   },
 });
-
-/*const renderScene = ({ route }) => {
-    switch (route.key) {
-      case "arrivals":
-        return (
-          <ArrivalList
-            searchQuery={searchQuery}
-            data={items}
-            setClicked={setClicked}
-            refreshing={refreshing}
-            setRefreshing={setRefreshing}
-            updateData={updateData}
-            setUpdateData={setUpdateData}
-          />
-        );
-      case "inhouse":
-        return (
-          <InHouseList
-            searchQuery={searchQuery}
-            data={items}
-            setClicked={setClicked}
-            refreshing={refreshing}
-            setRefreshing={setRefreshing}
-            updateData={updateData}
-            setUpdateData={setUpdateData}
-          />
-        );
-      case "departures":
-        return (
-          <DeparturesList
-            searchQuery={searchQuery}
-            data={items}
-            setClicked={setClicked}
-            refreshing={refreshing}
-            setRefreshing={setRefreshing}
-            updateData={updateData}
-            setUpdateData={setUpdateData}
-          />
-        );
-      case "all":
-        return (
-          <AllReservationsList
-            searchQuery={searchQuery}
-            data={items}
-            setClicked={setClicked}
-            refreshing={refreshing}
-            setRefreshing={setRefreshing}
-            updateData={updateData}
-            setUpdateData={setUpdateData}
-          />
-        );
-      default:
-        return null;
-    }
-  };*/

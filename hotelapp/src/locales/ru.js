@@ -21,7 +21,7 @@ const ru = {
       select_language: "Выбрать язык по умолчанию",
     },
     SearchBar: {
-      ReservationsScreen: "ФИО, номер комнаты или бронирования",
+      ReservationsScreen: "ФИО, номер комнаты или брони",
       HousekeepingScreen: "Имя гостя, номер комнаты",
       fastpost_screen: "ФИО, номер комнаты",
     },

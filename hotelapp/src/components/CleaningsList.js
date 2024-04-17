@@ -10,30 +10,26 @@ import {
   RefreshControl,
 } from "react-native";
 import { Text } from "react-native-paper";
-import { useNavigation } from "@react-navigation/native";
+import { reservationsFilter } from "../utils/reservationsFilter";
 
-// definition of the Item, which will be rendered in the FlatList
-const Item = ({ room, roomType, id }) => {
-  //const { room, roomType, id } = props;
-  const navigation = useNavigation();
+const Item = ({ item }) => {
   return (
-    <View key={id}>
-      
+    <View key={item.Id}>
       <Pressable
         style={styles.item}
         onPress={() => {
           Keyboard.dismiss();
-          Alert.alert("Pressed " + id);
+          Alert.alert("Тип уборки: " + item.CleaningType?.Name);
         }}
       >
-        <Text style={styles.title}>{room.Name}</Text>
-        <Text style={styles.details}>{roomType.Name}</Text>
+        <Text style={styles.title}>{item.Room.Name}</Text>
+        <Text style={styles.details}>{item.RoomType.Name}</Text>
       </Pressable>
     </View>
   );
 };
 
-// the filter
+// the filter 
 export const CleaningsList = ({
   searchQuery,
   setClicked,
@@ -42,40 +38,18 @@ export const CleaningsList = ({
   setRefreshing,
   updateData,
   setUpdateData,
-  
 }) => {
   const renderItem = ({ item }) => {
-    // when no input, show all
-    if (searchQuery === "") {
-      return <Item room={item.Room} roomType={item.RoomType} id={item.Id} />;
-    }
-    // filter of the name
-    if (
-      item.Room.Name.toUpperCase().includes(
-        searchQuery.toUpperCase().trim().replace(/\s/g, "")
-      )
-    ) {
-      return <Item room={item.Room} roomType={item.RoomType} id={item.Id} />;
-    }
-    // filter of the description
-    if (
-      item.RoomType.Name.toUpperCase().includes(
-        searchQuery.toUpperCase().trim().replace(/\s/g, "")
-      )
-    ) {
-      return <Item room={item.Room} roomType={item.RoomType} id={item.Id} />;
-    }
+    return reservationsFilter(item, searchQuery) ? <Item item={item} /> : null;
   };
 
   return (
     <SafeAreaView style={styles.list__container}>
-      
       <View
         onStartShouldSetResponder={() => {
           setClicked(false);
         }}
       >
-      
         <FlatList
           data={data}
           renderItem={renderItem}
@@ -109,7 +83,7 @@ const styles = StyleSheet.create({
     margin: 30,
     borderBottomWidth: 2,
     borderBottomColor: "lightgrey",
-    alignItems:'center'
+    alignItems: "center",
   },
   title: {
     //width: "100%",

@@ -29,8 +29,12 @@ export const fetchData = async (
   } catch (error) {
     if (controller.signal.aborted) {
       console.log("Data fetching cancelled");
+      setErrorFlag(true);
+      setIsLoading(false);
+      setRefreshing(false);
     } else {
       console.log(error);
+      //console.log("Data fetching cancelled");
       setErrorFlag(true);
       setIsLoading(false);
       setRefreshing(false);

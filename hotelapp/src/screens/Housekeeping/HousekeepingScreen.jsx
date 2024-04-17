@@ -50,10 +50,16 @@ export const HousekeepingScreen = ({ navigation }) => {
   useFocusEffect(
     useCallback(() => {
       const controller = new AbortController();
+      const newAbortSignal = (timeoutMs) => {
+        //const abortController = new AbortController();
+        setTimeout(() => controller.abort(), timeoutMs || 0);
+  
+        return controller.signal;
+      };
       const configurationObject = {
         method: "get",
         url: `${baseUrl}${endPoint}`,
-        signal: controller.signal,
+        signal: newAbortSignal(5000),
         headers: {
           Authorization: `Token ${token}`,
           "Content-Type": "application/json",
@@ -75,7 +81,7 @@ export const HousekeepingScreen = ({ navigation }) => {
         setSearchQuery("");
         setClicked(false);
         setErrorFlag(false);
-        setItems();
+        setItems([]);
         controller.abort("Data fetching cancelled");
       };
     }, [updateData])
@@ -113,13 +119,16 @@ export const HousekeepingScreen = ({ navigation }) => {
       accessible={false}
     >
       <SafeAreaView style={styles.root}>
-        <SearchbarComponent
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          searchLoading={searchLoading}
-          clicked={clicked}
-          setClicked={setClicked}
-        />
+        <View style={{ marginVertical: 20 }}>
+          <SearchbarComponent
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            searchLoading={searchLoading}
+            clicked={clicked}
+            setClicked={setClicked}
+          />
+        </View>
+        {!isLoading && hasError && <Text>{t("Loading.error")}</Text>}
         {isLoading ? (
           <LoadingIndicator text={t("Loading.loading")} />
         ) : (
@@ -133,8 +142,6 @@ export const HousekeepingScreen = ({ navigation }) => {
             setUpdateData={setUpdateData}
           />
         )}
-
-        {!isLoading && hasError && <Text>{t("Loading.error")}</Text>}
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );
@@ -142,12 +149,13 @@ export const HousekeepingScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   root: {
-    justifyContent: "center",
+    flex: 1,
+    
     alignItems: "center",
   },
   title: {
     width: "100%",
-    marginTop: 20,
+    //marginTop: 20,
     fontSize: 25,
     fontWeight: "bold",
     marginLeft: "10%",

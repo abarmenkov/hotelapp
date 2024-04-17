@@ -23,8 +23,9 @@ export const SearchbarComponent = ({
   return (
     <View
       style={{
-        width: WIDTH * 0.95,
+        width: WIDTH * 0.9,
         flexDirection: "row",
+        justifyContent: "center",
         alignItems: "center",
         //marginLeft: 50,
       }}
@@ -37,9 +38,9 @@ export const SearchbarComponent = ({
         onChangeText={setSearchQuery}
         value={searchQuery}
         //onClearIconPress={() => searchBarRef.blur(...args)}
-        traileringIcon={"skull-crossbones"} //
-        clearIcon={"sword-cross"} // по умолчанию cross, пишем только когда хотим свою иконку
-        style={{ width: clicked ? "90%" : "100%" }}
+        //traileringIcon={"skull-crossbones"} //
+        //clearIcon={"sword-cross"} // по умолчанию cross, пишем только когда хотим свою иконку
+        //style={{ width: clicked ? "80%" : WIDTH * 0.9 }}
         onFocus={() => setClicked(true)}
         keyboardType="email-address"
         keyboardAppearance="dark"

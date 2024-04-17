@@ -12,99 +12,37 @@ import {
 import { Text } from "react-native-paper";
 import { reservationsFilter } from "../../utils/reservationsFilter";
 import { compareDate } from "../../utils/compareDates";
+import { useTranslation } from "react-i18next";
 
-const ItemPressable = ({ item, routeKey }) => {
-  switch (routeKey) {
-    case "arrivals":
-      return (
-        <Pressable
-          style={styles.item}
-          onPress={() => {
-            Keyboard.dismiss();
-            Alert.alert("Pressed " + item.GenericNo);
-          }}
-        >
-          <View style={styles.roomNumber}>
-            <Text style={styles.title}>{item.RoomNo}</Text>
-          </View>
-          <View style={styles.reserveInfo}>
-            <View style={styles.guestInfo}>
-              <Text style={styles.details}>
-                {item.MainGuest.LastName} {item.MainGuest.FirstName}
-              </Text>
-              <Text style={styles.details}>{item.RoomTypeCode}</Text>
-            </View>
-
-            <Text style={styles.details}>{item.ArrivalDate}</Text>
-          </View>
-
-          <View style={styles.status}>
-            <Text style={styles.title}>{item.Status}</Text>
-          </View>
-        </Pressable>
-      );
-    case "inhouse":
-      return (
-        <Pressable
-          style={styles.item}
-          onPress={() => {
-            Keyboard.dismiss();
-            Alert.alert("Pressed " + item.GenericNo);
-          }}
-        >
-          <View style={styles.roomNumber}>
-            <Text style={styles.title}>{item.RoomNo}</Text>
-          </View>
-          <Text style={styles.details}>
-            {item.MainGuest.LastName} {item.MainGuest.FirstName}
-          </Text>
-          <Text style={styles.details}>{item.RoomTypeCode}</Text>
-          <Text style={styles.title}>{item.Status}</Text>
-        </Pressable>
-      );
-    case "departures":
-      return (
-        <Pressable
-          style={styles.item}
-          onPress={() => {
-            Keyboard.dismiss();
-            Alert.alert("Pressed " + item.GenericNo);
-          }}
-        >
-          <Text style={styles.title}>{item.RoomNo}</Text>
-          <Text style={styles.details}>
-            {item.MainGuest.LastName} {item.MainGuest.FirstName}
-          </Text>
-          <Text style={styles.details}>{item.RoomTypeCode}</Text>
-          <Text style={styles.title}>{item.Status}</Text>
-        </Pressable>
-      );
-    case "all":
-      return (
-        <Pressable
-          style={styles.item}
-          onPress={() => {
-            Keyboard.dismiss();
-            Alert.alert("Pressed " + item.GenericNo);
-          }}
-        >
-          <Text style={styles.title}>{item.Status}</Text>
-          <Text style={styles.details}>
-            {item.MainGuest.LastName} {item.MainGuest.FirstName}
-          </Text>
-          <Text style={styles.details}>{item.ArrivalDate}</Text>
-          <Text style={styles.details}>{item.DepartureDate}</Text>
-        </Pressable>
-      );
-    default:
-      return null;
-  }
+const ItemPressable = ({ item }) => {
+  return (
+    <Pressable
+      style={styles.item}
+      onPress={() => {
+        Keyboard.dismiss();
+        Alert.alert("Pressed " + item.GenericNo);
+      }}
+    >
+      <View style={styles.roomNumber}>
+        <Text style={styles.title}>{item.RoomNo}</Text>
+      </View>
+      <Text style={styles.details}>
+        {item.MainGuest.LastName} {item.MainGuest.FirstName}
+      </Text>
+      {item.LocalCurrencyBalance !== 0 && (
+        <Text style={styles.details}>{item.LocalCurrencyBalance}</Text>
+      )}
+      <View style={styles.status}>
+        <Text style={styles.title}>{item.Status}</Text>
+      </View>
+    </Pressable>
+  );
 };
 
-const Item = ({ item, routeKey }) => {
+const Item = ({ item }) => {
   return (
     <View key={item.Id}>
-      <ItemPressable item={item} routeKey={routeKey} />
+      <ItemPressable item={item} />
     </View>
   );
 };
@@ -118,7 +56,10 @@ const ReservationsList = ({
   updateData,
   setUpdateData,
   routeKey,
+  isLoading,
+  hasError,
 }) => {
+  const { t } = useTranslation();
   let filteredData;
 
   switch (routeKey) {
@@ -152,9 +93,7 @@ const ReservationsList = ({
   }
 
   const renderItem = ({ item }) => {
-    return reservationsFilter(item, searchQuery) ? (
-      <Item item={item} routeKey={routeKey} />
-    ) : null;
+    return reservationsFilter(item, searchQuery) ? <Item item={item} /> : null;
   };
 
   return (
@@ -164,22 +103,33 @@ const ReservationsList = ({
           setClicked(false);
         }}
       >
-        <FlatList
-          data={filteredData}
-          renderItem={renderItem}
-          removeClippedSubviews={true}
-          keyExtractor={(item) => item.Id}
-          keyboardShouldPersistTaps={"handled"} // чтобы скрыть открытую клавиатуру и отработать onPress элемента
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={() => {
-                setUpdateData(!updateData);
-                setRefreshing(true);
-              }}
-            />
-          }
-        />
+        {!isLoading && hasError ? (
+          <Text
+            style={{ marginVertical: 30, alignSelf: "center" }}
+            onPress={() => {
+              setUpdateData(!updateData);
+            }}
+          >
+            {t("Loading.error")}
+          </Text>
+        ) : (
+          <FlatList
+            data={filteredData}
+            renderItem={renderItem}
+            removeClippedSubviews={true}
+            keyExtractor={(item) => item.Id}
+            keyboardShouldPersistTaps={"handled"} // чтобы скрыть открытую клавиатуру и отработать onPress элемента
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={() => {
+                  setUpdateData(!updateData);
+                  setRefreshing(true);
+                }}
+              />
+            }
+          />
+        )}
       </View>
     </SafeAreaView>
   );
