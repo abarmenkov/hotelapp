@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { Searchbar, Button } from "react-native-paper";
+import { Searchbar, Button, Text } from "react-native-paper";
 import { View, Keyboard } from "react-native";
 import { WIDTH } from "../utils/constants";
 import { useTranslation } from "react-i18next";
@@ -34,7 +34,7 @@ export const SearchbarComponent = ({
         ref={searchBarRef}
         loading={searchLoading}
         placeholder={t(`SearchBar.${route.name}`)}
-        //placeholder={route.name}
+        //inputStyle={{ paddingHorizontal: 1 }}
         onChangeText={setSearchQuery}
         value={searchQuery}
         //onClearIconPress={() => searchBarRef.blur(...args)}

@@ -13,27 +13,65 @@ import { Text } from "react-native-paper";
 import { reservationsFilter } from "../../utils/reservationsFilter";
 import { compareDate } from "../../utils/compareDates";
 import { useTranslation } from "react-i18next";
+import { WIDTH } from "../../utils/constants";
+import { formatDate } from "../../utils/formatDate";
 
 const ItemPressable = ({ item }) => {
+  const arrivalDate = formatDate(item.ArrivalDate);
+  const departureDate = formatDate(item.DepartureDate);
+  
   return (
     <Pressable
       style={styles.item}
       onPress={() => {
         Keyboard.dismiss();
-        Alert.alert("Pressed " + item.GenericNo);
+        Alert.alert("Pressed Reservation with arrival date = " + item.ArrivalDate);
       }}
     >
-      <View style={styles.roomNumber}>
-        <Text style={styles.title}>{item.RoomNo}</Text>
+      <View>
+        <View style={styles.roomNumber}>
+          <Text style={styles.title}>{item.RoomNo}</Text>
+        </View>
       </View>
-      <Text style={styles.details}>
-        {item.MainGuest.LastName} {item.MainGuest.FirstName}
-      </Text>
-      {item.LocalCurrencyBalance !== 0 && (
-        <Text style={styles.details}>{item.LocalCurrencyBalance}</Text>
-      )}
-      <View style={styles.status}>
-        <Text style={styles.title}>{item.Status}</Text>
+      <View
+        style={{
+          flex: 1,
+          flexDirection: "row",
+          justifyContent: "space-between",
+          width: WIDTH * 0.6,
+          paddingHorizontal: 10,
+        }}
+      >
+        <View style={{ flex: 1, backgroundColor: "yellow" }}>
+          <Text style={styles.details} numberOfLines={1} ellipsizeMode="tail">
+            {item.MainGuest?.LastName} {item.MainGuest?.FirstName}{" "}
+            {item.MainGuest?.MiddleName}
+          </Text>
+          <Text style={styles.details} numberOfLines={1} ellipsizeMode="tail">
+            {arrivalDate.dateHour} {arrivalDate.dateDay}
+          </Text>
+          <Text style={styles.details} numberOfLines={1} ellipsizeMode="tail">
+            {departureDate.dateHour} {departureDate.dateDay}
+          </Text>
+        </View>
+        {item.LocalCurrencyBalance !== 0 ? (
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: "green",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text style={styles.balance}>{item.LocalCurrencyBalance}</Text>
+          </View>
+        ) : null}
+      </View>
+
+      <View>
+        <View style={styles.status}>
+          <Text style={styles.title}>{item.Status}</Text>
+        </View>
       </View>
     </Pressable>
   );
@@ -139,13 +177,14 @@ const styles = StyleSheet.create({
   list__container: {
     //margin: 10,
     height: "95%",
-    width: "100%",
+    //width: WIDTH * 0.8,
   },
   item: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    margin: 30,
+    marginHorizontal: 10,
+    paddingVertical: 10,
     borderBottomWidth: 2,
     borderBottomColor: "lightgrey",
   },
@@ -178,6 +217,9 @@ const styles = StyleSheet.create({
   },
   reserveInfo: {
     width: "60%",
+  },
+  details: {
+    //color: "red",
   },
 });
 

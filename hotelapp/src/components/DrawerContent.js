@@ -24,12 +24,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Picker } from "@react-native-picker/picker";
 //import { useAuth } from "../hooks/useAuth";
 import { WIDTH } from "../utils/constants";
-//import { width } from "../utils/constants";
-import {
-  getFocusedRouteNameFromRoute,
-  useIsFocused,
-  useRoute,
-} from "@react-navigation/native";
+
 
 export const DrawerContent = (props) => {
   //const { fontScale, width } = useWindowDimensions();
