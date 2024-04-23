@@ -15,17 +15,22 @@ import { compareDate } from "../../utils/compareDates";
 import { useTranslation } from "react-i18next";
 import { WIDTH } from "../../utils/constants";
 import { formatDate } from "../../utils/formatDate";
+import { FontAwesome } from "@expo/vector-icons";
+import { create } from "../../utils/normalize";
 
 const ItemPressable = ({ item }) => {
   const arrivalDate = formatDate(item.ArrivalDate);
   const departureDate = formatDate(item.DepartureDate);
-  
+
   return (
     <Pressable
       style={styles.item}
       onPress={() => {
         Keyboard.dismiss();
-        Alert.alert("Pressed Reservation with arrival date = " + item.ArrivalDate);
+        Alert.alert(
+          "Pressed Reservation with arrival date = " + item.ArrivalDate
+        );
+        console.log(item.Tags);
       }}
     >
       <View>
@@ -48,11 +53,25 @@ const ItemPressable = ({ item }) => {
             {item.MainGuest?.MiddleName}
           </Text>
           <Text style={styles.details} numberOfLines={1} ellipsizeMode="tail">
-            {arrivalDate.dateHour} {arrivalDate.dateDay}
+            {`${arrivalDate.dateHour} ${arrivalDate.dateDay} - ${departureDate.dateHour} ${departureDate.dateDay}`}
           </Text>
-          <Text style={styles.details} numberOfLines={1} ellipsizeMode="tail">
-            {departureDate.dateHour} {departureDate.dateDay}
-          </Text>
+
+          {item.Tags?.length > 0 ? (
+            <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+              {item.Tags.map((item) => (
+                <Text
+                  style={{
+                    marginRight: 10,
+                    borderBottomWidth: 2,
+                    borderBottomColor: item.Color,
+                  }}
+                  key={item.Code}
+                >
+                  {item.Code}
+                </Text>
+              ))}
+            </View>
+          ) : null}
         </View>
         {item.LocalCurrencyBalance !== 0 ? (
           <View
@@ -63,7 +82,18 @@ const ItemPressable = ({ item }) => {
               justifyContent: "center",
             }}
           >
-            <Text style={styles.balance}>{item.LocalCurrencyBalance}</Text>
+            <View
+              style={{
+                ...styles.status,
+                backgroundColor:
+                  item.LocalCurrencyBalance > 0 ? "pink" : "lightgreen",
+                flexDirection: "row",
+              }}
+            >
+              <Text style={styles.balance}>{item.LocalCurrencyBalance}</Text>
+              <FontAwesome name="rouble" size={16} color="black" />
+              <FontAwesome name="money" size={16} color="red" />
+            </View>
           </View>
         ) : null}
       </View>
@@ -204,7 +234,7 @@ const styles = StyleSheet.create({
   },
   status: {
     backgroundColor: "grey",
-    width: 60,
+    width: 70,
     height: 40,
     borderRadius: 25,
     justifyContent: "center",
@@ -222,5 +252,5 @@ const styles = StyleSheet.create({
     //color: "red",
   },
 });
-
+// ₽
 export default React.memo(ReservationsList);
