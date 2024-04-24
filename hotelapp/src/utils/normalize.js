@@ -14,7 +14,7 @@ const normalize = (size) => {
       return size * 1.15;
     }
 
-    return size * 1.25;
+    return size * 1.15;
   } else if (ratio >= 3 && ratio < 3.5) {
     if (width < 360) {
       return size;
@@ -24,7 +24,7 @@ const normalize = (size) => {
       return size * 1.2;
     }
 
-    return size * 1.27;
+    return size * 1.25;
   } else if (ratio >= 3.5) {
     if (width < 360) {
       return size;
@@ -34,7 +34,7 @@ const normalize = (size) => {
       return size * 1.25;
     }
 
-    return size * 1.4;
+    return size * 0.8;
   }
 
   return size;
@@ -51,6 +51,8 @@ export const create = (
     "paddingVertical",
     "paddingHorizontal",
     "height",
+    "width",
+    "gap",
   ]
 ) => {
   const normalizedStyles = {};

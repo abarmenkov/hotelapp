@@ -46,6 +46,7 @@ export const SearchbarComponent = ({
         keyboardAppearance="dark"
         returnKeyType="next"
         returnKeyLabel="next"
+        
         //onSubmitEditing={() => Keyboard.dismiss()}
       />
       {clicked && (

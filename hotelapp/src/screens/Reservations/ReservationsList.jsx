@@ -8,6 +8,8 @@ import {
   Alert,
   Keyboard,
   RefreshControl,
+  Dimensions,
+  PixelRatio,
 } from "react-native";
 import { Text } from "react-native-paper";
 import { reservationsFilter } from "../../utils/reservationsFilter";
@@ -16,11 +18,17 @@ import { useTranslation } from "react-i18next";
 import { WIDTH } from "../../utils/constants";
 import { formatDate } from "../../utils/formatDate";
 import { FontAwesome } from "@expo/vector-icons";
+
 import { create } from "../../utils/normalize";
+
+const { width, height } = Dimensions.get("window");
+const ratio = PixelRatio.get();
 
 const ItemPressable = ({ item }) => {
   const arrivalDate = formatDate(item.ArrivalDate);
   const departureDate = formatDate(item.DepartureDate);
+  const balanceColor = item.LocalCurrencyBalance > 0 ? "green" : "red";
+  const balanceBgColor = item.LocalCurrencyBalance > 0 ? "lightgreen" : "pink";
 
   return (
     <Pressable
@@ -30,29 +38,30 @@ const ItemPressable = ({ item }) => {
         Alert.alert(
           "Pressed Reservation with arrival date = " + item.ArrivalDate
         );
-        console.log(item.Tags);
+        console.log(width, height, ratio);
       }}
     >
-      <View>
+      <View style={styles.roomNumberContainer}>
         <View style={styles.roomNumber}>
           <Text style={styles.title}>{item.RoomNo}</Text>
         </View>
       </View>
-      <View
-        style={{
-          flex: 1,
-          flexDirection: "row",
-          justifyContent: "space-between",
-          width: WIDTH * 0.6,
-          paddingHorizontal: 10,
-        }}
-      >
-        <View style={{ flex: 1, backgroundColor: "yellow" }}>
-          <Text style={styles.details} numberOfLines={1} ellipsizeMode="tail">
+
+      <View style={styles.guestInfoContainer}>
+        <View style={{ flex: 1 }}>
+          <Text
+            style={styles.guestInfoDetails}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
             {item.MainGuest?.LastName} {item.MainGuest?.FirstName}{" "}
             {item.MainGuest?.MiddleName}
           </Text>
-          <Text style={styles.details} numberOfLines={1} ellipsizeMode="tail">
+          <Text
+            style={styles.guestInfoDetails}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
             {`${arrivalDate.dateHour} ${arrivalDate.dateDay} - ${departureDate.dateHour} ${departureDate.dateDay}`}
           </Text>
 
@@ -74,31 +83,29 @@ const ItemPressable = ({ item }) => {
           ) : null}
         </View>
         {item.LocalCurrencyBalance !== 0 ? (
-          <View
-            style={{
-              flex: 1,
-              backgroundColor: "green",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
+          <View style={styles.balanceContainer}>
             <View
               style={{
-                ...styles.status,
-                backgroundColor:
-                  item.LocalCurrencyBalance > 0 ? "pink" : "lightgreen",
-                flexDirection: "row",
+                ...styles.balance,
+                backgroundColor: balanceBgColor,
               }}
             >
-              <Text style={styles.balance}>{item.LocalCurrencyBalance}</Text>
-              <FontAwesome name="rouble" size={16} color="black" />
-              <FontAwesome name="money" size={16} color="red" />
+              <Text style={{ ...styles.balanceTitle, color: balanceColor }}>
+                {item.LocalCurrencyBalance}
+              </Text>
+              <FontAwesome
+                name="rouble"
+                size={16}
+                color={balanceColor}
+                style={{ paddingHorizontal: 5 }}
+              />
+              <FontAwesome name="money" size={16} color={balanceColor} />
             </View>
           </View>
         ) : null}
       </View>
 
-      <View>
+      <View style={styles.statusContainer}>
         <View style={styles.status}>
           <Text style={styles.title}>{item.Status}</Text>
         </View>
@@ -185,6 +192,7 @@ const ReservationsList = ({
             data={filteredData}
             renderItem={renderItem}
             removeClippedSubviews={true}
+            initialNumToRender={15}
             keyExtractor={(item) => item.Id}
             keyboardShouldPersistTaps={"handled"} // чтобы скрыть открытую клавиатуру и отработать onPress элемента
             refreshControl={
@@ -202,8 +210,91 @@ const ReservationsList = ({
     </SafeAreaView>
   );
 };
+const styles = create({
+  list__container: {
+    flex: 1,
+    paddingHorizontal: 5,
+  },
+  item: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    paddingVertical: 10,
+    borderBottomWidth: 2,
+    borderBottomColor: "lightgrey",
+    gap: 10,
+  },
 
-const styles = StyleSheet.create({
+  roomNumberContainer: {
+    flex: 1,
+    alignItems: "center",
+    //backgroundColor: "purple",
+  },
+  roomNumber: {
+    backgroundColor: "red",
+    width: 50,
+    height: 50,
+    borderRadius: 50,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  guestInfoContainer: {
+    flex: 6,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    //paddingHorizontal: 10,
+  },
+  balanceContainer: {
+    flex: 1,
+    //backgroundColor: "green",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  balance: {
+    flexDirection: "row",
+    height: 30,
+    borderRadius: 25,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 5,
+    color: "blue",
+  },
+  balanceTitle: { fontSize: 16 },
+  title: {
+    fontSize: 16,
+    fontWeight: 600,
+    //marginBottom: 5,
+    //fontStyle: "italic",
+  },
+  statusContainer: {
+    flex: 1,
+    //backgroundColor: "purple",
+    alignItems: "center",
+  },
+  status: {
+    backgroundColor: "grey",
+    width: 60,
+    height: 40,
+    borderRadius: 25,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  guestInfo: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  reserveInfo: {
+    width: "80%",
+  },
+  guestInfoDetails: {
+    fontSize: 18,
+    //color: "red",
+  },
+});
+
+/*const styles = StyleSheet.create({
   list__container: {
     //margin: 10,
     height: "95%",
@@ -252,5 +343,5 @@ const styles = StyleSheet.create({
     //color: "red",
   },
 });
-// ₽
+// ₽*/
 export default React.memo(ReservationsList);
