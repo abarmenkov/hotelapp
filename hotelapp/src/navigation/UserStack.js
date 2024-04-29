@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { DrawerContent } from "../components/DrawerContent";
-//import { TestScreen } from "../screens/TestScreen";
-import { StartingScreen } from "../screens/StartingScreen";
-import { WIDTH } from "../utils/constants";
 import { useWindowDimensions } from "react-native";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
@@ -16,21 +13,20 @@ import { TasksStackNavigator } from "./TasksScreenStack";
 import { SettingsStackNavigator } from "./SettingsScreenStack";
 import { Text, useTheme } from "react-native-paper";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
-import { ReservationsTopBarStack } from "./ReservationsTopTabStack";
+import { create } from "../utils/normalize";
 
 const Drawer = createDrawerNavigator();
 
 export const UserStack = ({ navigation, route }) => {
-  const [token, setToken] = useState(false);
-  const routeName = getFocusedRouteNameFromRoute(route) ?? "Reservations";
+  //const [token, setToken] = useState(false);
+  //const routeName = getFocusedRouteNameFromRoute(route) ?? "Reservations";
   const { t } = useTranslation();
   const { fontScale, width } = useWindowDimensions();
-  const iconSize = width > 768 ? 24 / fontScale : 18 / fontScale;
-  const labelFontSize = width > 768 ? 18 / fontScale : 16 / fontScale;
+  //const iconSize = width > 768 ? 24 / fontScale : 18 / fontScale;
+  //const labelFontSize = width > 768 ? 18 / fontScale : 16 / fontScale;
   const theme = useTheme();
   //console.log(route);
   //console.log(routeName);
-
 
   return (
     <Drawer.Navigator
@@ -41,9 +37,10 @@ export const UserStack = ({ navigation, route }) => {
         //backBehavior: "initialRoute",
         headerShown: true,
         drawerStyle: {
-          width: width > 768 ? width * 0.5 : width * 0.7,
+          width: width > 768 ? width * 0.55 : width * 0.8,
         },
-        drawerActiveTintColor: "green",
+        drawerActiveTintColor: theme.colors.onSecondaryContainer,
+        drawerInactiveTintColor: theme.colors.onSurfaceVariant,
         headerTintColor: theme.colors.onSurface, //цвет иконки меню
         /*headerLeft: ({ color }) => (
           <MaterialCommunityIcons
@@ -53,7 +50,7 @@ export const UserStack = ({ navigation, route }) => {
             onPress={() => navigation.openDrawer()}
           />
         ),*/
-        //drawerActiveBackgroundColor: "red",
+        drawerActiveBackgroundColor: theme.colors.secondaryContainer,
       })}
     >
       <Drawer.Screen
@@ -63,12 +60,7 @@ export const UserStack = ({ navigation, route }) => {
           //headerShown: true,
           //drawerActiveTintColor: "red", // цвет активной вкладки иконки и текста для конкретного элемента
           drawerLabel: ({ color }) => (
-            <Text
-              style={{
-                color,
-                fontSize: labelFontSize,
-              }}
-            >
+            <Text style={{ ...styles.label, color }}>
               {t("DrawerContent.reservations")}
             </Text>
           ),
@@ -76,13 +68,16 @@ export const UserStack = ({ navigation, route }) => {
             <MaterialCommunityIcons
               name="account-outline"
               color={color}
-              size={iconSize}
+              //size={iconSize}
+              style={styles.labelIcon}
             />
           ),
 
           title: "Reservations", //header
           headerTitle: () => (
-            <Text variant="titleMedium">{t("DrawerContent.reservations")}</Text>
+            <Text style={styles.headerTitle}>
+              {t("DrawerContent.reservations")}
+            </Text>
           ),
         }}
       />
@@ -92,12 +87,7 @@ export const UserStack = ({ navigation, route }) => {
         component={HousekeepingStackNavigator}
         options={{
           drawerLabel: ({ color }) => (
-            <Text
-              style={{
-                color,
-                fontSize: labelFontSize,
-              }}
-            >
+            <Text style={{ ...styles.label, color }}>
               {t("DrawerContent.housekeeping")}
             </Text>
           ),
@@ -108,12 +98,15 @@ export const UserStack = ({ navigation, route }) => {
             <MaterialIcons
               name="cleaning-services"
               color={color}
-              size={iconSize}
+              style={styles.labelIcon}
+              //size={iconSize}
             />
           ),
           title: "Housekeeping", //header
           headerTitle: () => (
-            <Text variant="titleMedium">{t("DrawerContent.housekeeping")}</Text>
+            <Text style={styles.headerTitle}>
+              {t("DrawerContent.housekeeping")}
+            </Text>
           ),
           //1й вариант скинуть фильтр при навигации и возврате на страницу, 2й - добавить листенер(focus) на страницу
           //unmountOnBlur: true,
@@ -124,12 +117,7 @@ export const UserStack = ({ navigation, route }) => {
         component={FastPostStackNavigator}
         options={{
           drawerLabel: ({ color }) => (
-            <Text
-              style={{
-                color,
-                fontSize: labelFontSize,
-              }}
-            >
+            <Text style={{ ...styles.label, color }}>
               {t("DrawerContent.fast_post")}
             </Text>
           ),
@@ -138,12 +126,15 @@ export const UserStack = ({ navigation, route }) => {
             <MaterialCommunityIcons
               name="credit-card-plus"
               color={color}
-              size={iconSize}
+              style={styles.labelIcon}
+              //size={iconSize}
             />
           ),
           title: "FastPost", //header
           headerTitle: () => (
-            <Text variant="titleMedium">{t("DrawerContent.fast_post")}</Text>
+            <Text style={styles.headerTitle}>
+              {t("DrawerContent.fast_post")}
+            </Text>
           ),
         }}
       />
@@ -152,12 +143,7 @@ export const UserStack = ({ navigation, route }) => {
         component={ServicesControlStackNavigator}
         options={{
           drawerLabel: ({ color }) => (
-            <Text
-              style={{
-                color,
-                fontSize: labelFontSize,
-              }}
-            >
+            <Text style={{ ...styles.label, color }}>
               {t("DrawerContent.services_control")}
             </Text>
           ),
@@ -166,12 +152,13 @@ export const UserStack = ({ navigation, route }) => {
             <MaterialCommunityIcons
               name="cash-check"
               color={color}
-              size={iconSize}
+              style={styles.labelIcon}
+              //size={iconSize}
             />
           ),
           title: "ServicesControl", //header
           headerTitle: () => (
-            <Text variant="titleMedium">
+            <Text style={styles.headerTitle}>
               {t("DrawerContent.services_control")}
             </Text>
           ),
@@ -182,12 +169,7 @@ export const UserStack = ({ navigation, route }) => {
         component={ServiceRequestsStackNavigator}
         options={{
           drawerLabel: ({ color }) => (
-            <Text
-              style={{
-                color,
-                fontSize: labelFontSize,
-              }}
-            >
+            <Text style={{ ...styles.label, color }}>
               {t("DrawerContent.service_requests")}
             </Text>
           ),
@@ -196,12 +178,13 @@ export const UserStack = ({ navigation, route }) => {
             <MaterialCommunityIcons
               name="room-service"
               color={color}
-              size={iconSize}
+              style={styles.labelIcon}
+              //size={iconSize}
             />
           ),
           title: "ServiceRequests", //header
           headerTitle: () => (
-            <Text variant="titleMedium">
+            <Text style={styles.headerTitle}>
               {t("DrawerContent.service_requests")}
             </Text>
           ),
@@ -212,22 +195,22 @@ export const UserStack = ({ navigation, route }) => {
         component={TasksStackNavigator}
         options={{
           drawerLabel: ({ color }) => (
-            <Text
-              style={{
-                color,
-                fontSize: labelFontSize,
-              }}
-            >
+            <Text style={{ ...styles.label, color }}>
               {t("DrawerContent.tasks")}
             </Text>
           ),
 
           drawerIcon: ({ color }) => (
-            <MaterialIcons name="task" color={color} size={iconSize} />
+            <MaterialIcons
+              name="task"
+              color={color}
+              style={styles.labelIcon}
+              //size={iconSize}
+            />
           ),
           title: "Tasks", //header
           headerTitle: () => (
-            <Text variant="titleMedium">{t("DrawerContent.tasks")}</Text>
+            <Text style={styles.headerTitle}>{t("DrawerContent.tasks")}</Text>
           ),
         }}
       />
@@ -236,25 +219,40 @@ export const UserStack = ({ navigation, route }) => {
         component={SettingsStackNavigator}
         options={{
           drawerLabel: ({ color }) => (
-            <Text
-              style={{
-                color,
-                fontSize: labelFontSize,
-              }}
-            >
+            <Text style={{ ...styles.label, color }}>
               {t("DrawerContent.settings")}
             </Text>
           ),
 
           drawerIcon: ({ color }) => (
-            <MaterialIcons name="settings" color={color} size={iconSize} />
+            <MaterialIcons
+              name="settings"
+              color={color}
+              style={styles.labelIcon}
+              //size={iconSize}
+            />
           ),
           title: "Settings", //header
           headerTitle: () => (
-            <Text variant="titleMedium">{t("DrawerContent.settings")}</Text>
+            <Text style={styles.headerTitle}>
+              {t("DrawerContent.settings")}
+            </Text>
           ),
         }}
       />
     </Drawer.Navigator>
   );
 };
+
+const styles = create({
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  labelIcon: {
+    fontSize: 24,
+  },
+  label: {
+    fontSize: 18,
+  },
+});

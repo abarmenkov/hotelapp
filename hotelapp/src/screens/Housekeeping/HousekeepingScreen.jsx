@@ -53,7 +53,7 @@ export const HousekeepingScreen = ({ navigation }) => {
       const newAbortSignal = (timeoutMs) => {
         //const abortController = new AbortController();
         setTimeout(() => controller.abort(), timeoutMs || 0);
-  
+
         return controller.signal;
       };
       const configurationObject = {
@@ -119,7 +119,7 @@ export const HousekeepingScreen = ({ navigation }) => {
       accessible={false}
     >
       <SafeAreaView style={styles.root}>
-        <View style={{ marginVertical: 20 }}>
+        <View style={{ alignItems: "center", marginVertical: 20 }}>
           <SearchbarComponent
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
@@ -150,8 +150,8 @@ export const HousekeepingScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-    
-    alignItems: "center",
+
+    //alignItems: "center",
   },
   title: {
     width: "100%",

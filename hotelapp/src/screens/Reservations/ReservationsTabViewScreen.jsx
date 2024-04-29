@@ -18,6 +18,7 @@ import { token, baseUrl } from "../../API/route";
 import ReservationsList from "./ReservationsList";
 import { useDrawerStatus } from "@react-navigation/drawer";
 import { useFocusEffect } from "@react-navigation/native";
+import { create } from "../../utils/normalize";
 
 export const ReservationsTabViewScreen = ({ navigation }) => {
   const { t } = useTranslation();
@@ -124,11 +125,18 @@ export const ReservationsTabViewScreen = ({ navigation }) => {
       activeColor={"white"}
       inactiveColor={"black"}
       //style={{  }}
+
+      indicatorStyle={{
+        backgroundColor: "white",
+      }}
       contentContainerStyle={{
         backgroundColor: "orange",
         justifyContent: "space-evenly",
       }}
-      tabStyle={{ width: "auto" }}
+      tabStyle={{
+        width: "auto",
+      }}
+      labelStyle={styles.tabBarLabel}
       getLabelText={({ route }) =>
         t(`ReservationsTabViewScreen.${route.title}`)
       }
@@ -143,7 +151,7 @@ export const ReservationsTabViewScreen = ({ navigation }) => {
       accessible={false}
     >
       <SafeAreaView style={styles.root}>
-        <View style={{ alignItems: "center", marginVertical: 10 }}>
+        <View style={{ alignItems: "center", marginVertical: 20 }}>
           <SearchbarComponent
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
@@ -173,9 +181,13 @@ export const ReservationsTabViewScreen = ({ navigation }) => {
   );
 };
 
-const styles = StyleSheet.create({
+const styles = create({
   root: {
     flex: 1,
-    marginVertical: 20,
+    //alignItems: "center",
+    //marginVertical: 20,
+  },
+  tabBarLabel: {
+    fontSize: 16,
   },
 });

@@ -7,6 +7,7 @@ import {
   useRoute,
   getFocusedRouteNameFromRoute,
 } from "@react-navigation/native";
+import { create } from "../utils/normalize";
 
 export const SearchbarComponent = ({
   searchLoading,
@@ -23,10 +24,9 @@ export const SearchbarComponent = ({
   return (
     <View
       style={{
-        width: WIDTH * 0.9,
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
+        ...styles.searchBarContainer,
+        width: WIDTH * 0.95,
+
         //marginLeft: 50,
       }}
     >
@@ -34,7 +34,9 @@ export const SearchbarComponent = ({
         ref={searchBarRef}
         loading={searchLoading}
         placeholder={t(`SearchBar.${route.name}`)}
-        //inputStyle={{ paddingHorizontal: 1 }}
+        //placeholderTextColor={"blue"}
+        inputStyle={styles.inputStyle}
+        //style={{ color: "green", backgroundColor: "yellow", }}
         onChangeText={setSearchQuery}
         value={searchQuery}
         //onClearIconPress={() => searchBarRef.blur(...args)}
@@ -46,7 +48,7 @@ export const SearchbarComponent = ({
         keyboardAppearance="dark"
         returnKeyType="next"
         returnKeyLabel="next"
-        
+
         //onSubmitEditing={() => Keyboard.dismiss()}
       />
       {clicked && (
@@ -64,3 +66,12 @@ export const SearchbarComponent = ({
     </View>
   );
 };
+
+const styles = create({
+  searchBarContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  inputStyle: { fontSize: 18 },
+});

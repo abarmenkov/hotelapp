@@ -1,5 +1,11 @@
 import React, { useContext, useEffect, useState, useRef } from "react";
-import { View, StyleSheet, Image, useWindowDimensions, Keyboard } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Image,
+  useWindowDimensions,
+  Keyboard,
+} from "react-native";
 import {
   DrawerItem,
   DrawerContentScrollView,
@@ -24,11 +30,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Picker } from "@react-native-picker/picker";
 //import { useAuth } from "../hooks/useAuth";
 import { WIDTH } from "../utils/constants";
-
+import { create } from "../utils/normalize";
 
 export const DrawerContent = (props) => {
   //const { fontScale, width } = useWindowDimensions();
-  //const { navigation, isFocused } = props;
+  const { navigation, isFocused } = props;
   //const initialRouteName = getFocusedRouteNameFromRoute(props);
   //console.log(initialRouteName);
   const { t } = useTranslation();
@@ -52,6 +58,7 @@ export const DrawerContent = (props) => {
   const handleLanguageChange = (value, index) => {
     setSelectedLanguage(value);
     i18n.changeLanguage(value);
+    setTimeout(() => navigation.closeDrawer(), 1000);
   };
 
   useEffect(() => {
@@ -98,25 +105,33 @@ export const DrawerContent = (props) => {
           <Drawer.Section style={styles.drawerSection}>
             <DrawerItemList {...props} />
           </Drawer.Section>
-          <Drawer.Section title={t("DrawerContent.settings")}>
+          <Drawer.Section
+            title={
+              <Text style={styles.settings}>{t("DrawerContent.settings")}</Text>
+            }
+            style={styles.drawerSection}
+          >
             <TouchableRipple
               onPress={() => {
                 toggleTheme();
                 setDark(!dark);
+                setTimeout(() => navigation.closeDrawer(), 1000);
               }}
             >
               <View style={styles.preference}>
-                <Text>{t("DrawerContent.darkTheme")}</Text>
-                <View>
-                  <Switch
-                    color={theme.colors.primary}
-                    value={isThemeDark}
-                    onValueChange={() => {
-                      toggleTheme();
-                      setDark(!dark);
-                    }}
-                  />
-                </View>
+                <Text style={styles.preferenceTitle}>
+                  {t("DrawerContent.darkTheme")}
+                </Text>
+
+                <Switch
+                  color={theme.colors.primary}
+                  value={isThemeDark}
+                  onValueChange={() => {
+                    toggleTheme();
+                    setDark(!dark);
+                    setTimeout(() => navigation.closeDrawer(), 1000);
+                  }}
+                />
               </View>
             </TouchableRipple>
             <TouchableRipple
@@ -125,7 +140,9 @@ export const DrawerContent = (props) => {
               }}
             >
               <View style={styles.preference}>
-                <Text>{t("DrawerContent.select_language")}</Text>
+                <Text style={styles.preferenceTitle}>
+                  {t("DrawerContent.select_language")}
+                </Text>
                 <View>
                   <Picker
                     ref={pickerRef}
@@ -148,6 +165,7 @@ export const DrawerContent = (props) => {
                             appLanguage === supportedLngs[item].code
                               ? "red"
                               : "blue",
+                          fontSize: 14,
                         }}
                       />
                     ))}
@@ -166,6 +184,7 @@ export const DrawerContent = (props) => {
                 />
               )}
               label={t("DrawerContent.logout")}
+              labelStyle={styles.logOut}
               onPress={() => {
                 console.log("Pressed Logout");
               }}
@@ -177,22 +196,20 @@ export const DrawerContent = (props) => {
   );
 };
 
-const styles = StyleSheet.create({
-  drawer: {
-    width: WIDTH * 0.4,
-  },
+const styles = create({
   container: {
     flex: 1,
-    //width: WIDTH * 0.4,
   },
   drawerContent: {
     flex: 1,
   },
+  drawerSection: {
+    //paddingVertical: 25,
+    //marginTop: 15,
+    //paddingVertical: 5,
+  },
   pickerStyles: {
-    width: "70%",
-    backgroundColor: "green",
-    color: "red",
-    width: 150,
+    width: 175,
   },
   userInfoSection: {
     paddingLeft: 20,
@@ -205,39 +222,45 @@ const styles = StyleSheet.create({
     lineHeight: 14,
   },
   row: {
-    marginTop: 20,
+    //marginTop: 20,
     flexDirection: "row",
     alignItems: "center",
   },
   headerRow: {
-    marginVertical: 15,
+    //marginVertical: 15,
     flexDirection: "row",
     alignItems: "center",
   },
   section: {
     flexDirection: "row",
-    alignItems: "space-between",
-    marginRight: 15,
+    justifyContent: "space-between",
+    alignItems: "center",
+    //marginRight: 15,
   },
   paragraph: {
     fontWeight: "bold",
     marginRight: 20,
+    paddingVertical: 15,
   },
-  drawerSection: {
-    marginTop: 15,
+
+  settings: {
+    fontSize: 14,
   },
+  logOut: { fontSize: 14 },
   preference: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+    alignItems: "center",
+    //paddingVertical: 120,
+    paddingHorizontal: 22,
   },
+  preferenceTitle: { fontSize: 14 },
   drawerItem: {
-    fontSize: 18,
+    fontSize: 16,
   },
   logo: {
-    width: 35,
-    height: 35,
+    width: 30,
+    height: 30,
     marginRight: 35,
   },
 });
