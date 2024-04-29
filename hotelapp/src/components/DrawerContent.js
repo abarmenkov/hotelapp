@@ -82,124 +82,115 @@ export const DrawerContent = (props) => {
     /*source={require("../../assets/images/Avatar.png")}*/
   }
   return (
-    <View style={styles.container}>
-      <DrawerContentScrollView {...props}>
-        <View style={styles.drawerContent}>
-          <View style={styles.userInfoSection}>
-            <View style={styles.headerRow}>
-              <Image
-                source={require("../../assets/images/Logo.png")}
-                style={styles.logo}
-              />
-              <Title style={styles.title}>HotelApp</Title>
-            </View>
-            <View style={styles.row}>
-              <View style={styles.section}>
-                <Paragraph style={[styles.paragraph, styles.caption]}>
-                  User name
-                </Paragraph>
-                <Caption style={styles.caption}>{userName}</Caption>
-              </View>
+    <DrawerContentScrollView {...props}>
+      <View style={styles.drawerContent}>
+        <View style={styles.userInfoSection}>
+          <View style={styles.headerRow}>
+            <Image
+              source={require("../../assets/images/Logo.png")}
+              style={styles.logo}
+            />
+            <Title style={styles.title}>HotelApp</Title>
+          </View>
+          <View style={styles.row}>
+            <View style={styles.section}>
+              <Paragraph style={[styles.paragraph, styles.caption]}>
+                User name
+              </Paragraph>
+              <Caption style={styles.caption}>{userName}</Caption>
             </View>
           </View>
-          <Drawer.Section style={styles.drawerSection}>
-            <DrawerItemList {...props} />
-          </Drawer.Section>
-          <Drawer.Section
-            title={
-              <Text style={styles.settings}>{t("DrawerContent.settings")}</Text>
-            }
-            style={styles.drawerSection}
-          >
-            <TouchableRipple
-              onPress={() => {
-                toggleTheme();
-                setDark(!dark);
-                setTimeout(() => navigation.closeDrawer(), 1000);
-              }}
-            >
-              <View style={styles.preference}>
-                <Text style={styles.preferenceTitle}>
-                  {t("DrawerContent.darkTheme")}
-                </Text>
-
-                <Switch
-                  color={theme.colors.primary}
-                  value={isThemeDark}
-                  onValueChange={() => {
-                    toggleTheme();
-                    setDark(!dark);
-                    setTimeout(() => navigation.closeDrawer(), 1000);
-                  }}
-                />
-              </View>
-            </TouchableRipple>
-            <TouchableRipple
-              onPress={() => {
-                openPicker();
-              }}
-            >
-              <View style={styles.preference}>
-                <Text style={styles.preferenceTitle}>
-                  {t("DrawerContent.select_language")}
-                </Text>
-                <View>
-                  <Picker
-                    ref={pickerRef}
-                    mode="dropdown"
-                    //mode="dialog"
-                    selectedValue={selectedLanguage}
-                    onValueChange={handleLanguageChange}
-                    style={styles.pickerStyles}
-                    dropdownIconColor={"red"}
-                    dropdownIconRippleColor={"yellow"}
-                    prompt="Выберите язык" // header окна в режиме dialog
-                  >
-                    {sortedLanguages.map((item) => (
-                      <Picker.Item
-                        key={supportedLngs[item].code}
-                        label={supportedLngs[item].locale}
-                        value={item}
-                        style={{
-                          color:
-                            appLanguage === supportedLngs[item].code
-                              ? "red"
-                              : "blue",
-                          fontSize: 14,
-                        }}
-                      />
-                    ))}
-                  </Picker>
-                </View>
-              </View>
-            </TouchableRipple>
-          </Drawer.Section>
-          <Drawer.Section style={styles.drawerSection}>
-            <DrawerItem
-              icon={({ color, size }) => (
-                <MaterialCommunityIcons
-                  name="logout"
-                  color={color}
-                  size={size}
-                />
-              )}
-              label={t("DrawerContent.logout")}
-              labelStyle={styles.logOut}
-              onPress={() => {
-                console.log("Pressed Logout");
-              }}
-            />
-          </Drawer.Section>
         </View>
-      </DrawerContentScrollView>
-    </View>
+        <Drawer.Section style={styles.drawerSection}>
+          <DrawerItemList {...props} />
+        </Drawer.Section>
+        <Drawer.Section
+          title={
+            <Text style={styles.settings}>{t("DrawerContent.settings")}</Text>
+          }
+          style={styles.drawerSection}
+        >
+          <TouchableRipple
+            onPress={() => {
+              toggleTheme();
+              setDark(!dark);
+              setTimeout(() => navigation.closeDrawer(), 1000);
+            }}
+          >
+            <View style={styles.preference}>
+              <Text style={styles.preferenceTitle}>
+                {t("DrawerContent.darkTheme")}
+              </Text>
+
+              <Switch
+                color={theme.colors.primary}
+                value={isThemeDark}
+                onValueChange={() => {
+                  toggleTheme();
+                  setDark(!dark);
+                  setTimeout(() => navigation.closeDrawer(), 1000);
+                }}
+              />
+            </View>
+          </TouchableRipple>
+          <TouchableRipple
+            onPress={() => {
+              openPicker();
+            }}
+          >
+            <View style={styles.preference}>
+              <Text style={styles.preferenceTitle}>
+                {t("DrawerContent.select_language")}
+              </Text>
+              <View>
+                <Picker
+                  ref={pickerRef}
+                  mode="dropdown"
+                  //mode="dialog"
+                  selectedValue={selectedLanguage}
+                  onValueChange={handleLanguageChange}
+                  style={styles.pickerStyles}
+                  dropdownIconColor={"red"}
+                  dropdownIconRippleColor={"yellow"}
+                  prompt="Выберите язык" // header окна в режиме dialog
+                >
+                  {sortedLanguages.map((item) => (
+                    <Picker.Item
+                      key={supportedLngs[item].code}
+                      label={supportedLngs[item].locale}
+                      value={item}
+                      style={{
+                        color:
+                          appLanguage === supportedLngs[item].code
+                            ? "red"
+                            : "blue",
+                        fontSize: 14,
+                      }}
+                    />
+                  ))}
+                </Picker>
+              </View>
+            </View>
+          </TouchableRipple>
+        </Drawer.Section>
+        <Drawer.Section style={styles.drawerSection}>
+          <DrawerItem
+            icon={({ color, size }) => (
+              <MaterialCommunityIcons name="logout" color={color} size={size} />
+            )}
+            label={t("DrawerContent.logout")}
+            labelStyle={styles.logOut}
+            onPress={() => {
+              console.log("Pressed Logout");
+            }}
+          />
+        </Drawer.Section>
+      </View>
+    </DrawerContentScrollView>
   );
 };
 
 const styles = create({
-  container: {
-    flex: 1,
-  },
   drawerContent: {
     flex: 1,
   },

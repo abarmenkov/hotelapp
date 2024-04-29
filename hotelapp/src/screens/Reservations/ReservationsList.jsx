@@ -38,7 +38,7 @@ const ItemPressable = ({ item }) => {
         Alert.alert(
           "Pressed Reservation with arrival date = " + item.ArrivalDate
         );
-        console.log(width, height, ratio);
+        //console.log(width, height, ratio);
       }}
     >
       <View style={styles.roomNumberContainer}>

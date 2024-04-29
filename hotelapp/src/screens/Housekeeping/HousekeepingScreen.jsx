@@ -11,12 +11,13 @@ import {
 } from "react-native";
 import { SearchbarComponent } from "../../components/SearchBar";
 import { useTranslation } from "react-i18next";
-import { CleaningsList } from "../../components/CleaningsList";
+import { CleaningsList } from "./CleaningsList";
 import { LoadingIndicator } from "../../components/LoadingIndicator";
 import { fetchData } from "../../API/FetchData";
 import { token, baseUrl } from "../../API/route";
 import { useFocusEffect } from "@react-navigation/native";
 import { useDrawerStatus } from "@react-navigation/drawer";
+import { create } from "../../utils/normalize";
 
 export const HousekeepingScreen = ({ navigation }) => {
   const { t } = useTranslation();
@@ -147,7 +148,7 @@ export const HousekeepingScreen = ({ navigation }) => {
   );
 };
 
-const styles = StyleSheet.create({
+const styles = create({
   root: {
     flex: 1,
 
