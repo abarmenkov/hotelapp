@@ -120,7 +120,7 @@ export const HousekeepingScreen = ({ navigation }) => {
       accessible={false}
     >
       <SafeAreaView style={styles.root}>
-        <View style={{ alignItems: "center", marginVertical: 20 }}>
+        <View style={styles.searchbar_container}>
           <SearchbarComponent
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
@@ -153,6 +153,12 @@ const styles = create({
     flex: 1,
 
     //alignItems: "center",
+  },
+  searchbar_container: {
+    alignItems: "center",
+    paddingVertical: 15,
+    borderBottomWidth: 2,
+    borderBottomColor: "lightgrey",
   },
   title: {
     width: "100%",

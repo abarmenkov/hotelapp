@@ -128,6 +128,7 @@ export const ReservationsTabViewScreen = ({ navigation }) => {
 
       indicatorStyle={{
         backgroundColor: "white",
+        
       }}
       contentContainerStyle={{
         backgroundColor: "orange",
@@ -151,7 +152,7 @@ export const ReservationsTabViewScreen = ({ navigation }) => {
       accessible={false}
     >
       <SafeAreaView style={styles.root}>
-        <View style={{ alignItems: "center", marginVertical: 20 }}>
+        <View style={styles.searchbar_container}>
           <SearchbarComponent
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
@@ -189,5 +190,11 @@ const styles = create({
   },
   tabBarLabel: {
     fontSize: 16,
+  },
+  searchbar_container: {
+    alignItems: "center",
+    paddingVertical: 15,
+    borderBottomWidth: 2,
+    borderBottomColor: "lightgrey",
   },
 });

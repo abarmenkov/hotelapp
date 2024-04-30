@@ -22,14 +22,7 @@ export const SearchbarComponent = ({
   //const routeName = getFocusedRouteNameFromRoute(route) ?? "Test2";
   //console.log(routeName);
   return (
-    <View
-      style={{
-        ...styles.searchBarContainer,
-        width: WIDTH * 0.95,
-
-        //marginLeft: 50,
-      }}
-    >
+    <View style={styles.searchBarContainer}>
       <Searchbar
         ref={searchBarRef}
         loading={searchLoading}
@@ -42,7 +35,7 @@ export const SearchbarComponent = ({
         //onClearIconPress={() => searchBarRef.blur(...args)}
         //traileringIcon={"skull-crossbones"} //
         //clearIcon={"sword-cross"} // по умолчанию cross, пишем только когда хотим свою иконку
-        //style={{ width: clicked ? "80%" : WIDTH * 0.9 }}
+        style={{ width: clicked ? WIDTH * 0.85 : WIDTH * 0.95 }}
         onFocus={() => setClicked(true)}
         keyboardType="email-address"
         keyboardAppearance="dark"

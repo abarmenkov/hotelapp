@@ -17,7 +17,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 const Item = ({ item }) => {
   const theme = useTheme();
   return (
-    <View key={item.Id} style={styles.list__container}>
+    <View key={item.Id}>
       <Pressable
         style={styles.item}
         onPress={() => {
@@ -38,21 +38,21 @@ const Item = ({ item }) => {
               <MaterialCommunityIcons
                 //style={{ paddingHorizontal: 5 }}
                 name="account"
-                size={22}
+                size={24}
                 color={theme.colors.onSurface}
               />
-              <Text style={styles.guestInfoDetails}>
-                {item.CleaningType?.Name}
-              </Text>
+              <Text style={styles.cleaning}>{item.CleaningType?.Name}</Text>
             </View>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text
-                style={styles.guestInfoDetails}
-                numberOfLines={2}
-                ellipsizeMode="tail"
-              >
-                {item.GuestLayout}
-              </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                //flexWrap: "wrap",
+                overflow: "hidden",
+                //paddingHorizontal: 5,
+              }}
+            >
+              <Text style={styles.guestLayout}>{item.GuestLayout}</Text>
               <Text
                 style={styles.guestInfoDetails}
                 numberOfLines={1}
@@ -138,20 +138,18 @@ const styles = create({
     justifyContent: "space-around",
     alignItems: "center",
     paddingVertical: 10,
-    borderBottomWidth: 2,
+    borderBottomWidth: 1,
     borderBottomColor: "lightgrey",
-    gap: 10,
+    gap: 5,
+    //marginHorizontal: 5,
+    //backgroundColor: "purple",
+    //paddingHorizontal: 5,
   },
-  title: {
-    //width: "100%",
-    marginTop: 20,
-    fontSize: 16,
-    fontWeight: "bold",
-    //marginLeft: "10%",
-  },
+
   roomNumberContainer: {
     flex: 1,
     alignItems: "center",
+
     //backgroundColor: "purple",
   },
   roomNumber: {
@@ -165,17 +163,28 @@ const styles = create({
   title: {
     fontSize: 16,
     fontWeight: 600,
-    //marginBottom: 5,
-    //fontStyle: "italic",
   },
   guestInfoContainer: {
     flex: 6,
     flexDirection: "row",
     justifyContent: "space-between",
-    //paddingHorizontal: 10,
+    //backgroundColor: "yellow",
+    paddingHorizontal: 5,
+  },
+  cleaning: {
+    fontSize: 18,
+    paddingHorizontal: 5,
+  },
+  guestLayout: {
+    fontSize: 16,
+    fontWeight: 700,
+    paddingHorizontal: 5,
   },
   guestInfoDetails: {
-    fontSize: 18,
+    fontSize: 16,
+    fontWeight: 500,
     //color: "red",
+
+    paddingHorizontal: 5,
   },
 });
