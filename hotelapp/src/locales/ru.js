@@ -35,6 +35,10 @@ const ru = {
       Departures: "Выезд",
       All: "ВСЕ",
     },
+    HousekeepingScreen: {
+      startCleaning: "Начать",
+      finishCleaning: "Закончить",
+    },
   },
   code: "ru",
   locale: "Русский",

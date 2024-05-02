@@ -29,6 +29,10 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { I18nextProvider } from "react-i18next";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import i18next from "./i18n";
+import {
+  GestureHandlerRootView,
+  RectButton,
+} from "react-native-gesture-handler";
 
 const CombinedDefaultTheme = {
   ...MD3LightTheme,
@@ -98,19 +102,21 @@ export default function App() {
     return <ActivityIndicator size="large" color="green" />;
   }
   return (
-    <Suspense fallback={<ActivityIndicator size="large" color="red" />}>
-      <PreferencesContext.Provider value={preferences}>
-        <UserContext.Provider value={user}>
-          <PaperProvider theme={theme}>
-            <I18nextProvider i18n={i18next}>
-              <SafeAreaProvider>
-                <StartingStack />
-              </SafeAreaProvider>
-            </I18nextProvider>
-          </PaperProvider>
-        </UserContext.Provider>
-      </PreferencesContext.Provider>
-    </Suspense>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <Suspense fallback={<ActivityIndicator size="large" color="red" />}>
+        <PreferencesContext.Provider value={preferences}>
+          <UserContext.Provider value={user}>
+            <PaperProvider theme={theme}>
+              <I18nextProvider i18n={i18next}>
+                <SafeAreaProvider>
+                  <StartingStack />
+                </SafeAreaProvider>
+              </I18nextProvider>
+            </PaperProvider>
+          </UserContext.Provider>
+        </PreferencesContext.Provider>
+      </Suspense>
+    </GestureHandlerRootView>
   );
 }
 

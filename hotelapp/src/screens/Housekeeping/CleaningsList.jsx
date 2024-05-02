@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -8,79 +8,150 @@ import {
   Alert,
   Keyboard,
   RefreshControl,
+  Animated,
 } from "react-native";
-import { Text, useTheme } from "react-native-paper";
+import { Text, useTheme, Button } from "react-native-paper";
 import { reservationsFilter } from "../../utils/reservationsFilter";
 import { create } from "../../utils/normalize";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import Swipeable from "react-native-gesture-handler/Swipeable";
+import { useTranslation } from "react-i18next";
 
-const Item = ({ item }) => {
+const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
+  const { t } = useTranslation();
   const theme = useTheme();
-  return (
-    <View key={item.Id}>
-      <Pressable
-        style={styles.item}
-        onPress={() => {
-          Keyboard.dismiss();
-          //Alert.alert("Тип уборки: " + item.CleaningType?.Name + item.Tags);
-          console.log(item);
+
+  /*const swipeRef = useRef();
+  const closeSwipeable = () => {
+    swipeRef?.current?.close();
+  };*/
+
+  const closeRow = (id) => {
+    if (prevOpenedRow && prevOpenedRow !== id) {
+      prevOpenedRow.close();
+    }
+    setPrevOpenedRow(id);
+  };
+  const renderActionButtons = (progress, dragX) => {
+    //console.log(dragX);
+    const scale = dragX.interpolate({
+      inputRange: [-150, 0],
+      outputRange: [0.85, 0],
+    });
+    return (
+      <View
+        //key={item.Id}
+        style={{
+          flexDirection: "row",
+          //backgroundColor: "#ff8303",
+          justifyContent: "space-between",
+          alignItems: "center",
         }}
       >
-        <View style={styles.roomNumberContainer}>
-          <View style={styles.roomNumber}>
-            <Text style={styles.title}>{item.Room?.Name}</Text>
-          </View>
-        </View>
-
-        <View style={styles.guestInfoContainer}>
-          <View style={{ flex: 1 }}>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <MaterialCommunityIcons
-                //style={{ paddingHorizontal: 5 }}
-                name="account"
-                size={24}
-                color={theme.colors.onSurface}
-              />
-              <Text style={styles.cleaning}>{item.CleaningType?.Name}</Text>
-            </View>
-            <View
+        {!item.StartedDate ? (
+          <Animated.View style={{ backgroundColor: "blue", marginRight: 5 }}>
+            <Animated.Text
+              onPress={() => Alert.alert(item?.CleaningType?.Name)}
               style={{
-                flexDirection: "row",
-                alignItems: "center",
-                //flexWrap: "wrap",
-                overflow: "hidden",
-                //paddingHorizontal: 5,
+                ...styles.actionBtn,
+                transform: [{ scale }],
               }}
             >
-              <Text style={styles.guestLayout}>{item.GuestLayout}</Text>
-              <Text
-                style={styles.guestInfoDetails}
-                numberOfLines={1}
-                ellipsizeMode="tail"
-              >
-                {item.RoomType?.Name}
-              </Text>
-            </View>
+              {t("HousekeepingScreen.startCleaning")}
+            </Animated.Text>
+          </Animated.View>
+        ) : null}
 
-            {item.BookingTags?.length > 0 ? (
-              <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-                {item.BookingTags.map((item) => (
-                  <Text
-                    style={{
-                      marginRight: 10,
-                      borderBottomWidth: 2,
-                      borderBottomColor: item.Color,
-                    }}
-                    key={item.Code}
-                  >
-                    {item.Code}
-                  </Text>
-                ))}
-              </View>
-            ) : null}
+        <Animated.View style={{ backgroundColor: "green" }}>
+          <Animated.Text
+            onPress={() => Alert.alert(item?.CleaningType?.Name)}
+            style={{
+              ...styles.actionBtn,
+              transform: [{ scale }],
+            }}
+          >
+            {t("HousekeepingScreen.finishCleaning")}
+          </Animated.Text>
+        </Animated.View>
+      </View>
+    );
+  };
+  return (
+    <View key={item.Id}>
+      <Swipeable
+        //key={item.Id}
+        ref={(ref) => (item.Id = ref)}
+        onSwipeableWillOpen={() => closeRow(item.Id)}
+        renderRightActions={renderActionButtons}
+        friction={1}
+        overshootFriction={20}
+        leftThreshold={-150}
+        //rightThreshold={-50}
+      >
+        <Pressable
+          style={styles.item}
+          onPress={() => {
+            Keyboard.dismiss();
+            //Alert.alert("Тип уборки: " + item.CleaningType?.Name + item.Tags);
+            console.log(item);
+          }}
+        >
+          <View style={styles.roomNumberContainer}>
+            <View style={styles.roomNumber}>
+              <Text style={styles.title}>{item.Room?.Name}</Text>
+            </View>
           </View>
-        </View>
-      </Pressable>
+
+          <View style={styles.guestInfoContainer}>
+            <View style={{ flex: 1 }}>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <MaterialCommunityIcons
+                  //style={{ paddingHorizontal: 5 }}
+                  name="account"
+                  size={24}
+                  color={theme.colors.onSurface}
+                />
+                <Text style={styles.cleaning}>{item.CleaningType?.Name}</Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  //flexWrap: "wrap",
+                  overflow: "hidden",
+                  //paddingHorizontal: 5,
+                }}
+              >
+                <Text style={styles.guestLayout}>{item.GuestLayout}</Text>
+                <Text
+                  style={styles.guestInfoDetails}
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                >
+                  {item.RoomType?.Name}
+                </Text>
+              </View>
+
+              {item.BookingTags?.length > 0 ? (
+                <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+                  {item.BookingTags.map((item) => (
+                    <Text
+                      style={{
+                        marginRight: 10,
+                        borderBottomWidth: 2,
+                        borderBottomColor: item.Color,
+                      }}
+                      key={item.Code}
+                    >
+                      {item.Code}
+                    </Text>
+                  ))}
+                </View>
+              ) : null}
+            </View>
+          </View>
+        </Pressable>
+      </Swipeable>
     </View>
   );
 };
@@ -95,8 +166,15 @@ export const CleaningsList = ({
   updateData,
   setUpdateData,
 }) => {
+  const [prevOpenedRow, setPrevOpenedRow] = useState();
   const renderItem = ({ item }) => {
-    return reservationsFilter(item, searchQuery) ? <Item item={item} /> : null;
+    return reservationsFilter(item, searchQuery) ? (
+      <Item
+        item={item}
+        prevOpenedRow={prevOpenedRow}
+        setPrevOpenedRow={setPrevOpenedRow}
+      />
+    ) : null;
   };
 
   return (
@@ -110,7 +188,8 @@ export const CleaningsList = ({
           data={data}
           renderItem={renderItem}
           removeClippedSubviews={true}
-          keyExtractor={(item) => item.Id}
+          initialNumToRender={15}
+          //keyExtractor={(item) => item.Id}
           keyboardShouldPersistTaps={"handled"} // чтобы скрыть открытую клавиатуру и отработать onPress элемента
           refreshControl={
             <RefreshControl
@@ -183,8 +262,13 @@ const styles = create({
   guestInfoDetails: {
     fontSize: 16,
     fontWeight: 500,
-    //color: "red",
-
     paddingHorizontal: 5,
+  },
+  actionBtn: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "600",
+    paddingHorizontal: 10,
+    paddingVertical: 14,
   },
 });

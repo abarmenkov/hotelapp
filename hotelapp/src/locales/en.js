@@ -35,6 +35,10 @@ const en = {
       Departures: "Departures",
       All: "All",
     },
+    HousekeepingScreen: {
+      startCleaning: "Start",
+      finishCleaning: "Finish",
+    },
   },
   code: "en",
   locale: "English",

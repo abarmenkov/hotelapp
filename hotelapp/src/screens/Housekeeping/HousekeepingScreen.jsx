@@ -18,6 +18,7 @@ import { token, baseUrl } from "../../API/route";
 import { useFocusEffect } from "@react-navigation/native";
 import { useDrawerStatus } from "@react-navigation/drawer";
 import { create } from "../../utils/normalize";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export const HousekeepingScreen = ({ navigation }) => {
   const { t } = useTranslation();
