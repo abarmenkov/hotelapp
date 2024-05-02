@@ -48,7 +48,7 @@ const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
           alignItems: "center",
         }}
       >
-        {!item.StartedDate ? (
+        {!item.StartedDate && item.CleaningStatus.Code !== "I" ? (
           <Animated.View style={{ backgroundColor: "blue", marginRight: 5 }}>
             <Animated.Text
               onPress={() => Alert.alert(item?.CleaningType?.Name)}
