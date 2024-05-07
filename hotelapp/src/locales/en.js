@@ -38,6 +38,11 @@ const en = {
     HousekeepingScreen: {
       startCleaning: "Start",
       finishCleaning: "Finish",
+      inspection: "Inspection",
+    },
+    Time: {
+      hour: "h",
+      minute: "m",
     },
   },
   code: "en",

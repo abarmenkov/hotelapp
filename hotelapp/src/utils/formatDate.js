@@ -1,10 +1,10 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 
-export const formatDate = (itemDate) => {
+export const formatDate = (datestring) => {
   const { i18n } = useTranslation();
   const appLanguage = i18n.language;
-  const date = new Date(itemDate);
+  const date = new Date(datestring);
 
   const hours =
     date.getHours().toString().length < 2

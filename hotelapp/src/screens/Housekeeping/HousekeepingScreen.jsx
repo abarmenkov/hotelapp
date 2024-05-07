@@ -130,7 +130,7 @@ export const HousekeepingScreen = ({ navigation }) => {
             setClicked={setClicked}
           />
         </View>
-        {!isLoading && hasError && <Text>{t("Loading.error")}</Text>}
+        
         {isLoading ? (
           <LoadingIndicator text={t("Loading.loading")} />
         ) : (
@@ -142,6 +142,8 @@ export const HousekeepingScreen = ({ navigation }) => {
             setRefreshing={setRefreshing}
             updateData={updateData}
             setUpdateData={setUpdateData}
+            isLoading={isLoading}
+            hasError={hasError}
           />
         )}
       </SafeAreaView>

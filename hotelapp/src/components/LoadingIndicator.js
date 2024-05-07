@@ -1,6 +1,7 @@
 import React from "react";
-import { ActivityIndicator, StyleSheet, Text, View, Modal } from "react-native";
-import { useTheme } from "react-native-paper";
+import { View, Modal } from "react-native";
+import { useTheme, ActivityIndicator, Text } from "react-native-paper";
+import { create } from "../utils/normalize";
 
 export const LoadingIndicator = ({ text }) => {
   const theme = useTheme();
@@ -8,17 +9,13 @@ export const LoadingIndicator = ({ text }) => {
     <Modal transparent={true}>
       <View style={styles.indicatorWrapper}>
         <ActivityIndicator size="large" />
-        <Text
-          style={{ ...styles.indicatorText, color: theme.colors.onBackground }}
-        >
-          {text}
-        </Text>
+        <Text style={styles.indicatorText}>{text}</Text>
       </View>
     </Modal>
   );
 };
 
-const styles = StyleSheet.create({
+const styles = create({
   indicatorWrapper: {
     flex: 1,
     alignItems: "center",

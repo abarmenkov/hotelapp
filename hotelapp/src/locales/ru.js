@@ -38,6 +38,11 @@ const ru = {
     HousekeepingScreen: {
       startCleaning: "Начать",
       finishCleaning: "Закончить",
+      inspection: "Инспекция",
+    },
+    Time: {
+      hour: "ч",
+      minute: "м",
     },
   },
   code: "ru",

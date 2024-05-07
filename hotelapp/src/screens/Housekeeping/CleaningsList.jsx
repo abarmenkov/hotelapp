@@ -13,13 +13,15 @@ import {
 import { Text, useTheme, Button } from "react-native-paper";
 import { reservationsFilter } from "../../utils/reservationsFilter";
 import { create } from "../../utils/normalize";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import { useTranslation } from "react-i18next";
+import { getDuration } from "../../utils/getDuration";
 
 const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
   const { t } = useTranslation();
   const theme = useTheme();
+  const Timer = item.StartedDate ? getDuration(item.StartedDate) : null;
 
   /*const swipeRef = useRef();
   const closeSwipeable = () => {
@@ -106,7 +108,6 @@ const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
             <View style={{ flex: 1 }}>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <MaterialCommunityIcons
-                  //style={{ paddingHorizontal: 5 }}
                   name="account"
                   size={24}
                   color={theme.colors.onSurface}
@@ -149,6 +150,23 @@ const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
                 </View>
               ) : null}
             </View>
+            {item.CleaningStatus?.Code === "I" ? (
+              <View style={styles.inspection}>
+                <Text style={styles.inspectionTitle}>
+                  {t("HousekeepingScreen.inspection")}
+                </Text>
+              </View>
+            ) : item.StartedDate ? (
+              <View style={styles.inspection}>
+                <Ionicons
+                  style={{ marginRight: 5 }}
+                  name="timer"
+                  size={22}
+                  color="#08a2b4"
+                />
+                <Text style={styles.inspectionTitle}>{Timer}</Text>
+              </View>
+            ) : null}
           </View>
         </Pressable>
       </Swipeable>
@@ -157,15 +175,19 @@ const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
 };
 
 // the filter
-export const CleaningsList = ({
-  searchQuery,
-  setClicked,
-  data,
-  refreshing,
-  setRefreshing,
-  updateData,
-  setUpdateData,
-}) => {
+export const CleaningsList = (props) => {
+  const {
+    searchQuery,
+    setClicked,
+    data,
+    refreshing,
+    setRefreshing,
+    updateData,
+    setUpdateData,
+    isLoading,
+    hasError,
+  } = props;
+  const { t } = useTranslation();
   const [prevOpenedRow, setPrevOpenedRow] = useState();
   const renderItem = ({ item }) => {
     return reservationsFilter(item, searchQuery) ? (
@@ -184,23 +206,34 @@ export const CleaningsList = ({
           setClicked(false);
         }}
       >
-        <FlatList
-          data={data}
-          renderItem={renderItem}
-          removeClippedSubviews={true}
-          initialNumToRender={15}
-          //keyExtractor={(item) => item.Id}
-          keyboardShouldPersistTaps={"handled"} // чтобы скрыть открытую клавиатуру и отработать onPress элемента
-          refreshControl={
-            <RefreshControl
-              refreshing={refreshing}
-              onRefresh={() => {
-                setUpdateData(!updateData);
-                setRefreshing(true);
-              }}
-            />
-          }
-        />
+        {!isLoading && hasError ? (
+          <Text
+            style={{ marginVertical: 30, alignSelf: "center" }}
+            onPress={() => {
+              setUpdateData(!updateData);
+            }}
+          >
+            {t("Loading.error")}
+          </Text>
+        ) : (
+          <FlatList
+            data={data}
+            renderItem={renderItem}
+            removeClippedSubviews={true}
+            initialNumToRender={15}
+            //keyExtractor={(item) => item.Id}
+            keyboardShouldPersistTaps={"handled"} // чтобы скрыть открытую клавиатуру и отработать onPress элемента
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={() => {
+                  setUpdateData(!updateData);
+                  setRefreshing(true);
+                }}
+              />
+            }
+          />
+        )}
       </View>
     </SafeAreaView>
   );
@@ -210,6 +243,7 @@ const styles = create({
   list__container: {
     flex: 1,
     paddingHorizontal: 5,
+    //marginHorizontal: 5,
   },
   item: {
     flex: 1,
@@ -219,7 +253,7 @@ const styles = create({
     paddingVertical: 10,
     borderBottomWidth: 1,
     borderBottomColor: "lightgrey",
-    gap: 5,
+    //gap: 4,
     //marginHorizontal: 5,
     //backgroundColor: "purple",
     //paddingHorizontal: 5,
@@ -247,8 +281,10 @@ const styles = create({
     flex: 6,
     flexDirection: "row",
     justifyContent: "space-between",
+    marginRight: 5,
+    alignItems: "center",
     //backgroundColor: "yellow",
-    paddingHorizontal: 5,
+    //paddingHorizontal: 5,
   },
   cleaning: {
     fontSize: 18,
@@ -263,6 +299,22 @@ const styles = create({
     fontSize: 16,
     fontWeight: 500,
     paddingHorizontal: 5,
+  },
+  inspection: {
+    backgroundColor: "#c4f3fd",
+    flexDirection: "row",
+    //width: 60,
+    height: 40,
+    borderRadius: 25,
+    justifyContent: "center",
+    alignItems: "center",
+    //marginRight: 50,
+    paddingHorizontal: 15,
+  },
+  inspectionTitle: {
+    fontSize: 16,
+    fontWeight: 600,
+    color: "#08a2b4",
   },
   actionBtn: {
     color: "white",
