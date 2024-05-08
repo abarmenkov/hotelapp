@@ -158,6 +158,30 @@ const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
               </View>
             ) : item.StartedDate ? (
               <View style={styles.inspection}>
+                {item.ArrivalTime && (
+                  <>
+                    <MaterialCommunityIcons
+                      name="login"
+                      color="#08a2b4"
+                      size={22}
+                    />
+                    <Text style={styles.inspectionTitle}>
+                      {item.ArrivalTime}
+                    </Text>
+                  </>
+                )}
+                {item.DepartureTime && (
+                  <>
+                    <MaterialCommunityIcons
+                      name="logout"
+                      color="#08a2b4"
+                      size={22}
+                    />
+                    <Text style={styles.inspectionTitle}>
+                      {item.DepartureTime}
+                    </Text>
+                  </>
+                )}
                 <Ionicons
                   style={{ marginRight: 5 }}
                   name="timer"

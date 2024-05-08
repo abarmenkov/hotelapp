@@ -18,6 +18,7 @@ import { useTranslation } from "react-i18next";
 import { WIDTH } from "../../utils/constants";
 import { formatDate } from "../../utils/formatDate";
 import { FontAwesome } from "@expo/vector-icons";
+import { LoadingIndicator } from "../../components/LoadingIndicator";
 
 import { create } from "../../utils/normalize";
 
@@ -119,7 +120,7 @@ const Item = ({ item }) => {
   );
 };
 
-const ReservationsList = ({
+const GuestList = ({
   searchQuery,
   setClicked,
   data,
@@ -127,42 +128,10 @@ const ReservationsList = ({
   setRefreshing,
   updateData,
   setUpdateData,
-  routeKey,
   isLoading,
   hasError,
 }) => {
   const { t } = useTranslation();
-  let filteredData;
-
-  switch (routeKey) {
-    case "arrivals": {
-      filteredData =
-        data.length === 0 ? [] : data.filter((item) => item.Status === "RES");
-      break;
-    }
-    case "inhouse": {
-      filteredData =
-        data.length === 0 ? [] : data.filter((item) => item.Status === "IN");
-      break;
-    }
-    case "departures": {
-      filteredData =
-        data.length === 0
-          ? []
-          : data.filter(
-              (item) => item.Status === "IN" && compareDate(item.DepartureDate)
-            );
-      break;
-    }
-    case "all": {
-      filteredData = data.length === 0 ? [] : data;
-
-      break;
-    }
-    default: {
-      filteredData = [];
-    }
-  }
 
   const renderItem = ({ item }) => {
     return reservationsFilter(item, searchQuery) ? <Item item={item} /> : null;
@@ -175,6 +144,7 @@ const ReservationsList = ({
           setClicked(false);
         }}
       >
+        {isLoading && <LoadingIndicator text={t("Loading.loading")} />}
         {!isLoading && hasError ? (
           <Text
             style={{ marginVertical: 30, alignSelf: "center" }}
@@ -186,7 +156,7 @@ const ReservationsList = ({
           </Text>
         ) : (
           <FlatList
-            data={filteredData}
+            data={data}
             renderItem={renderItem}
             removeClippedSubviews={true}
             initialNumToRender={15}
@@ -291,54 +261,5 @@ const styles = create({
   },
 });
 
-/*const styles = StyleSheet.create({
-  list__container: {
-    //margin: 10,
-    height: "95%",
-    //width: WIDTH * 0.8,
-  },
-  item: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginHorizontal: 10,
-    paddingVertical: 10,
-    borderBottomWidth: 2,
-    borderBottomColor: "lightgrey",
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 5,
-    fontStyle: "italic",
-  },
-  roomNumber: {
-    backgroundColor: "red",
-    width: 60,
-    height: 60,
-    borderRadius: 50,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  status: {
-    backgroundColor: "grey",
-    width: 70,
-    height: 40,
-    borderRadius: 25,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  guestInfo: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  reserveInfo: {
-    width: "60%",
-  },
-  details: {
-    //color: "red",
-  },
-});
 // ₽*/
-export default React.memo(ReservationsList);
+export default React.memo(GuestList);

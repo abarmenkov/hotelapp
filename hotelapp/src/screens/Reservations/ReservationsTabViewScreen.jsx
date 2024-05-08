@@ -19,6 +19,10 @@ import ReservationsList from "./ReservationsList";
 import { useDrawerStatus } from "@react-navigation/drawer";
 import { useFocusEffect } from "@react-navigation/native";
 import { create } from "../../utils/normalize";
+import AllReservationsList from "./AllReservationsList";
+import ArrivalList from "./ArrivalList";
+import DeparturesList from "./DeparturesList";
+import InHouseList from "./InHouseList";
 
 export const ReservationsTabViewScreen = ({ navigation }) => {
   const { t } = useTranslation();
@@ -45,6 +49,7 @@ export const ReservationsTabViewScreen = ({ navigation }) => {
   ]);
 
   const endPoint = "Reservation/QuickSearch";
+  //useEffect(() => setItems([]), [index]);
 
   useFocusEffect(
     useCallback(() => {
@@ -118,6 +123,48 @@ export const ReservationsTabViewScreen = ({ navigation }) => {
         return null;
     }
   };
+  /*const renderScene = ({ route }) => {
+    switch (route.key) {
+      case "arrivals":
+        return (
+          <ArrivalList
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            setClicked={setClicked}
+            index={index}
+          />
+        );
+      case "inhouse":
+        return (
+          <InHouseList
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            setClicked={setClicked}
+            index={index}
+          />
+        );
+      case "departures":
+        return (
+          <DeparturesList
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            setClicked={setClicked}
+            index={index}
+          />
+        );
+      case "all":
+        return (
+          <AllReservationsList
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            setClicked={setClicked}
+            index={index}
+          />
+        );
+      default:
+        return null;
+    }
+  };*/
 
   const renderTabBar = (props) => (
     <TabBar
@@ -128,7 +175,6 @@ export const ReservationsTabViewScreen = ({ navigation }) => {
 
       indicatorStyle={{
         backgroundColor: "white",
-        
       }}
       contentContainerStyle={{
         backgroundColor: "orange",
@@ -174,7 +220,7 @@ export const ReservationsTabViewScreen = ({ navigation }) => {
             renderTabBar={renderTabBar}
             swipeEnabled={false}
             animationEnabled={true}
-            //lazy
+            lazy
           />
         )}
       </SafeAreaView>
