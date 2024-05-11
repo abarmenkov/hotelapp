@@ -35,7 +35,7 @@ const ItemPressable = ({ item }) => {
         Alert.alert(
           "Pressed Reservation with arrival date = " + item.ArrivalDate
         );
-        //console.log(width, height, ratio);
+        console.log(item);
       }}
     >
       <View style={styles.roomNumberContainer}>
@@ -137,7 +137,11 @@ const ReservationsList = ({
   switch (routeKey) {
     case "arrivals": {
       filteredData =
-        data.length === 0 ? [] : data.filter((item) => item.Status === "RES");
+        data.length === 0
+          ? []
+          : data.filter(
+              (item) => item.Status === "RES" && compareDate(item.ArrivalDate)
+            );
       break;
     }
     case "inhouse": {
