@@ -21,7 +21,7 @@ import { getDuration } from "../../utils/getDuration";
 const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
   const { t } = useTranslation();
   const theme = useTheme();
-  const Timer = item.StartedDate ? getDuration(item.StartedDate) : null;
+  const timer = item.StartedDate ? getDuration(item.StartedDate) : null;
 
   /*const swipeRef = useRef();
   const closeSwipeable = () => {
@@ -188,7 +188,7 @@ const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
                   size={22}
                   color="#08a2b4"
                 />
-                <Text style={styles.inspectionTitle}>{Timer}</Text>
+                <Text style={styles.inspectionTitle}>{timer}</Text>
               </View>
             ) : null}
           </View>

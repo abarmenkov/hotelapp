@@ -19,6 +19,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useDrawerStatus } from "@react-navigation/drawer";
 import { create } from "../../utils/normalize";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { appRoutes } from "../../API/route";
 
 export const HousekeepingScreen = ({ navigation }) => {
   const { t } = useTranslation();
@@ -34,7 +35,7 @@ export const HousekeepingScreen = ({ navigation }) => {
   const isDrawerOpen = useDrawerStatus() === "open";
   if (isDrawerOpen) Keyboard.dismiss();
 
-  const endPoint = "Cleanings";
+  //const endPoint = "Cleanings";
 
   //при возврате на страницу сбрасываем данные фильтра
   /*useEffect(() => {
@@ -60,7 +61,8 @@ export const HousekeepingScreen = ({ navigation }) => {
       };
       const configurationObject = {
         method: "get",
-        url: `${baseUrl}${endPoint}`,
+        //url: `${baseUrl}${endPoint}`,
+        url: appRoutes.cleaningPath(),
         signal: newAbortSignal(5000),
         headers: {
           Authorization: `Token ${token}`,
@@ -130,7 +132,7 @@ export const HousekeepingScreen = ({ navigation }) => {
             setClicked={setClicked}
           />
         </View>
-        
+
         {isLoading ? (
           <LoadingIndicator text={t("Loading.loading")} />
         ) : (

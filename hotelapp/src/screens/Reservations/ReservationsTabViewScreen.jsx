@@ -19,6 +19,7 @@ import ReservationsList from "./ReservationsList";
 import { useDrawerStatus } from "@react-navigation/drawer";
 import { useFocusEffect } from "@react-navigation/native";
 import { create } from "../../utils/normalize";
+import { appRoutes } from "../../API/route";
 import AllReservationsList from "./AllReservationsList";
 import ArrivalList from "./ArrivalList";
 import DeparturesList from "./DeparturesList";
@@ -48,7 +49,7 @@ export const ReservationsTabViewScreen = ({ navigation }) => {
     { key: "all", title: "All" },
   ]);
 
-  const endPoint = "Reservation/QuickSearch";
+  const endPoint = "/QuickSearch";
   //useEffect(() => setItems([]), [index]);
 
   useFocusEffect(
@@ -65,7 +66,8 @@ export const ReservationsTabViewScreen = ({ navigation }) => {
       };
       const configurationObject = {
         method: "post",
-        url: `${baseUrl}${endPoint}`,
+        //url: `${baseUrl}${endPoint}`,
+        url: `${appRoutes.reservationPath()}${endPoint}`,
         signal: newAbortSignal(5000),
         headers: {
           Authorization: `Token ${token}`,
