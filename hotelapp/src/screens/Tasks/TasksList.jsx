@@ -17,6 +17,7 @@ import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import { useTranslation } from "react-i18next";
 import { getDuration } from "../../utils/getDuration";
+//import { TasksScreen } from "./TasksScreen";
 
 const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
   const { t } = useTranslation();
@@ -30,31 +31,31 @@ const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
   let taskStatus;
   switch (item.Status) {
     case "D": {
-      taskStatus = "Предварительная";
+      taskStatus = t("TasksScreen.taskStatus.D");
       break;
     }
     case "S": {
-      taskStatus = "Открыта";
+      taskStatus = t("TasksScreen.taskStatus.S");
       break;
     }
     case "P": {
-      taskStatus = "В работе";
+      taskStatus = t("TasksScreen.taskStatus.P");
       break;
     }
     case "COMPL": {
-      taskStatus = "Выполненна";
+      taskStatus = t("TasksScreen.taskStatus.COMPL");
       break;
     }
     case "CLS": {
-      taskStatus = "Закрыта";
+      taskStatus = t("TasksScreen.taskStatus.CLS");
       break;
     }
     case "CANC": {
-      taskStatus = "Отмененна";
+      taskStatus = t("TasksScreen.taskStatus.CANC");
       break;
     }
     default: {
-      taskStatus = "Не определенно";
+      taskStatus = t("TasksScreen.taskStatus.Default");
     }
   }
   const closeRow = (id) => {
@@ -120,7 +121,7 @@ const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
         //rightThreshold={-50}
       >
         <Pressable
-          style={{...styles.item, backgroundColor: theme.colors.surface}}
+          style={{ ...styles.item, backgroundColor: theme.colors.surface }}
           onPress={() => {
             Keyboard.dismiss();
             //Alert.alert("Тип уборки: " + item.CleaningType?.Name + item.Tags);

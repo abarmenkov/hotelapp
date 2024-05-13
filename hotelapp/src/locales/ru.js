@@ -41,6 +41,17 @@ const ru = {
       finishCleaning: "Закончить",
       inspection: "Инспекция",
     },
+    TasksScreen: {
+      taskStatus: {
+        D: "Предварительная",
+        S: "Открыта",
+        P: "В работе",
+        COMPL: "Выполненна",
+        CLS: "Закрыта",
+        CANC: "Отмененна",
+        Default: "Не определенно",
+      },
+    },
     Time: {
       hour: "ч",
       minute: "м",
