@@ -21,13 +21,42 @@ import { getDuration } from "../../utils/getDuration";
 const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
   const { t } = useTranslation();
   const theme = useTheme();
-  const timer = item.StartedDate ? getDuration(item.StartedDate) : null;
+  //const timer = item.StartedDate ? getDuration(item.StartedDate) : null;
 
   /*const swipeRef = useRef();
   const closeSwipeable = () => {
     swipeRef?.current?.close();
   };*/
-
+  let taskStatus;
+  switch (item.Status) {
+    case "D": {
+      taskStatus = "Предварительная";
+      break;
+    }
+    case "S": {
+      taskStatus = "Открыта";
+      break;
+    }
+    case "P": {
+      taskStatus = "В работе";
+      break;
+    }
+    case "COMPL": {
+      taskStatus = "Выполненна";
+      break;
+    }
+    case "CLS": {
+      taskStatus = "Закрыта";
+      break;
+    }
+    case "CANC": {
+      taskStatus = "Отмененна";
+      break;
+    }
+    default: {
+      taskStatus = "Не определенно";
+    }
+  }
   const closeRow = (id) => {
     if (prevOpenedRow && prevOpenedRow !== id) {
       prevOpenedRow.close();
@@ -50,7 +79,7 @@ const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
           alignItems: "center",
         }}
       >
-        {!item.StartedDate && item.CleaningStatus.Code !== "I" ? (
+        {!item.StartedDate && item.CleaningStatus?.Code !== "I" ? (
           <Animated.View style={{ backgroundColor: "blue", marginRight: 5 }}>
             <Animated.Text
               onPress={() => Alert.alert(item?.CleaningType?.Name)}
@@ -98,99 +127,60 @@ const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
             console.log(item);
           }}
         >
-          <View style={styles.roomNumberContainer}>
-            <View style={styles.roomNumber}>
-              <Text style={styles.title}>{item.Room?.Name}</Text>
+          <View style={{ flex: 1 }}>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                //flexWrap: "wrap",
+                overflow: "hidden",
+                //paddingHorizontal: 5,
+              }}
+            >
+              <Text style={styles.guestLayout}>#</Text>
+              {item.LinkedRoom && (
+                <Text style={styles.guestLayout}>{item.LinkedRoom?.Name}</Text>
+              )}
+              <Text style={styles.guestLayout}>{item.TaskType?.Name}</Text>
             </View>
-          </View>
-
-          <View style={styles.guestInfoContainer}>
-            <View style={{ flex: 1 }}>
+            {item.Summary && (
+              <View>
+                <Text
+                  style={styles.guestInfoDetails}
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                >
+                  {item.Summary}
+                </Text>
+              </View>
+            )}
+            {item.Description && (
+              <View>
+                <Text
+                  style={styles.guestInfoDetails}
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                >
+                  {item.Description}
+                </Text>
+              </View>
+            )}
+            {item.AssignedUser && (
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <MaterialCommunityIcons
                   name="account"
                   size={24}
                   color={theme.colors.onSurface}
                 />
-                <Text style={styles.cleaning}>{item.CleaningType?.Name}</Text>
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  //flexWrap: "wrap",
-                  overflow: "hidden",
-                  //paddingHorizontal: 5,
-                }}
-              >
-                <Text style={styles.guestLayout}>{item.GuestLayout}</Text>
-                <Text
-                  style={styles.guestInfoDetails}
-                  numberOfLines={1}
-                  ellipsizeMode="tail"
-                >
-                  {item.RoomType?.Name}
-                </Text>
-              </View>
 
-              {item.BookingTags?.length > 0 ? (
-                <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-                  {item.BookingTags.map((item) => (
-                    <Text
-                      style={{
-                        marginRight: 10,
-                        borderBottomWidth: 2,
-                        borderBottomColor: item.Color,
-                      }}
-                      key={item.Code}
-                    >
-                      {item.Code}
-                    </Text>
-                  ))}
-                </View>
-              ) : null}
+                <Text style={styles.cleaning}>{item.AssignedUser?.Name}</Text>
+              </View>
+            )}
+          </View>
+          <View style={styles.statusContainer}>
+            <View style={styles.status}>
+              <Text style={styles.title}>{taskStatus}</Text>
             </View>
-            {item.CleaningStatus?.Code === "I" ? (
-              <View style={styles.inspection}>
-                <Text style={styles.inspectionTitle}>
-                  {t("HousekeepingScreen.inspection")}
-                </Text>
-              </View>
-            ) : item.StartedDate ? (
-              <View style={styles.inspection}>
-                {item.ArrivalTime && (
-                  <>
-                    <MaterialCommunityIcons
-                      name="login"
-                      color="#08a2b4"
-                      size={22}
-                    />
-                    <Text style={styles.inspectionTitle}>
-                      {item.ArrivalTime}
-                    </Text>
-                  </>
-                )}
-                {item.DepartureTime && (
-                  <>
-                    <MaterialCommunityIcons
-                      name="logout"
-                      color="#08a2b4"
-                      size={22}
-                    />
-                    <Text style={styles.inspectionTitle}>
-                      {item.DepartureTime}
-                    </Text>
-                  </>
-                )}
-                <Ionicons
-                  style={{ marginRight: 5 }}
-                  name="timer"
-                  size={22}
-                  color="#08a2b4"
-                />
-                <Text style={styles.inspectionTitle}>{timer}</Text>
-              </View>
-            ) : null}
           </View>
         </Pressable>
       </Swipeable>
@@ -199,7 +189,7 @@ const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
 };
 
 // the filter
-export const CleaningsList = (props) => {
+export const TasksList = (props) => {
   const {
     searchQuery,
     setClicked,
@@ -272,23 +262,17 @@ const styles = create({
   item: {
     flex: 1,
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
     alignItems: "center",
     paddingVertical: 10,
     borderBottomWidth: 1,
     borderBottomColor: "lightgrey",
     //gap: 4,
     //marginHorizontal: 5,
-    //backgroundColor: "purple",
-    //paddingHorizontal: 5,
+    //backgroundColor: "white",
+    paddingHorizontal: 25,
   },
 
-  roomNumberContainer: {
-    flex: 1,
-    alignItems: "center",
-
-    //backgroundColor: "purple",
-  },
   roomNumber: {
     backgroundColor: "red",
     width: 50,
@@ -302,12 +286,12 @@ const styles = create({
     fontWeight: 600,
   },
   guestInfoContainer: {
-    flex: 6,
+    flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
-    marginRight: 5,
+    //marginRight: 5,
     alignItems: "center",
-    //backgroundColor: "yellow",
+    backgroundColor: "yellow",
     //paddingHorizontal: 5,
   },
   cleaning: {
@@ -324,17 +308,7 @@ const styles = create({
     fontWeight: 500,
     paddingHorizontal: 5,
   },
-  inspection: {
-    backgroundColor: "#c4f3fd",
-    flexDirection: "row",
-    //width: 60,
-    height: 40,
-    borderRadius: 25,
-    justifyContent: "center",
-    alignItems: "center",
-    //marginRight: 50,
-    paddingHorizontal: 15,
-  },
+
   inspectionTitle: {
     fontSize: 16,
     fontWeight: 600,
@@ -346,5 +320,26 @@ const styles = create({
     fontWeight: "600",
     paddingHorizontal: 10,
     paddingVertical: 14,
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: 600,
+    //marginBottom: 5,
+    //fontStyle: "italic",
+  },
+  statusContainer: {
+    //flex: 1,
+    //backgroundColor: "purple",
+    alignItems: "center",
+    //backgroundColor: "yellow",
+  },
+  status: {
+    backgroundColor: "grey",
+    //width: 60,
+    height: 40,
+    borderRadius: 25,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 15,
   },
 });

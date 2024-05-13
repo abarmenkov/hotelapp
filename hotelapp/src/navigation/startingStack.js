@@ -16,12 +16,34 @@ import { TestStack } from "./TestStack";
 //import { AddReservationScreen } from "../screens/AddReservationScreen";
 //import { DefaultTheme, DarkTheme } from "@react-navigation/native";
 //import { PreferencesContext } from "../context/PreferencesContext";
+import { MD3DarkTheme, MD3LightTheme } from "react-native-paper";
+import { appDefaultColors, appDarkColors } from "../utils/constants";
 
 const Stack = createStackNavigator();
 
+const CombinedDefaultTheme = {
+  ...MD3LightTheme,
+  ...DefaultTheme,
+  colors: {
+    ...MD3LightTheme.colors,
+    ...DefaultTheme.colors,
+    ...appDefaultColors.colors,
+  },
+};
+const CombinedDarkTheme = {
+  ...MD3DarkTheme,
+  ...DarkTheme,
+  colors: {
+    ...MD3DarkTheme.colors,
+    ...DarkTheme.colors,
+    ...appDarkColors.colors,
+  },
+};
+
 export const StartingStack = () => {
   const theme = useTheme();
-  const navigationTheme = theme.dark ? DarkTheme : DefaultTheme;
+  const navigationTheme = theme.dark ? CombinedDarkTheme : CombinedDefaultTheme;
+  //const navigationTheme = theme.dark ? DarkTheme : DefaultTheme;
   const { i18n } = useTranslation();
   /*useEffect(() => {
     const getData = async () => {
