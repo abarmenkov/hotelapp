@@ -16,6 +16,7 @@ import { create } from "../../utils/normalize";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import { useTranslation } from "react-i18next";
+import { TaskStatus } from "./TaskStatus";
 import { getDuration } from "../../utils/getDuration";
 //import { TasksScreen } from "./TasksScreen";
 
@@ -28,36 +29,8 @@ const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
   const closeSwipeable = () => {
     swipeRef?.current?.close();
   };*/
-  let taskStatus;
-  switch (item.Status) {
-    case "D": {
-      taskStatus = t("TasksScreen.taskStatus.D");
-      break;
-    }
-    case "S": {
-      taskStatus = t("TasksScreen.taskStatus.S");
-      break;
-    }
-    case "P": {
-      taskStatus = t("TasksScreen.taskStatus.P");
-      break;
-    }
-    case "COMPL": {
-      taskStatus = t("TasksScreen.taskStatus.COMPL");
-      break;
-    }
-    case "CLS": {
-      taskStatus = t("TasksScreen.taskStatus.CLS");
-      break;
-    }
-    case "CANC": {
-      taskStatus = t("TasksScreen.taskStatus.CANC");
-      break;
-    }
-    default: {
-      taskStatus = t("TasksScreen.taskStatus.Default");
-    }
-  }
+  const taskStatus = TaskStatus(item.Status);
+
   const closeRow = (id) => {
     if (prevOpenedRow && prevOpenedRow !== id) {
       prevOpenedRow.close();
@@ -124,7 +97,6 @@ const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
           style={{ ...styles.item, backgroundColor: theme.colors.surface }}
           onPress={() => {
             Keyboard.dismiss();
-            //Alert.alert("Тип уборки: " + item.CleaningType?.Name + item.Tags);
             console.log(item);
           }}
         >
@@ -179,8 +151,15 @@ const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
             )}
           </View>
           <View style={styles.statusContainer}>
-            <View style={styles.status}>
-              <Text style={styles.title}>{taskStatus}</Text>
+            <View
+              style={{
+                ...styles.status,
+                backgroundColor: taskStatus.backgroundColor,
+              }}
+            >
+              <Text style={{ ...styles.title, color: taskStatus.titleColor }}>
+                {taskStatus.title}
+              </Text>
             </View>
           </View>
         </Pressable>
@@ -335,7 +314,7 @@ const styles = create({
     //backgroundColor: "yellow",
   },
   status: {
-    backgroundColor: "grey",
+    //backgroundColor: "grey",
     //width: 60,
     height: 40,
     borderRadius: 25,
