@@ -47,3 +47,34 @@ export const TaskStatus = (status) => {
       };
   }
 };
+
+export const TaskTypePriority = (priority) => {
+  switch (priority) {
+    case "Major":
+      return {
+        backgroundColor: "lightblue",
+        titleColor: "red",
+      };
+    case "Minor":
+      return {
+        backgroundColor: "lightgrey",
+        titleColor: "#08a2b4",
+      };
+    case "Critical":
+      return {
+        backgroundColor: "red",
+        titleColor: "blue",
+      };
+    case "Normal":
+      return {
+        backgroundColor: "yellow",
+        titleColor: "red",
+      };
+
+    default:
+      return {
+        backgroundColor: "yellow",
+        titleColor: "red",
+      };
+  }
+};

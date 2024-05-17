@@ -41,16 +41,16 @@ const en = {
       finishCleaning: "Finish",
       inspection: "Inspection",
     },
-    TasksScreen:{
+    TasksScreen: {
       taskStatus: {
-        D: 'Preliminary',
-        S: 'Open',
-        P: 'In work',
-        COMPL:'Fulfilled',
-        CLS: 'Closed',
-        CANC:'Cancelled',
-        Default: 'Status not found'
-      }
+        D: "Preliminary",
+        S: "Open",
+        P: "In work",
+        COMPL: "Fulfilled",
+        CLS: "Closed",
+        CANC: "Cancelled",
+        Default: "Status not found",
+      },
     },
     Time: {
       hour: "h",

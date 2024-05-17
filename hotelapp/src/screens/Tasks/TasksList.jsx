@@ -17,6 +17,7 @@ import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import { useTranslation } from "react-i18next";
 import { TaskStatus } from "./TaskStatus";
+import { TaskTypePriority } from "./TaskStatus";
 import { getDuration } from "../../utils/getDuration";
 //import { TasksScreen } from "./TasksScreen";
 
@@ -30,6 +31,7 @@ const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
     swipeRef?.current?.close();
   };*/
   const taskStatus = TaskStatus(item.Status);
+  const taskTypePriority = TaskTypePriority(item.Priority);
 
   const closeRow = (id) => {
     if (prevOpenedRow && prevOpenedRow !== id) {
@@ -114,7 +116,16 @@ const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
               {item.LinkedRoom && (
                 <Text style={styles.guestLayout}>{item.LinkedRoom?.Name}</Text>
               )}
-              <Text style={styles.guestLayout}>{item.TaskType?.Name}</Text>
+              <Text
+                style={{
+                  ...styles.guestLayout,
+                  backgroundColor: taskTypePriority.backgroundColor,
+                  borderRadius: 25,
+                  textAlign: "center",
+                }}
+              >
+                {item.TaskType?.Name}
+              </Text>
             </View>
             {item.Summary && (
               <View>
@@ -145,7 +156,6 @@ const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
                   size={24}
                   color={theme.colors.onSurface}
                 />
-
                 <Text style={styles.cleaning}>{item.AssignedUser?.Name}</Text>
               </View>
             )}
