@@ -46,12 +46,18 @@ const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
         style={{
           flexDirection: "row",
           //backgroundColor: "#ff8303",
-          justifyContent: "space-between",
-          alignItems: "center",
+          //justifyContent: "space-between",
+          //alignItems: "center",
         }}
       >
         {!item.StartedDate && item.CleaningStatus.Code !== "I" ? (
-          <Animated.View style={{ backgroundColor: "blue", marginRight: 5 }}>
+          <Animated.View
+            style={{
+              backgroundColor: "blue",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
             <Animated.Text
               onPress={() => Alert.alert(item?.CleaningType?.Name)}
               style={{
@@ -64,7 +70,13 @@ const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
           </Animated.View>
         ) : null}
 
-        <Animated.View style={{ backgroundColor: "green" }}>
+        <Animated.View
+          style={{
+            backgroundColor: "green",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <Animated.Text
             onPress={() => Alert.alert(item?.CleaningType?.Name)}
             style={{
@@ -91,7 +103,7 @@ const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
         //rightThreshold={-50}
       >
         <Pressable
-          style={{...styles.item, backgroundColor: theme.colors.surface}}
+          style={{ ...styles.item, backgroundColor: theme.colors.surface }}
           onPress={() => {
             Keyboard.dismiss();
             //Alert.alert("Тип уборки: " + item.CleaningType?.Name + item.Tags);
@@ -344,7 +356,8 @@ const styles = create({
     color: "white",
     fontSize: 16,
     fontWeight: "600",
-    paddingHorizontal: 10,
-    paddingVertical: 14,
+    paddingHorizontal: 5,
+    //paddingHorizontal: 10,
+    //paddingVertical: 14,
   },
 });
