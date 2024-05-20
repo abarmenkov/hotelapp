@@ -4,12 +4,13 @@ import { useTheme } from "react-native-paper";
 
 export const TaskStatus = (status) => {
   const { t } = useTranslation();
+  const theme = useTheme();
   switch (status) {
     case "D":
       return {
         title: t("TasksScreen.taskStatus.D"),
-        backgroundColor: "yellow",
-        titleColor: "red",
+        backgroundColor: "transparent",
+        titleColor: theme.colors.onSurface,
       };
     case "S":
       return {
