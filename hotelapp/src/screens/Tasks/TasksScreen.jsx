@@ -125,7 +125,7 @@ export const TasksScreen = ({ navigation }) => {
       accessible={false}
     >
       <SafeAreaView style={styles.root}>
-        <View style={styles.searchbar_container}>
+        {/*<View style={styles.searchbar_container}>
           <SearchbarComponent
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
@@ -133,7 +133,7 @@ export const TasksScreen = ({ navigation }) => {
             clicked={clicked}
             setClicked={setClicked}
           />
-        </View>
+        </View>*/}
 
         {isLoading ? (
           <LoadingIndicator text={t("Loading.loading")} />
@@ -158,10 +158,11 @@ export const TasksScreen = ({ navigation }) => {
 const styles = create({
   root: {
     flex: 1,
+    paddingVertical: 5,
 
     //alignItems: "center",
   },
-  searchbar_container: {
+  /*searchbar_container: {
     alignItems: "center",
     paddingVertical: 15,
     borderBottomWidth: 2,
@@ -173,5 +174,5 @@ const styles = create({
     fontSize: 25,
     fontWeight: "bold",
     marginLeft: "10%",
-  },
+  },*/
 });

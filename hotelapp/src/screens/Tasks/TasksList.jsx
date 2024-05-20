@@ -51,12 +51,20 @@ const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
         style={{
           flexDirection: "row",
           //backgroundColor: "#ff8303",
-          justifyContent: "space-between",
-          alignItems: "center",
+          //justifyContent: "space-between",
+          //alignItems: "center",
+          paddingVertical: 5,
         }}
       >
         {!item.StartedDate && item.CleaningStatus?.Code !== "I" ? (
-          <Animated.View style={{ backgroundColor: "blue", marginRight: 5 }}>
+          <Animated.View
+            style={{
+              backgroundColor: "blue",
+              //marginRight: 5,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
             <Animated.Text
               onPress={() => Alert.alert(item?.CleaningType?.Name)}
               style={{
@@ -69,7 +77,13 @@ const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
           </Animated.View>
         ) : null}
 
-        <Animated.View style={{ backgroundColor: "green" }}>
+        <Animated.View
+          style={{
+            backgroundColor: "green",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <Animated.Text
             onPress={() => Alert.alert(item?.CleaningType?.Name)}
             style={{
@@ -107,30 +121,34 @@ const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
               style={{
                 flexDirection: "row",
                 alignItems: "center",
-                //flexWrap: "wrap",
-                overflow: "hidden",
-                //paddingHorizontal: 5,
               }}
             >
-              <Text style={styles.guestLayout}>#</Text>
-              {item.LinkedRoom && (
-                <Text style={styles.guestLayout}>{item.LinkedRoom?.Name}</Text>
-              )}
-              <Text
+              <View style={styles.roomNumberContainer}>
+                <Text style={styles.roomNumber}>#</Text>
+                {item.LinkedRoom && (
+                  <Text style={styles.roomNumber}>{item.LinkedRoom?.Name}</Text>
+                )}
+              </View>
+              <View
                 style={{
-                  ...styles.guestLayout,
+                  ...styles.status,
                   backgroundColor: taskTypePriority.backgroundColor,
-                  borderRadius: 25,
-                  textAlign: "center",
                 }}
               >
-                {item.TaskType?.Name}
-              </Text>
+                <Text
+                  style={{
+                    ...styles.title,
+                    color: taskTypePriority.titleColor,
+                  }}
+                >
+                  {item.TaskType?.Name}
+                </Text>
+              </View>
             </View>
             {item.Summary && (
               <View>
                 <Text
-                  style={styles.guestInfoDetails}
+                  style={styles.taskSummary}
                   numberOfLines={1}
                   ellipsizeMode="tail"
                 >
@@ -141,7 +159,7 @@ const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
             {item.Description && (
               <View>
                 <Text
-                  style={styles.guestInfoDetails}
+                  style={styles.taskDescription}
                   numberOfLines={1}
                   ellipsizeMode="tail"
                 >
@@ -153,10 +171,12 @@ const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <MaterialCommunityIcons
                   name="account"
-                  size={24}
+                  size={22}
                   color={theme.colors.onSurface}
                 />
-                <Text style={styles.cleaning}>{item.AssignedUser?.Name}</Text>
+                <Text style={styles.assignedUser}>
+                  {item.AssignedUser?.Name}
+                </Text>
               </View>
             )}
           </View>
@@ -260,42 +280,27 @@ const styles = create({
     //gap: 4,
     //marginHorizontal: 5,
     //backgroundColor: "white",
-    paddingHorizontal: 25,
+    paddingHorizontal: 10,
   },
 
-  roomNumber: {
-    backgroundColor: "red",
-    width: 50,
-    height: 50,
-    borderRadius: 50,
-    justifyContent: "center",
-    alignItems: "center",
-  },
   title: {
     fontSize: 16,
     fontWeight: 600,
   },
-  guestInfoContainer: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    //marginRight: 5,
-    alignItems: "center",
-    backgroundColor: "yellow",
-    //paddingHorizontal: 5,
-  },
-  cleaning: {
-    fontSize: 18,
+
+  taskSummary: {
+    fontSize: 16,
+    fontWeight: 600,
     paddingHorizontal: 5,
   },
-  guestLayout: {
-    fontSize: 16,
-    fontWeight: 700,
+  taskDescription: {
+    fontSize: 14,
+    fontWeight: 400,
     paddingHorizontal: 5,
   },
-  guestInfoDetails: {
+  assignedUser: {
     fontSize: 16,
-    fontWeight: 500,
+    fontWeight: 600,
     paddingHorizontal: 5,
   },
 
@@ -307,9 +312,9 @@ const styles = create({
   actionBtn: {
     color: "white",
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: 600,
     paddingHorizontal: 10,
-    paddingVertical: 14,
+    //paddingVertical: 14,
   },
   title: {
     fontSize: 16,
@@ -326,10 +331,20 @@ const styles = create({
   status: {
     //backgroundColor: "grey",
     //width: 60,
-    height: 40,
+    height: 30,
     borderRadius: 25,
     justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: 15,
+    paddingHorizontal: 10,
+  },
+  roomNumber: {
+    fontSize: 16,
+    fontWeight: 500,
+    //paddingHorizontal: 5,
+  },
+  roomNumberContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 5,
   },
 });

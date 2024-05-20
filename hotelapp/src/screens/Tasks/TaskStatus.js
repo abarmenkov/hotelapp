@@ -1,4 +1,6 @@
 import { useTranslation } from "react-i18next";
+import { useTheme } from "react-native-paper";
+//import { useTheme } from "react-native-paper";
 
 export const TaskStatus = (status) => {
   const { t } = useTranslation();
@@ -49,26 +51,27 @@ export const TaskStatus = (status) => {
 };
 
 export const TaskTypePriority = (priority) => {
+  const theme = useTheme();
   switch (priority) {
     case "Major":
       return {
-        backgroundColor: "lightblue",
-        titleColor: "red",
+        backgroundColor: "orange",
+        titleColor: theme.colors.onSurface,
       };
     case "Minor":
       return {
-        backgroundColor: "lightgrey",
-        titleColor: "#08a2b4",
+        backgroundColor: "transparent",
+        titleColor: theme.colors.onSurface,
       };
     case "Critical":
       return {
         backgroundColor: "red",
-        titleColor: "blue",
+        titleColor: "white",
       };
     case "Normal":
       return {
-        backgroundColor: "yellow",
-        titleColor: "red",
+        backgroundColor: "lightgrey",
+        titleColor: "grey",
       };
 
     default:
