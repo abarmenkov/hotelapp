@@ -17,11 +17,13 @@ import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import { useTranslation } from "react-i18next";
 import { getDuration } from "../../utils/getDuration";
+import { ServiceRequestPriority } from "./ServiceRequestStatus";
 
 const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
   const { t } = useTranslation();
   const theme = useTheme();
   const timer = item.StartedDate ? getDuration(item.StartedDate) : null;
+  const priority = ServiceRequestPriority(item.Model.Priority);
 
   /*const swipeRef = useRef();
   const closeSwipeable = () => {
@@ -50,25 +52,23 @@ const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
           //alignItems: "center",
         }}
       >
-        {!item.StartedDate && item.CleaningStatus.Code !== "I" ? (
-          <Animated.View
+        <Animated.View
+          style={{
+            backgroundColor: "blue",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Animated.Text
+            onPress={() => Alert.alert(item?.RepairType?.Name)}
             style={{
-              backgroundColor: "blue",
-              alignItems: "center",
-              justifyContent: "center",
+              ...styles.actionBtn,
+              transform: [{ scale }],
             }}
           >
-            <Animated.Text
-              onPress={() => Alert.alert(item?.CleaningType?.Name)}
-              style={{
-                ...styles.actionBtn,
-                transform: [{ scale }],
-              }}
-            >
-              {t("HousekeepingScreen.startCleaning")}
-            </Animated.Text>
-          </Animated.View>
-        ) : null}
+            {t("HousekeepingScreen.startCleaning")}
+          </Animated.Text>
+        </Animated.View>
 
         <Animated.View
           style={{
@@ -78,7 +78,7 @@ const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
           }}
         >
           <Animated.Text
-            onPress={() => Alert.alert(item?.CleaningType?.Name)}
+            onPress={() => Alert.alert(item?.RepairType?.Name)}
             style={{
               ...styles.actionBtn,
               transform: [{ scale }],
@@ -119,12 +119,7 @@ const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
           <View style={styles.guestInfoContainer}>
             <View style={{ flex: 1 }}>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <MaterialCommunityIcons
-                  name="account"
-                  size={24}
-                  color={theme.colors.onSurface}
-                />
-                <Text style={styles.cleaning}>{item.CleaningType?.Name}</Text>
+                <Text style={styles.cleaning}>{item.RepairType?.Name}</Text>
               </View>
               <View
                 style={{
@@ -135,7 +130,6 @@ const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
                   //paddingHorizontal: 5,
                 }}
               >
-                <Text style={styles.guestLayout}>{item.GuestLayout}</Text>
                 <Text
                   style={styles.guestInfoDetails}
                   numberOfLines={1}
@@ -144,65 +138,24 @@ const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
                   {item.RoomType?.Name}
                 </Text>
               </View>
-
-              {item.BookingTags?.length > 0 ? (
-                <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-                  {item.BookingTags.map((item) => (
-                    <Text
-                      style={{
-                        marginRight: 10,
-                        borderBottomWidth: 2,
-                        borderBottomColor: item.Color,
-                      }}
-                      key={item.Code}
-                    >
-                      {item.Code}
-                    </Text>
-                  ))}
-                </View>
-              ) : null}
             </View>
-            {item.CleaningStatus?.Code === "I" ? (
-              <View style={styles.inspection}>
-                <Text style={styles.inspectionTitle}>
-                  {t("HousekeepingScreen.inspection")}
-                </Text>
-              </View>
-            ) : item.StartedDate ? (
-              <View style={styles.inspection}>
-                {item.ArrivalTime && (
-                  <>
-                    <MaterialCommunityIcons
-                      name="login"
-                      color="#08a2b4"
-                      size={22}
-                    />
-                    <Text style={styles.inspectionTitle}>
-                      {item.ArrivalTime}
-                    </Text>
-                  </>
-                )}
-                {item.DepartureTime && (
-                  <>
-                    <MaterialCommunityIcons
-                      name="logout"
-                      color="#08a2b4"
-                      size={22}
-                    />
-                    <Text style={styles.inspectionTitle}>
-                      {item.DepartureTime}
-                    </Text>
-                  </>
-                )}
-                <Ionicons
-                  style={{ marginRight: 5 }}
-                  name="timer"
-                  size={22}
-                  color="#08a2b4"
-                />
-                <Text style={styles.inspectionTitle}>{timer}</Text>
-              </View>
-            ) : null}
+          </View>
+          <View style={styles.statusContainer}>
+            <View
+              style={{
+                ...styles.status,
+                backgroundColor: priority.backgroundColor,
+              }}
+            >
+              <Text
+                style={{
+                  ...styles.title,
+                  color: priority.titleColor,
+                }}
+              >
+                {item.Model?.Priority}
+              </Text>
+            </View>
           </View>
         </Pressable>
       </Swipeable>
@@ -359,5 +312,21 @@ const styles = create({
     paddingHorizontal: 5,
     //paddingHorizontal: 10,
     //paddingVertical: 14,
+  },
+
+  statusContainer: {
+    //flex: 1,
+    //backgroundColor: "purple",
+    alignItems: "center",
+    //backgroundColor: "yellow",
+  },
+  status: {
+    //backgroundColor: "grey",
+    //width: 90,
+    height: 30,
+    borderRadius: 25,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 10,
   },
 });
