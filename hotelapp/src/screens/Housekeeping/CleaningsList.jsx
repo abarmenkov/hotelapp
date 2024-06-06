@@ -119,11 +119,13 @@ const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
           <View style={styles.guestInfoContainer}>
             <View style={{ flex: 1 }}>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <MaterialCommunityIcons
-                  name="account"
-                  size={24}
-                  color={theme.colors.onSurface}
-                />
+                {item.Guest ? (
+                  <MaterialCommunityIcons
+                    name="account"
+                    size={24}
+                    color={theme.colors.onSurface}
+                  />
+                ) : null}
                 <Text style={styles.cleaning}>{item.CleaningType?.Name}</Text>
               </View>
               <View
@@ -135,7 +137,9 @@ const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
                   //paddingHorizontal: 5,
                 }}
               >
-                <Text style={styles.guestLayout}>{item.GuestLayout}</Text>
+                {item.Guest ? (
+                  <Text style={styles.guestLayout}>{item.GuestLayout}</Text>
+                ) : null}
                 <Text
                   style={styles.guestInfoDetails}
                   numberOfLines={1}

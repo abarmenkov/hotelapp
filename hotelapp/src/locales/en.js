@@ -23,8 +23,9 @@ const en = {
     SearchBar: {
       ReservationsScreen: "Enter name, room or reservation number",
       HousekeepingScreen: "Enter guest name or room number",
-      fastpost_screen: "Enter name or room number",
+      Fastpost_screen: "Enter name or room number",
       TasksScreen: "Enter name or room number",
+      ServiceRequestsScreen: "Enter guest name or room number",
     },
     Loading: {
       loading: "Loading data is in process...",
