@@ -66,8 +66,8 @@ export const ServiceRequestPriority = (priority) => {
       };
     case "Critical":
       return {
-        backgroundColor: "red",
-        titleColor: "white",
+        backgroundColor: "pink",
+        titleColor: "red",
       };
     case "Normal":
       return {
