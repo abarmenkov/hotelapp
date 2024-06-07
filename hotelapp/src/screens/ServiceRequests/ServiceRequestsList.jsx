@@ -103,7 +103,10 @@ const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
         //rightThreshold={-50}
       >
         <Pressable
-          style={{ ...styles.item, backgroundColor: theme.colors.surface }}
+          style={{
+            ...styles.item,
+            backgroundColor: theme.colors.surface,
+          }}
           onPress={() => {
             Keyboard.dismiss();
             //Alert.alert("Тип уборки: " + item.CleaningType?.Name + item.Tags);
@@ -112,14 +115,14 @@ const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
         >
           <View style={styles.roomNumberContainer}>
             <View style={styles.roomNumber}>
-              <Text style={styles.title}>{item.Room?.Name}</Text>
+              <Text style={styles.roomNumberTitle}>{item.Room?.Name}</Text>
             </View>
           </View>
 
-          <View style={styles.guestInfoContainer}>
+          <View style={styles.serviceInfoContainer}>
             <View style={{ flex: 1 }}>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Text style={styles.cleaning}>{item.RepairType?.Name}</Text>
+              <View>
+                <Text style={styles.repairTitle}>{item.RepairType?.Name}</Text>
               </View>
               <View
                 style={{
@@ -131,7 +134,7 @@ const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
                 }}
               >
                 <Text
-                  style={styles.guestInfoDetails}
+                  style={styles.roomName}
                   numberOfLines={1}
                   ellipsizeMode="tail"
                 >
@@ -149,7 +152,7 @@ const Item = ({ item, prevOpenedRow, setPrevOpenedRow }) => {
             >
               <Text
                 style={{
-                  ...styles.title,
+                  ...styles.statusTitle,
                   color: priority.titleColor,
                 }}
               >
@@ -231,8 +234,9 @@ export const ServiceRequestsList = (props) => {
 const styles = create({
   list__container: {
     flex: 1,
-    paddingHorizontal: 5,
+    //paddingHorizontal: 5,
     //marginHorizontal: 5,
+    //backgroundColor: "purple",
   },
   item: {
     flex: 1,
@@ -245,7 +249,7 @@ const styles = create({
     //gap: 4,
     //marginHorizontal: 5,
     //backgroundColor: "purple",
-    //paddingHorizontal: 5,
+    //paddingHorizontal: 10,
   },
 
   roomNumberContainer: {
@@ -262,48 +266,27 @@ const styles = create({
     justifyContent: "center",
     alignItems: "center",
   },
-  title: {
+  roomNumberTitle: {
     fontSize: 16,
     fontWeight: 600,
   },
-  guestInfoContainer: {
-    flex: 6,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginRight: 5,
-    alignItems: "center",
+  serviceInfoContainer: {
+    flex: 5,
+    //flexDirection: "row",
+    //justifyContent: "space-between",
+    //marginRight: 5,
+    //alignItems: "center",
     //backgroundColor: "yellow",
     //paddingHorizontal: 5,
   },
-  cleaning: {
+  repairTitle: {
     fontSize: 18,
     paddingHorizontal: 5,
   },
-  guestLayout: {
-    fontSize: 16,
-    fontWeight: 700,
-    paddingHorizontal: 5,
-  },
-  guestInfoDetails: {
+  roomName: {
     fontSize: 16,
     fontWeight: 500,
     paddingHorizontal: 5,
-  },
-  inspection: {
-    backgroundColor: "#c4f3fd",
-    flexDirection: "row",
-    //width: 60,
-    height: 40,
-    borderRadius: 25,
-    justifyContent: "center",
-    alignItems: "center",
-    //marginRight: 50,
-    paddingHorizontal: 15,
-  },
-  inspectionTitle: {
-    fontSize: 16,
-    fontWeight: 600,
-    color: "#08a2b4",
   },
   actionBtn: {
     color: "white",
@@ -313,9 +296,8 @@ const styles = create({
     //paddingHorizontal: 10,
     //paddingVertical: 14,
   },
-
   statusContainer: {
-    //flex: 1,
+    flex: 1,
     //backgroundColor: "purple",
     alignItems: "center",
     //backgroundColor: "yellow",
@@ -328,5 +310,9 @@ const styles = create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 10,
+  },
+  statusTitle: {
+    fontSize: 16,
+    fontWeight: 600,
   },
 });
