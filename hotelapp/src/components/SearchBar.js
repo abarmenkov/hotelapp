@@ -35,7 +35,11 @@ export const SearchbarComponent = ({
         //onClearIconPress={() => searchBarRef.blur(...args)}
         //traileringIcon={"skull-crossbones"} //
         //clearIcon={"sword-cross"} // по умолчанию cross, пишем только когда хотим свою иконку
-        style={{ width: clicked ? WIDTH * 0.85 : WIDTH * 0.95 }}
+        style={{
+          width: clicked ? WIDTH * 0.85 : WIDTH * 0.95,
+          //height: 45,
+          //alignItems: "center",
+        }}
         onFocus={() => setClicked(true)}
         keyboardType="email-address"
         keyboardAppearance="dark"

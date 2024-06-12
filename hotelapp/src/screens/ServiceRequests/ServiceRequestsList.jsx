@@ -271,7 +271,7 @@ const styles = create({
     fontWeight: 600,
   },
   serviceInfoContainer: {
-    flex: 5,
+    flex: 4,
     //flexDirection: "row",
     //justifyContent: "space-between",
     //marginRight: 5,

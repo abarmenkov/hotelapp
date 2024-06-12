@@ -23,7 +23,7 @@ const en = {
     SearchBar: {
       ReservationsScreen: "Enter name, room or reservation number",
       HousekeepingScreen: "Enter guest name or room number",
-      Fastpost_screen: "Enter name or room number",
+      FastPostScreen: "Enter name or room/folio number",
       TasksScreen: "Enter name or room number",
       ServiceRequestsScreen: "Enter guest name or room number",
     },

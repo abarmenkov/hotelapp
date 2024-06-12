@@ -23,7 +23,7 @@ const ru = {
     SearchBar: {
       ReservationsScreen: "ФИО, номер комнаты или брони",
       HousekeepingScreen: "Имя гостя, номер комнаты",
-      Fastpost_screen: "ФИО, номер комнаты",
+      FastPostScreen: "ФИО, номер комнаты/счета",
       TasksScreen: "Название задачи",
       ServiceRequestsScreen: "Номер комнаты или ФИО",
     },
