@@ -26,6 +26,7 @@ const ru = {
       FastPostScreen: "ФИО, номер комнаты/счета",
       TasksScreen: "Название задачи",
       ServiceRequestsScreen: "Номер комнаты или ФИО",
+      Clear: "Очистить",
     },
     Loading: {
       loading: "Загрузка данных...",

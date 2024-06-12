@@ -57,7 +57,7 @@ export const SearchbarComponent = ({
             Keyboard.dismiss();
           }}
         >
-          Clear
+          {t("SearchBar.Clear")}
         </Button>
       )}
     </View>

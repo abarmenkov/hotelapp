@@ -26,6 +26,7 @@ const en = {
       FastPostScreen: "Enter name or room/folio number",
       TasksScreen: "Enter name or room number",
       ServiceRequestsScreen: "Enter guest name or room number",
+      Clear: "Clear",
     },
     Loading: {
       loading: "Loading data is in process...",
