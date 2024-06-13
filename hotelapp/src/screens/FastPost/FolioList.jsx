@@ -24,8 +24,8 @@ import { create } from "../../utils/normalize";
 const ItemPressable = ({ item }) => {
   const arrivalDate = formatDate(item.ArrivalDate);
   const departureDate = formatDate(item.DepartureDate);
-  const balanceColor = item.LocalCurrencyBalance < 0 ? "green" : "red";
-  const balanceBgColor = item.LocalCurrencyBalance < 0 ? "lightgreen" : "pink";
+  const balanceColor = item.LocalCurrencyBalance <= 0 ? "green" : "red";
+  const balanceBgColor = item.LocalCurrencyBalance <= 0 ? "lightgreen" : "pink";
 
   return (
     <Pressable
@@ -54,15 +54,9 @@ const ItemPressable = ({ item }) => {
             {item.MainGuest?.LastName} {item.MainGuest?.FirstName}{" "}
             {item.MainGuest?.MiddleName}
           </Text>
-          <Text
-            style={styles.guestInfoDetails}
-            numberOfLines={1}
-            ellipsizeMode="tail"
-          >
-            {`${arrivalDate.dateHour} ${arrivalDate.dateDay} - ${departureDate.dateHour} ${departureDate.dateDay}`}
-          </Text>
+          <Text style={styles.guestInfoDetails}>{item.GenericNo}</Text>
 
-          {item.Tags?.length > 0 ? (
+          {/*item.Tags?.length > 0 ? (
             <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
               {item.Tags.map((item) => (
                 <Text
@@ -77,34 +71,27 @@ const ItemPressable = ({ item }) => {
                 </Text>
               ))}
             </View>
-          ) : null}
+          ) : null*/}
         </View>
-        {item.LocalCurrencyBalance !== 0 ? (
-          <View style={styles.balanceContainer}>
-            <View
-              style={{
-                ...styles.balance,
-                backgroundColor: balanceBgColor,
-              }}
-            >
-              <Text style={{ ...styles.balanceTitle, color: balanceColor }}>
-                {item.LocalCurrencyBalance}
-              </Text>
-              <FontAwesome
-                name="rouble"
-                size={16}
-                color={balanceColor}
-                style={{ paddingHorizontal: 5 }}
-              />
-              <FontAwesome name="money" size={16} color={balanceColor} />
-            </View>
-          </View>
-        ) : null}
       </View>
 
-      <View style={styles.statusContainer}>
-        <View style={styles.status}>
-          <Text style={styles.title}>{item.Status}</Text>
+      <View style={styles.balanceContainer}>
+        <View
+          style={{
+            ...styles.balance,
+            backgroundColor: balanceBgColor,
+          }}
+        >
+          <Text style={{ ...styles.balanceTitle, color: balanceColor }}>
+            {item.LocalCurrencyBalance}
+          </Text>
+          <FontAwesome
+            name="rouble"
+            size={16}
+            color={balanceColor}
+            style={{ paddingHorizontal: 5 }}
+          />
+          <FontAwesome name="money" size={16} color={balanceColor} />
         </View>
       </View>
     </Pressable>
@@ -205,7 +192,7 @@ const styles = create({
     alignItems: "center",
   },
   guestInfoContainer: {
-    flex: 6,
+    flex: 4,
     flexDirection: "row",
     justifyContent: "space-between",
     //paddingHorizontal: 10,
