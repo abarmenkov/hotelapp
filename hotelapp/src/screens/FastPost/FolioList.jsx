@@ -127,46 +127,10 @@ const FolioList = ({
   setRefreshing,
   updateData,
   setUpdateData,
-  routeKey,
   isLoading,
   hasError,
 }) => {
   const { t } = useTranslation();
-  let filteredData;
-
-  switch (routeKey) {
-    case "arrivals": {
-      filteredData =
-        data.length === 0
-          ? []
-          : data.filter(
-              (item) => item.Status === "RES" && compareDate(item.ArrivalDate)
-            );
-      break;
-    }
-    case "inhouse": {
-      filteredData =
-        data.length === 0 ? [] : data.filter((item) => item.Status === "IN");
-      break;
-    }
-    case "departures": {
-      filteredData =
-        data.length === 0
-          ? []
-          : data.filter(
-              (item) => item.Status === "IN" && compareDate(item.DepartureDate)
-            );
-      break;
-    }
-    case "all": {
-      filteredData = data.length === 0 ? [] : data;
-
-      break;
-    }
-    default: {
-      filteredData = [];
-    }
-  }
 
   const renderItem = ({ item }) => {
     return reservationsFilter(item, searchQuery) ? <Item item={item} /> : null;
@@ -190,7 +154,7 @@ const FolioList = ({
           </Text>
         ) : (
           <FlatList
-            data={filteredData}
+            data={data}
             renderItem={renderItem}
             removeClippedSubviews={true}
             initialNumToRender={15}

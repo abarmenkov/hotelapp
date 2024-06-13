@@ -38,12 +38,12 @@ export const FastPostScreen = ({ navigation }) => {
   const isDrawerOpen = useDrawerStatus() === "open";
   if (isDrawerOpen) Keyboard.dismiss();
 
-  const [routes] = useState([
+  /*const [routes] = useState([
     { key: "arrivals", title: "Arrivals" },
     { key: "inhouse", title: "Inhouse" },
     { key: "departures", title: "Departures" },
     { key: "all", title: "All" },
-  ]);
+  ]);*/
 
   const endPoint = "/QuickSearch";
   //useEffect(() => setItems([]), [index]);
@@ -97,7 +97,7 @@ export const FastPostScreen = ({ navigation }) => {
     }, [updateData, index])
   );
 
-  const renderScene = ({ route }) => {
+  /*const renderScene = ({ route }) => {
     switch (route.key) {
       case "arrivals":
       case "inhouse":
@@ -121,7 +121,7 @@ export const FastPostScreen = ({ navigation }) => {
         return null;
     }
   };
-  /*const renderScene = ({ route }) => {
+  const renderScene = ({ route }) => {
     switch (route.key) {
       case "arrivals":
         return (
@@ -162,7 +162,7 @@ export const FastPostScreen = ({ navigation }) => {
       default:
         return null;
     }
-  };*/
+  };
 
   const renderTabBar = (props) => (
     <TabBar
@@ -186,7 +186,7 @@ export const FastPostScreen = ({ navigation }) => {
         t(`ReservationsTabViewScreen.${route.title}`)
       }
     />
-  );
+  );*/
 
   return (
     <TouchableWithoutFeedback
@@ -209,16 +209,16 @@ export const FastPostScreen = ({ navigation }) => {
         {isLoading ? (
           <LoadingIndicator text={t("Loading.loading")} />
         ) : (
-          <TabView
-            navigationState={{ index, routes }}
-            renderScene={renderScene}
-            onIndexChange={setIndex}
-            initialLayout={{ width: WIDTH }}
-            //style={{ backgroundColor: "red" }}
-            renderTabBar={renderTabBar}
-            swipeEnabled={false}
-            animationEnabled={true}
-            lazy
+          <FolioList
+            searchQuery={searchQuery}
+            data={items}
+            setClicked={setClicked}
+            refreshing={refreshing}
+            setRefreshing={setRefreshing}
+            updateData={updateData}
+            setUpdateData={setUpdateData}
+            isLoading={isLoading}
+            hasError={hasError}
           />
         )}
       </SafeAreaView>
