@@ -122,6 +122,7 @@ const FolioList = ({
   const renderItem = ({ item }) => {
     return reservationsFilter(item, searchQuery) ? <Item item={item} /> : null;
   };
+  const sortedData = data.sort((a, b) => a.GenericNo - b.GenericNo);
 
   return (
     <SafeAreaView style={styles.list__container}>
@@ -141,7 +142,7 @@ const FolioList = ({
           </Text>
         ) : (
           <FlatList
-            data={data}
+            data={sortedData}
             renderItem={renderItem}
             removeClippedSubviews={true}
             initialNumToRender={15}
