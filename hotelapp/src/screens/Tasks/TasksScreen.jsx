@@ -32,6 +32,7 @@ export const TasksScreen = ({ navigation }) => {
   const [hasError, setErrorFlag] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [updateData, setUpdateData] = useState(false);
+  
 
   const isDrawerOpen = useDrawerStatus() === "open";
   if (isDrawerOpen) Keyboard.dismiss();

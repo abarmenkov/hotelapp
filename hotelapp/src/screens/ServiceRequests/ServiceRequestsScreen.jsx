@@ -32,6 +32,7 @@ export const ServiceRequestsScreen = ({ navigation }) => {
   const [hasError, setErrorFlag] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [updateData, setUpdateData] = useState(false);
+  const [apiSearch, setApiSearch] = useState(false);
 
   const isDrawerOpen = useDrawerStatus() === "open";
   if (isDrawerOpen) Keyboard.dismiss();
@@ -131,6 +132,7 @@ export const ServiceRequestsScreen = ({ navigation }) => {
             searchLoading={searchLoading}
             clicked={clicked}
             setClicked={setClicked}
+            setApiSearch={setApiSearch}
           />
         </View>
 

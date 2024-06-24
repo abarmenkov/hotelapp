@@ -36,6 +36,7 @@ export const ReservationsTabViewScreen = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [updateData, setUpdateData] = useState(false);
   const [index, setIndex] = useState(0);
+  const [apiSearch, setApiSearch] = useState(false);
   //const layout = useWindowDimensions();
 
   //чтобы при открытии Drawer, если на странице открыта Keyboard, она закрывалась автоматически
@@ -207,6 +208,7 @@ export const ReservationsTabViewScreen = ({ navigation }) => {
             searchLoading={searchLoading}
             clicked={clicked}
             setClicked={setClicked}
+            setApiSearch={setApiSearch}
           />
         </View>
 

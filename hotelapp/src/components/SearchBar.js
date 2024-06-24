@@ -15,12 +15,12 @@ export const SearchbarComponent = ({
   setSearchQuery,
   clicked,
   setClicked,
+  setApiSearch,
 }) => {
   const searchBarRef = useRef();
   const { t } = useTranslation();
   const route = useRoute();
-  //const routeName = getFocusedRouteNameFromRoute(route) ?? "Test2";
-  //console.log(routeName);
+
   return (
     <View style={styles.searchBarContainer}>
       <Searchbar
@@ -31,6 +31,7 @@ export const SearchbarComponent = ({
         inputStyle={styles.inputStyle}
         //style={{ color: "green", backgroundColor: "yellow", }}
         onChangeText={setSearchQuery}
+        //onChangeText={() => setSearchQuery(value)}
         value={searchQuery}
         //onClearIconPress={() => searchBarRef.blur(...args)}
         //traileringIcon={"skull-crossbones"} //
@@ -43,10 +44,11 @@ export const SearchbarComponent = ({
         onFocus={() => setClicked(true)}
         keyboardType="email-address"
         keyboardAppearance="dark"
-        returnKeyType="next"
-        returnKeyLabel="next"
-
-        //onSubmitEditing={() => Keyboard.dismiss()}
+        returnKeyType="search"
+        returnKeyLabel="search"
+        onSubmitEditing={() => {
+          if (route.name == "FastPostScreen") setApiSearch(true);
+        }}
       />
       {clicked && (
         <Button
@@ -54,6 +56,7 @@ export const SearchbarComponent = ({
           onPress={() => {
             setSearchQuery("");
             setClicked(false);
+            setApiSearch(false)
             Keyboard.dismiss();
           }}
         >

@@ -31,7 +31,7 @@ export const FastPostScreen = ({ navigation }) => {
   const [hasError, setErrorFlag] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [updateData, setUpdateData] = useState(false);
-  const [index, setIndex] = useState(0);
+  const [apiSearch, setApiSearch] = useState(false);
   //const layout = useWindowDimensions();
 
   //чтобы при открытии Drawer, если на странице открыта Keyboard, она закрывалась автоматически
@@ -94,7 +94,7 @@ export const FastPostScreen = ({ navigation }) => {
 
         controller.abort("Data fetching cancelled");
       };
-    }, [updateData, index])
+    }, [updateData])
   );
 
   /*const renderScene = ({ route }) => {
@@ -203,6 +203,7 @@ export const FastPostScreen = ({ navigation }) => {
             searchLoading={searchLoading}
             clicked={clicked}
             setClicked={setClicked}
+            setApiSearch={setApiSearch}
           />
         </View>
 
