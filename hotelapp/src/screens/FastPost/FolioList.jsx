@@ -199,7 +199,7 @@ const styles = create({
     //paddingHorizontal: 10,
   },
   balanceContainer: {
-    flex: 1,
+    flex: 2,
     //backgroundColor: "green",
     alignItems: "center",
     justifyContent: "center",
