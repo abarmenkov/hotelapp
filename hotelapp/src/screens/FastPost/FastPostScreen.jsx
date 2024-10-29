@@ -33,23 +33,14 @@ export const FastPostScreen = ({ navigation }) => {
   const [updateData, setUpdateData] = useState(false);
   const [apiSearch, setApiSearch] = useState(false);
   //const layout = useWindowDimensions();
+  //console.log(apiSearch);
 
   //чтобы при открытии Drawer, если на странице открыта Keyboard, она закрывалась автоматически
   const isDrawerOpen = useDrawerStatus() === "open";
   if (isDrawerOpen) Keyboard.dismiss();
 
-  /*const [routes] = useState([
-    { key: "arrivals", title: "Arrivals" },
-    { key: "inhouse", title: "Inhouse" },
-    { key: "departures", title: "Departures" },
-    { key: "all", title: "All" },
-  ]);*/
-
-  const endPoint = "/QuickSearch";
-  //useEffect(() => setItems([]), [index]);
-
-  useFocusEffect(
-    useCallback(() => {
+  const endPoint = apiSearch ? "/Search" : "/QuickSearch";
+  /*useEffect(() => {
       const ArrivalDateTo = new Date();
 
       const controller = new AbortController();
@@ -94,99 +85,74 @@ export const FastPostScreen = ({ navigation }) => {
 
         controller.abort("Data fetching cancelled");
       };
+    }, [apiSearch]);*/
+
+  useFocusEffect(
+    useCallback(() => {
+      const ArrivalDateTo = new Date();
+      //const search = encodeURIComponent("Абакум");
+      const search = !isNaN(searchQuery)
+        ? searchQuery
+        : encodeURIComponent(searchQuery);
+
+      const controller = new AbortController();
+      ///прервать загрузку если сервер не отвечает
+      const newAbortSignal = (timeoutMs) => {
+        //const abortController = new AbortController();
+        setTimeout(() => controller.abort(), timeoutMs || 0);
+
+        return controller.signal;
+      };
+      const configurationObject =
+        apiSearch && searchQuery
+          ? {
+              method: "get",
+              url: `${appRoutes.folioPath()}${endPoint}?filter.query=${search}`,
+              signal: newAbortSignal(5000),
+              headers: {
+                Authorization: `Token ${token}`,
+                "Content-Type": "application/json",
+              },
+            }
+          : {
+              method: "post",
+              url: `${appRoutes.reservationPath()}${endPoint}`,
+              signal: newAbortSignal(5000),
+              headers: {
+                Authorization: `Token ${token}`,
+                "Content-Type": "application/json",
+              },
+              data: JSON.stringify({
+                Statuses: [{ Code: "IN" }, { Code: "RES" }],
+                ArrivalDateTo: ArrivalDateTo.toDateString(),
+                //DepartureDateTo: "2024-04-04T12:00:00+03:00",
+              }),
+            };
+
+      fetchData(
+        setIsLoading,
+        setItems,
+        configurationObject,
+        setErrorFlag,
+        setRefreshing,
+        refreshing,
+        controller
+      );
+
+      return () => {
+        /*if (!apiSearch) {
+          setSearchQuery("");
+        }*/
+
+        setClicked(false);
+        setErrorFlag(false);
+        setItems([]);
+        setApiSearch(false);
+
+        controller.abort("Data fetching cancelled");
+      };
     }, [updateData])
   );
-
-  /*const renderScene = ({ route }) => {
-    switch (route.key) {
-      case "arrivals":
-      case "inhouse":
-      case "departures":
-      case "all":
-        return (
-          <FolioList
-            searchQuery={searchQuery}
-            data={items}
-            setClicked={setClicked}
-            refreshing={refreshing}
-            setRefreshing={setRefreshing}
-            updateData={updateData}
-            setUpdateData={setUpdateData}
-            routeKey={route.key}
-            isLoading={isLoading}
-            hasError={hasError}
-          />
-        );
-      default:
-        return null;
-    }
-  };
-  const renderScene = ({ route }) => {
-    switch (route.key) {
-      case "arrivals":
-        return (
-          <ArrivalList
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            setClicked={setClicked}
-            index={index}
-          />
-        );
-      case "inhouse":
-        return (
-          <InHouseList
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            setClicked={setClicked}
-            index={index}
-          />
-        );
-      case "departures":
-        return (
-          <DeparturesList
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            setClicked={setClicked}
-            index={index}
-          />
-        );
-      case "all":
-        return (
-          <AllReservationsList
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            setClicked={setClicked}
-            index={index}
-          />
-        );
-      default:
-        return null;
-    }
-  };
-
-  const renderTabBar = (props) => (
-    <TabBar
-      {...props}
-      activeColor={"white"}
-      inactiveColor={"black"}
-      //style={{  }}
-
-      indicatorStyle={{
-        backgroundColor: "white",
-      }}
-      contentContainerStyle={{
-        backgroundColor: "orange",
-        justifyContent: "space-evenly",
-      }}
-      tabStyle={{
-        width: "auto",
-      }}
-      labelStyle={styles.tabBarLabel}
-      getLabelText={({ route }) =>
-        t(`ReservationsTabViewScreen.${route.title}`)
-      }
-    />
-  );*/
 
   return (
     <TouchableWithoutFeedback
@@ -204,6 +170,8 @@ export const FastPostScreen = ({ navigation }) => {
             clicked={clicked}
             setClicked={setClicked}
             setApiSearch={setApiSearch}
+            updateData={updateData}
+            setUpdateData={setUpdateData}
           />
         </View>
 
@@ -211,7 +179,7 @@ export const FastPostScreen = ({ navigation }) => {
           <LoadingIndicator text={t("Loading.loading")} />
         ) : (
           <FolioList
-            searchQuery={searchQuery}
+            //searchQuery={searchQuery}
             data={items}
             setClicked={setClicked}
             refreshing={refreshing}

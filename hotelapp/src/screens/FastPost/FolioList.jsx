@@ -46,14 +46,24 @@ const ItemPressable = ({ item }) => {
 
       <View style={styles.guestInfoContainer}>
         <View style={{ flex: 1 }}>
-          <Text
-            style={styles.guestInfoDetails}
-            numberOfLines={1}
-            ellipsizeMode="tail"
-          >
-            {item.MainGuest?.LastName} {item.MainGuest?.FirstName}{" "}
-            {item.MainGuest?.MiddleName}
-          </Text>
+          {item.MainGuest ? (
+            <Text
+              style={styles.guestInfoDetails}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {item.MainGuest?.LastName} {item.MainGuest?.FirstName}{" "}
+              {item.MainGuest?.MiddleName}
+            </Text>
+          ) : (
+            <Text
+              style={styles.guestInfoDetails}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {item.Name}
+            </Text>
+          )}
           <Text style={styles.guestInfoDetails}>{item.GenericNo}</Text>
 
           {/*item.Tags?.length > 0 ? (
@@ -100,14 +110,14 @@ const ItemPressable = ({ item }) => {
 
 const Item = ({ item }) => {
   return (
-    <View key={item.Id}>
+    <View>
       <ItemPressable item={item} />
     </View>
   );
 };
 
 const FolioList = ({
-  searchQuery,
+  //searchQuery,
   setClicked,
   data,
   refreshing,
@@ -119,9 +129,11 @@ const FolioList = ({
 }) => {
   const { t } = useTranslation();
 
-  const renderItem = ({ item }) => {
+  const renderItem = ({ item }) => <Item item={item} />;
+  /*const renderItem = ({ item }) => {
     return reservationsFilter(item, searchQuery) ? <Item item={item} /> : null;
-  };
+  };*/
+
   const sortedData = data.sort((a, b) => a.GenericNo - b.GenericNo);
 
   return (
@@ -146,7 +158,7 @@ const FolioList = ({
             renderItem={renderItem}
             removeClippedSubviews={true}
             initialNumToRender={15}
-            keyExtractor={(item) => item.Id}
+            keyExtractor={(item) => item.GenericNo}
             keyboardShouldPersistTaps={"handled"} // чтобы скрыть открытую клавиатуру и отработать onPress элемента
             refreshControl={
               <RefreshControl

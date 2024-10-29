@@ -16,6 +16,8 @@ export const SearchbarComponent = ({
   clicked,
   setClicked,
   setApiSearch,
+  updateData,
+  setUpdateData,
 }) => {
   const searchBarRef = useRef();
   const { t } = useTranslation();
@@ -33,7 +35,14 @@ export const SearchbarComponent = ({
         onChangeText={setSearchQuery}
         //onChangeText={() => setSearchQuery(value)}
         value={searchQuery}
-        //onClearIconPress={() => searchBarRef.blur(...args)}
+        onClearIconPress={() => {
+          if (route.name == "FastPostScreen") {
+            setSearchQuery("");
+            //setClicked(false);
+            //setApiSearch(false);
+            //Keyboard.dismiss();
+          }
+        }}
         //traileringIcon={"skull-crossbones"} //
         //clearIcon={"sword-cross"} // по умолчанию cross, пишем только когда хотим свою иконку
         style={{
@@ -44,19 +53,31 @@ export const SearchbarComponent = ({
         onFocus={() => setClicked(true)}
         keyboardType="email-address"
         keyboardAppearance="dark"
-        returnKeyType="search"
+        returnKeyType={route.name == "FastPostScreen" ? "search" : "done"}
         returnKeyLabel="search"
+        enablesReturnKeyAutomatically={true}
         onSubmitEditing={() => {
-          if (route.name == "FastPostScreen") setApiSearch(true);
+          if (route.name == "FastPostScreen") {
+            if (!searchQuery) {
+              console.log("пустой запрос");
+            } else {
+              setApiSearch(true);
+              setUpdateData(!updateData);
+            }
+          }
         }}
       />
       {clicked && (
         <Button
           mode="text"
           onPress={() => {
+            if (route.name == "FastPostScreen") {
+              setUpdateData(!updateData);
+              setApiSearch(false);
+            }
             setSearchQuery("");
             setClicked(false);
-            setApiSearch(false)
+
             Keyboard.dismiss();
           }}
         >
