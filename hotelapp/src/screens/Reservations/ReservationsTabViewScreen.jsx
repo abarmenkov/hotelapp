@@ -20,10 +20,10 @@ import { useDrawerStatus } from "@react-navigation/drawer";
 import { useFocusEffect } from "@react-navigation/native";
 import { create } from "../../utils/normalize";
 import { appRoutes } from "../../API/route";
-import AllReservationsList from "./AllReservationsList";
+/*import AllReservationsList from "./AllReservationsList";
 import ArrivalList from "./ArrivalList";
 import DeparturesList from "./DeparturesList";
-import InHouseList from "./InHouseList";
+import InHouseList from "./InHouseList";*/
 
 export const ReservationsTabViewScreen = ({ navigation }) => {
   const { t } = useTranslation();

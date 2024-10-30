@@ -7,6 +7,7 @@ import { AddReservationScreen } from "../screens/Reservations/AddReservationScre
 import { CleaningScreen } from "../screens/Housekeeping/CleaningScreen";
 import { AddServiceTaskScreen } from "../screens/Housekeeping/AddServiceTask";
 import { ReservationsTabViewScreen } from "../screens/Reservations/ReservationsTabViewScreen";
+import Account from "../screens/Account";
 
 const Stack = createStackNavigator();
 
@@ -26,6 +27,11 @@ export const ReservationsStackNavigator = ({ route }) => {
         name="AddReservation"
         component={AddReservationScreen}
         //options={{ headerShown: true }}
+      />
+      <Stack.Screen
+        name="Account"
+        component={Account}
+        options={{ headerShown: true }}
       />
       <Stack.Screen
         name="CleaningScreen"

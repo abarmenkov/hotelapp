@@ -90,7 +90,7 @@ export const FastPostScreen = ({ navigation }) => {
   useFocusEffect(
     useCallback(() => {
       const ArrivalDateTo = new Date();
-      //const search = encodeURIComponent("Абакум");
+      
       const search = !isNaN(searchQuery)
         ? searchQuery
         : encodeURIComponent(searchQuery);
@@ -147,7 +147,7 @@ export const FastPostScreen = ({ navigation }) => {
         setClicked(false);
         setErrorFlag(false);
         setItems([]);
-        setApiSearch(false);
+        //setApiSearch(false);
 
         controller.abort("Data fetching cancelled");
       };

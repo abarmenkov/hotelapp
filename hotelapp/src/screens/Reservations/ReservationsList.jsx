@@ -20,8 +20,10 @@ import { formatDate } from "../../utils/formatDate";
 import { FontAwesome } from "@expo/vector-icons";
 
 import { create } from "../../utils/normalize";
+import { useNavigation } from "@react-navigation/native";
 
 const ItemPressable = ({ item }) => {
+  const navigation = useNavigation();
   const arrivalDate = formatDate(item.ArrivalDate);
   const departureDate = formatDate(item.DepartureDate);
   const balanceColor = item.LocalCurrencyBalance < 0 ? "green" : "red";
@@ -32,10 +34,14 @@ const ItemPressable = ({ item }) => {
       style={styles.item}
       onPress={() => {
         Keyboard.dismiss();
-        Alert.alert(
+        {
+          /*Alert.alert(
           "Pressed Reservation with arrival date = " + item.ArrivalDate
-        );
-        console.log(item);
+        );*/
+        }
+        navigation.navigate("Account", { item: item });
+
+        //console.log(item);
       }}
     >
       <View style={styles.roomNumberContainer}>
