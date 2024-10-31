@@ -21,6 +21,7 @@ import { FontAwesome } from "@expo/vector-icons";
 
 import { create } from "../../utils/normalize";
 import { useNavigation } from "@react-navigation/native";
+import { AddReservationScreen } from "./AddReservationScreen";
 
 const ItemPressable = ({ item }) => {
   const navigation = useNavigation();
@@ -40,6 +41,7 @@ const ItemPressable = ({ item }) => {
         );*/
         }
         navigation.navigate("Account", { item: item });
+        //navigation.navigate("AddReservation", { item: item });
 
         //console.log(item);
       }}

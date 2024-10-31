@@ -1,5 +1,8 @@
 const en = {
   translation: {
+    AccountHeader: {
+      title: "Account",
+    },
     LoginScreen: {
       login_placeholder: "Enter your login",
       password_placeholder: "Enter your password",

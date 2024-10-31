@@ -1,5 +1,8 @@
 const ru = {
   translation: {
+    AccountHeader: {
+      title: "Счёт",
+    },
     LoginScreen: {
       login_placeholder: "Введите Ваш логин",
       password_placeholder: "Введите Ваш пароль",

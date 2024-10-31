@@ -15,7 +15,7 @@ export const fetchData = async (
       setIsLoading(true);
     }
     const response = await axios(configurationObject);
-    console.log(response.data);
+    //console.log(response.data);
 
     if (response.status === 200) {
       setItems(response.data);

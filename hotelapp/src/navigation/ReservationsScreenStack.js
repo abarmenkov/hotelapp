@@ -8,6 +8,7 @@ import { CleaningScreen } from "../screens/Housekeeping/CleaningScreen";
 import { AddServiceTaskScreen } from "../screens/Housekeeping/AddServiceTask";
 import { ReservationsTabViewScreen } from "../screens/Reservations/ReservationsTabViewScreen";
 import Account from "../screens/Account";
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 
 const Stack = createStackNavigator();
 
@@ -26,12 +27,18 @@ export const ReservationsStackNavigator = ({ route }) => {
       <Stack.Screen
         name="AddReservation"
         component={AddReservationScreen}
-        //options={{ headerShown: true }}
+        options={{ headerShown: true }}
       />
       <Stack.Screen
         name="Account"
         component={Account}
-        options={{ headerShown: true }}
+        options={{
+          headerShown: true,
+          headerBackTitleVisible: false,
+          headerBackImage: () => (
+            <MaterialCommunityIcons name="close" size={24} />
+          ),
+        }}
       />
       <Stack.Screen
         name="CleaningScreen"
