@@ -15,6 +15,7 @@ export const AccountHeader = ({ navigation, title }) => {
   return (
     <Appbar.Header style={theme.colors.onSecondary}>
       <Appbar.BackAction size={24} onPress={navigation.goBack} />
+      {/* Пользовательская иконка для BackAction */}
       {/*<Appbar.Action icon="close" onPress={navigation.goBack} />*/}
       <Appbar.Content
         title={`${t("AccountHeader.title")} #${title}`}
@@ -25,24 +26,27 @@ export const AccountHeader = ({ navigation, title }) => {
         onPress={() => {
           console.log("delete");
         }}
+        disabled
       />
       <Appbar.Action
         icon="circle-edit-outline"
         onPress={() => {
           console.log("edit");
         }}
+        disabled
       />
       <Appbar.Action
         icon="magnify"
         onPress={() => {
           console.log("search");
         }}
+        disabled
       />
       <Menu
         visible={visible}
         onDismiss={closeMenu}
         anchor={
-          <Tooltip title="dots">
+          <Tooltip title="Action menu">
             <Appbar.Action icon="dots-vertical" onPress={openMenu} />
           </Tooltip>
         }
@@ -53,9 +57,9 @@ export const AccountHeader = ({ navigation, title }) => {
       >
         <Menu.Item
           onPress={() => {
-            Alert.alert("Action : ", "Print");
+            Alert.alert("Action : ", "Post");
           }}
-          title="Print"
+          title={t("AccountHeader.actions_menu.post")}
         />
         <Divider />
 
@@ -63,21 +67,22 @@ export const AccountHeader = ({ navigation, title }) => {
           onPress={() => {
             Alert.alert("Action : ", "Forward");
           }}
-          title="Forward"
+          title={t("AccountHeader.actions_menu.pay")}
           disabled
         />
+        <Divider />
         <Menu.Item
           onPress={() => {
             Alert.alert("Action : ", "Backward");
           }}
-          title="Backward"
+          title={t("AccountHeader.actions_menu.checkin")}
           disabled
         />
         <Menu.Item
           onPress={() => {
             Alert.alert("Action :", "Save");
           }}
-          title="Save"
+          title={t("AccountHeader.actions_menu.checkout")}
           disabled
         />
       </Menu>

@@ -2,6 +2,13 @@ const en = {
   translation: {
     AccountHeader: {
       title: "Account",
+      actions_menu: {
+        post: 'Post',
+        pay: "Pay",
+        checkout: "Check out",
+        checkin: "Check in",
+
+      }
     },
     LoginScreen: {
       login_placeholder: "Enter your login",

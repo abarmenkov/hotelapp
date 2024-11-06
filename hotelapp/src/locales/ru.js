@@ -2,6 +2,12 @@ const ru = {
   translation: {
     AccountHeader: {
       title: "Счёт",
+      actions_menu: {
+        post: "Начислить",
+        pay: "Оплатить",
+        checkout: "Выселить",
+        checkin: "Поселить",
+      },
     },
     LoginScreen: {
       login_placeholder: "Введите Ваш логин",
