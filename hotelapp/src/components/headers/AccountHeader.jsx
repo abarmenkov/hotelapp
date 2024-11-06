@@ -60,6 +60,7 @@ export const AccountHeader = ({ navigation, title }) => {
             Alert.alert("Action : ", "Post");
           }}
           title={t("AccountHeader.actions_menu.post")}
+          leadingIcon="cash"
         />
         <Divider />
 
@@ -68,6 +69,7 @@ export const AccountHeader = ({ navigation, title }) => {
             Alert.alert("Action : ", "Forward");
           }}
           title={t("AccountHeader.actions_menu.pay")}
+          leadingIcon="cash-plus"
           disabled
         />
         <Divider />
@@ -76,6 +78,7 @@ export const AccountHeader = ({ navigation, title }) => {
             Alert.alert("Action : ", "Backward");
           }}
           title={t("AccountHeader.actions_menu.checkin")}
+          leadingIcon="login"
           disabled
         />
         <Menu.Item
@@ -83,6 +86,7 @@ export const AccountHeader = ({ navigation, title }) => {
             Alert.alert("Action :", "Save");
           }}
           title={t("AccountHeader.actions_menu.checkout")}
+          leadingIcon="logout"
           disabled
         />
       </Menu>
