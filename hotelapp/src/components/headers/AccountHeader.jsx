@@ -90,6 +90,7 @@ export const AccountHeader = ({ navigation, title }) => {
           disabled
         />
       </Menu>
+      
     </Appbar.Header>
   );
 };
