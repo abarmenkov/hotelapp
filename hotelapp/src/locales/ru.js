@@ -25,6 +25,9 @@ const ru = {
       service_requests: "Сервисные заявки",
       logout: " Выход",
     },
+    Folio: {
+      transactions_groups: "Группы услуг",
+    },
     Settings: {
       add_hotel: "Добавить отель",
       select_language: "Выбрать язык по умолчанию",

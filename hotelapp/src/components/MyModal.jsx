@@ -3,8 +3,10 @@ import { Alert, Modal, StyleSheet, Text, Pressable, View } from "react-native";
 //import Modal from "react-native-modal";
 import ReactNativeModal from "react-native-modal";
 //import { Modal, Portal, Text, Button, PaperProvider } from "react-native-paper";
+import { useTranslation } from "react-i18next";
 
 const MyModal = ({ visible, hideModal }) => {
+  const { t } = useTranslation();
   return (
     <View>
       <ReactNativeModal
@@ -43,7 +45,7 @@ const MyModal = ({ visible, hideModal }) => {
               width: 450,
             }}
           >
-            <Text>I am the modal content!</Text>
+            <Text>{t("Folio.transactions_groups")}</Text>
           </View>
         </View>
       </ReactNativeModal>
@@ -51,8 +53,7 @@ const MyModal = ({ visible, hideModal }) => {
   );
 };
 
-
-//react-native-paper Modal- не найден bottom-slide 
+//react-native-paper Modal- не найден bottom-slide
 
 /*const MyModal = ({ visible, hideModal }) => {
   //const [visible, setVisible] = React.useState(false);

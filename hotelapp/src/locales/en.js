@@ -3,12 +3,11 @@ const en = {
     AccountHeader: {
       title: "Account",
       actions_menu: {
-        post: 'Post',
+        post: "Post",
         pay: "Pay",
         checkout: "Check out",
         checkin: "Check in",
-
-      }
+      },
     },
     LoginScreen: {
       login_placeholder: "Enter your login",
@@ -25,6 +24,9 @@ const en = {
       tasks: "Tasks",
       service_requests: "Service Requests",
       logout: "Log out",
+    },
+    Folio: {
+      transactions_groups: "Transactions groups",
     },
     Settings: {
       add_hotel: "Add hotel",
