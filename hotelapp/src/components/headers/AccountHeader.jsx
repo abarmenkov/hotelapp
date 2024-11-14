@@ -4,7 +4,7 @@ import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { Alert } from "react-native";
 
-export const AccountHeader = ({ navigation, title }) => {
+export const AccountHeader = ({ navigation, title, showModal }) => {
   const { t } = useTranslation();
   const theme = useTheme();
   const [visible, setVisible] = useState(false);
@@ -57,7 +57,8 @@ export const AccountHeader = ({ navigation, title }) => {
       >
         <Menu.Item
           onPress={() => {
-            Alert.alert("Action : ", "Post");
+            showModal();
+            setVisible(false);
           }}
           title={t("AccountHeader.actions_menu.post")}
           leadingIcon="cash"
@@ -90,7 +91,6 @@ export const AccountHeader = ({ navigation, title }) => {
           disabled
         />
       </Menu>
-      
     </Appbar.Header>
   );
 };

@@ -33,7 +33,7 @@ const Account = ({ route, navigation }) => {
 
   useEffect(() => {
     navigation.setOptions({
-      header: (props) => <AccountHeader {...props} title={GenericNo} />,
+      header: (props) => <AccountHeader {...props} title={GenericNo} showModal={showModal}/>,
       /*headerBackTitleVisible: false,
       headerBackImage: () => <MaterialCommunityIcons name="close" size={24} />,
       headerTitle: "test",*/

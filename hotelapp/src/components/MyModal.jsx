@@ -1,12 +1,91 @@
-import * as React from "react";
-import { Alert, Modal, StyleSheet, Text, Pressable, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  Alert,
+  Modal,
+  StyleSheet,
+  Text,
+  Pressable,
+  View,
+  FlatList,
+  StatusBar,
+} from "react-native";
 //import Modal from "react-native-modal";
 import ReactNativeModal from "react-native-modal";
 //import { Modal, Portal, Text, Button, PaperProvider } from "react-native-paper";
 import { useTranslation } from "react-i18next";
+import { token } from "../API/route";
+import { fetchData } from "../API/FetchData";
+import { appRoutes } from "../API/route";
 
 const MyModal = ({ visible, hideModal }) => {
+  const [items, setItems] = useState([]);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasError, setErrorFlag] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [updateData, setUpdateData] = useState(false);
+  const [apiSearch, setApiSearch] = useState(false);
+  //const endPoint = "/Logus.HMS.Entities.Dictionaries.ServiceItem";
+  const endPoint = "/Logus.HMS.Entities.Dictionaries.ServiceGroup";
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const newAbortSignal = (timeoutMs) => {
+      setTimeout(() => controller.abort(), timeoutMs || 0);
+
+      return controller.signal;
+    };
+    const configurationObject = {
+      method: "get",
+      url: `${appRoutes.dictionariesPath()}${endPoint}`,
+      //url: appRoutes.dictionariesPath(),
+      signal: newAbortSignal(5000),
+      headers: {
+        Authorization: `Token ${token}`,
+        "Content-Type": "application/json",
+      },
+      params: {
+        propertyId: 1,
+      },
+    };
+    fetchData(
+      setIsLoading,
+      setItems,
+      configurationObject,
+      setErrorFlag,
+      setRefreshing,
+      refreshing,
+      controller
+    );
+    return () => {
+      setErrorFlag(false);
+      controller.abort("Data fetching cancelled");
+    };
+  }, [updateData]);
+
   const { t } = useTranslation();
+
+  const ServiceGroupName = ({ item }) => {
+    return (
+      <Pressable onPress={() => console.log("pressed")}>
+        <View
+          style={{
+            backgroundColor: "#f9c2ff",
+            padding: 8,
+            marginVertical: 8,
+            marginHorizontal: 16,
+          }}
+        >
+          <Text>{item.Name}</Text>
+        </View>
+      </Pressable>
+    );
+  };
+
+  const renderItem = ({ item }) => <ServiceGroupName item={item} />;
+
+  //console.log(items);
+
   return (
     <View>
       <ReactNativeModal
@@ -18,7 +97,7 @@ const MyModal = ({ visible, hideModal }) => {
         style={{
           //backgroundColor: "green",
           //padding: 120,
-          margin: 0,
+          margin: 10,
           //position: "relative",
           //height: 300,
           //width: 450,
@@ -29,8 +108,9 @@ const MyModal = ({ visible, hideModal }) => {
         <View
           style={{
             flex: 1,
-            alignItems: "center",
-            justifyContent: "center",
+
+            //alignItems: "center",
+            //justifyContent: "space-between",
             //height: 200,
             //backgroundColor: "yellow",
             //width: 150,
@@ -38,14 +118,34 @@ const MyModal = ({ visible, hideModal }) => {
         >
           <View
             style={{
-              alignItems: "center",
+              //alignItems: "center",
               justifyContent: "center",
-              height: 450,
+              height: 50,
               backgroundColor: "pink",
-              width: 450,
+              //width: 450,
             }}
           >
             <Text>{t("Folio.transactions_groups")}</Text>
+          </View>
+          <View
+            style={{
+              //flex: 1,
+              //alignItems: "center",
+              //justifyContent: "space-evenly",
+              //height: 200,
+              //backgroundColor: "green",
+              //width: 150,
+            }}
+          >
+            <FlatList
+              data={items}
+              renderItem={renderItem}
+              removeClippedSubviews={true}
+              //initialNumToRender={15}
+              keyExtractor={(item) => item.Id}
+              keyboardShouldPersistTaps={"handled"}
+              justifyContent="space-evenly"
+            />
           </View>
         </View>
       </ReactNativeModal>
