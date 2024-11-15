@@ -18,7 +18,8 @@ import { fetchData } from "../API/FetchData";
 import { appRoutes } from "../API/route";
 
 const MyModal = ({ visible, hideModal }) => {
-  const [items, setItems] = useState([]);
+  const [serviceGroups, setServiceGroups] = useState([]);
+  const [serviceItems, setServiceItems] = useState([]);
   const [searchLoading, setSearchLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setErrorFlag] = useState(false);
@@ -26,9 +27,9 @@ const MyModal = ({ visible, hideModal }) => {
   const [updateData, setUpdateData] = useState(false);
   const [apiSearch, setApiSearch] = useState(false);
   //const endPoint = "/Logus.HMS.Entities.Dictionaries.ServiceItem";
-  const endPoint = "/Logus.HMS.Entities.Dictionaries.ServiceGroup";
 
   useEffect(() => {
+    const endPoint = "/Logus.HMS.Entities.Dictionaries.ServiceGroup";
     const controller = new AbortController();
     const newAbortSignal = (timeoutMs) => {
       setTimeout(() => controller.abort(), timeoutMs || 0);
@@ -50,7 +51,42 @@ const MyModal = ({ visible, hideModal }) => {
     };
     fetchData(
       setIsLoading,
-      setItems,
+      setServiceGroups,
+      configurationObject,
+      setErrorFlag,
+      setRefreshing,
+      refreshing,
+      controller
+    );
+    return () => {
+      setErrorFlag(false);
+      controller.abort("Data fetching cancelled");
+    };
+  }, [updateData]);
+  useEffect(() => {
+    const endPoint = "/Logus.HMS.Entities.Dictionaries.ServiceItem";
+    const controller = new AbortController();
+    const newAbortSignal = (timeoutMs) => {
+      setTimeout(() => controller.abort(), timeoutMs || 0);
+
+      return controller.signal;
+    };
+    const configurationObject = {
+      method: "get",
+      url: `${appRoutes.dictionariesPath()}${endPoint}`,
+      //url: appRoutes.dictionariesPath(),
+      signal: newAbortSignal(5000),
+      headers: {
+        Authorization: `Token ${token}`,
+        "Content-Type": "application/json",
+      },
+      params: {
+        propertyId: 1,
+      },
+    };
+    fetchData(
+      setIsLoading,
+      setServiceItems,
       configurationObject,
       setErrorFlag,
       setRefreshing,
@@ -65,9 +101,17 @@ const MyModal = ({ visible, hideModal }) => {
 
   const { t } = useTranslation();
 
+  const serviceItemsFilter = (serviceGropuId) =>
+    serviceItems.filter((item) => item.ServiceGroupId === serviceGropuId);
+
   const ServiceGroupName = ({ item }) => {
     return (
-      <Pressable onPress={() => console.log("pressed")}>
+      <Pressable
+        onPress={() => {
+          const filteredServiceItems = serviceItemsFilter(item.Id);
+          console.log(filteredServiceItems.map((item) => item.Name));
+        }}
+      >
         <View
           style={{
             backgroundColor: "#f9c2ff",
@@ -128,17 +172,19 @@ const MyModal = ({ visible, hideModal }) => {
             <Text>{t("Folio.transactions_groups")}</Text>
           </View>
           <View
-            style={{
-              //flex: 1,
-              //alignItems: "center",
-              //justifyContent: "space-evenly",
-              //height: 200,
-              //backgroundColor: "green",
-              //width: 150,
-            }}
+            style={
+              {
+                //flex: 1,
+                //alignItems: "center",
+                //justifyContent: "space-evenly",
+                //height: 200,
+                //backgroundColor: "green",
+                //width: 150,
+              }
+            }
           >
             <FlatList
-              data={items}
+              data={serviceGroups}
               renderItem={renderItem}
               removeClippedSubviews={true}
               //initialNumToRender={15}
