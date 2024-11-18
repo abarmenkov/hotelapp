@@ -27,6 +27,8 @@ const ru = {
     },
     Folio: {
       transactions_groups: "Группы услуг",
+      post: "Начислить",
+      cancel: "Отменить",
     },
     Settings: {
       add_hotel: "Добавить отель",

@@ -8,6 +8,7 @@ import { CleaningScreen } from "../screens/Housekeeping/CleaningScreen";
 import { AddServiceTaskScreen } from "../screens/Housekeeping/AddServiceTask";
 import { ReservationsTabViewScreen } from "../screens/Reservations/ReservationsTabViewScreen";
 import Account from "../screens/Account";
+import ServiceGroupScreen from "../screens/ServiceGroupScreen";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 
 const Stack = createStackNavigator();
@@ -38,6 +39,16 @@ export const ReservationsStackNavigator = ({ route }) => {
           headerBackImage: () => (
             <MaterialCommunityIcons name="close" size={24} />
           ),
+        }}
+      />
+      <Stack.Screen
+        name="ServiceGroup"
+        component={ServiceGroupScreen}
+        options={{
+          headerShown: true,
+          headerLeft: () => null, //чтобы скрыть кнопку назад Expo, Android
+          //headerBackVisible: false, // не скрывает назад
+          //headerBackTitleVisible: false, // не скрывает назад
         }}
       />
       <Stack.Screen

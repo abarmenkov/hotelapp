@@ -27,6 +27,8 @@ const en = {
     },
     Folio: {
       transactions_groups: "Transactions groups",
+      post: "Post",
+      cancel: "Cancel",
     },
     Settings: {
       add_hotel: "Add hotel",

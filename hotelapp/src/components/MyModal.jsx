@@ -16,8 +16,10 @@ import { useTranslation } from "react-i18next";
 import { token } from "../API/route";
 import { fetchData } from "../API/FetchData";
 import { appRoutes } from "../API/route";
+import { useNavigation } from "@react-navigation/native";
 
 const MyModal = ({ visible, hideModal }) => {
+  const navigation = useNavigation();
   const [serviceGroups, setServiceGroups] = useState([]);
   const [serviceItems, setServiceItems] = useState([]);
   const [searchLoading, setSearchLoading] = useState(false);
@@ -107,9 +109,13 @@ const MyModal = ({ visible, hideModal }) => {
   const ServiceGroupName = ({ item }) => {
     return (
       <Pressable
-        onPress={() => {
+        /*onPress={() => {
           const filteredServiceItems = serviceItemsFilter(item.Id);
           console.log(filteredServiceItems.map((item) => item.Name));
+        }}*/
+        onPress={() => {
+          navigation.navigate("ServiceGroup", { id: item.Id });
+          hideModal();
         }}
       >
         <View
