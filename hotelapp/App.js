@@ -33,6 +33,8 @@ import {
   GestureHandlerRootView,
   RectButton,
 } from "react-native-gesture-handler";
+import { clearStorage } from "./src/API/asyncStorageMethods";
+import { LoadingIndicator } from "./src/components/LoadingIndicator";
 
 const CombinedDefaultTheme = {
   ...MD3LightTheme,
@@ -56,29 +58,38 @@ const CombinedDarkTheme = {
 export default function App() {
   const [isThemeDark, setIsThemeDark] = useState(null);
   //const [language, setLanguage] = useState(null);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({
+    userName: "test",
+    userPassword: "testpassword",
+  });
   const [userIsLoading, setUserIsLoading] = useState(false);
   const [themeIsLoading, setThemeIsLoading] = useState(false);
 
   useEffect(() => {
+    setUserIsLoading(true);
     const getTheme = async () => {
       const value = await AsyncStorage.getItem("@theme");
       setIsThemeDark(JSON.parse(value));
     };
     getTheme();
+    setUserIsLoading(false);
   }, []);
 
   useEffect(() => {
+    //clearStorage();
+    setUserIsLoading(true);
     const getUser = async () => {
-      setUserIsLoading(true);
       const value = await AsyncStorage.getItem("@user");
-      console.log(JSON.parse(value));
+      //console.log(JSON.parse(value));
       if (value) {
+        //console.log(value);
         setUser(JSON.parse(value));
-        setUserIsLoading(false);
+        setTimeout(() => setUserIsLoading(false), 3000);
+        //console.log("value ok");
       } else {
         setUser({ userName: "test", userPassword: "test1" });
         setUserIsLoading(false);
+        //console.log(user)
       }
     };
     getUser();
@@ -97,9 +108,18 @@ export default function App() {
     }),
     [toggleTheme, isThemeDark]
   );
-
+  //console.log("user1:", user);
+  /*if (userIsLoading) {
+    return (
+      <View
+        style={{ flex: 1, justifyContent: "center", alignContent: "center" }}
+      >
+        <ActivityIndicator size="large" color="green"/>
+      </View>
+    );
+  }*/
   if (userIsLoading) {
-    return <ActivityIndicator size="large" color="green" />;
+    return <LoadingIndicator text={"Загрузка данных приложения"} />;
   }
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

@@ -169,9 +169,11 @@ export const ReservationsTabViewScreen = ({ navigation }) => {
     }
   };*/
 
-  const renderTabBar = (props) => (
+  const RenderTabBar = (props) => (
     <TabBar
+      //key={key}
       {...props}
+    
       activeColor={"white"}
       inactiveColor={"black"}
       //style={{  }}
@@ -221,7 +223,7 @@ export const ReservationsTabViewScreen = ({ navigation }) => {
             onIndexChange={setIndex}
             initialLayout={{ width: WIDTH }}
             //style={{ backgroundColor: "red" }}
-            renderTabBar={renderTabBar}
+            renderTabBar={(props) => <RenderTabBar {...props} />}
             swipeEnabled={false}
             animationEnabled={true}
             lazy

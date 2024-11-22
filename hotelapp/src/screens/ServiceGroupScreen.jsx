@@ -12,15 +12,66 @@ import { Divider, Button, useTheme } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 import MyModal from "../components/MyModal";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { appRoutes } from "../API/route";
+import { token } from "../API/route";
+import { fetchData } from "../API/FetchData";
 
 const ServiceGroupScreen = ({ route, navigation }) => {
   const [visible, setVisible] = useState(false);
+  const [serviceItems, setServiceItems] = useState([]);
+
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasError, setErrorFlag] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [updateData, setUpdateData] = useState(false);
+  const [apiSearch, setApiSearch] = useState(false);
 
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
-  const { id } = route.params.id;
+  const { id } = route.params;
   const { t } = useTranslation();
   const theme = useTheme();
+
+  useEffect(() => {
+    const endPoint = "/Logus.HMS.Entities.Dictionaries.ServiceItem";
+    const controller = new AbortController();
+    const newAbortSignal = (timeoutMs) => {
+      setTimeout(() => controller.abort(), timeoutMs || 0);
+
+      return controller.signal;
+    };
+    const configurationObject = {
+      method: "get",
+      url: `${appRoutes.dictionariesPath()}${endPoint}`,
+      //url: appRoutes.dictionariesPath(),
+      signal: newAbortSignal(5000),
+      headers: {
+        Authorization: `Token ${token}`,
+        "Content-Type": "application/json",
+      },
+      /*data: JSON.stringify({
+        ServiceGroupId: id,
+        //DepartureDateTo: "2024-04-04T12:00:00+03:00",
+      }),*/
+      params: {
+        propertyId: 1,
+      },
+    };
+    fetchData(
+      setIsLoading,
+      setServiceItems,
+      configurationObject,
+      setErrorFlag,
+      setRefreshing,
+      refreshing,
+      controller
+    );
+    return () => {
+      setErrorFlag(false);
+      controller.abort("Data fetching cancelled");
+    };
+  }, []);
 
   /*useEffect(() => {
     navigation.getParent()?.setOptions({
@@ -43,8 +94,13 @@ const ServiceGroupScreen = ({ route, navigation }) => {
     });
   }, []);
 
-  console.log(route.params.id);
-  //console.log(route.params.item.GenericNo);
+  console.log(route.params);
+  console.log(id);
+  const filteredServiceItems = serviceItems.filter(
+    (item) => item.ServiceGroupId === id
+  );
+
+  console.log(filteredServiceItems);
   return (
     <>
       <SafeAreaView style={{ flex: 1 }}>
@@ -58,7 +114,7 @@ const ServiceGroupScreen = ({ route, navigation }) => {
           }}
         >
           <View>
-            <Text>text</Text>
+            <Text>Text</Text>
           </View>
           <View>
             <MyModal visible={visible} hideModal={hideModal} />

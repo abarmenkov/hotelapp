@@ -1,3 +1,8 @@
-import { createContext } from "react";
+//import { createContext } from "react";
+import React from "react";
 
-export const UserContext = createContext({userName: "test", userPassword: "test1" });
+export const UserContext = React.createContext({
+  userName: "test",
+  userPassword: "testpassword",
+});
+//export const UserContext = createContext({});

@@ -13,19 +13,21 @@ import { useTranslation } from "react-i18next";
 
 import * as Localization from "expo-localization";
 import { useTheme } from "react-native-paper";
-import { UserContext } from "../context/UserContext";
+//import { UserContext } from "../context/UserContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AppStyles } from "../utils/constants";
+import { UserContext } from "../context/UserContext";
 
 export const LoginScreen = ({ navigation }) => {
+  //console.log(UserContext);
   const { userName, userPassword } = useContext(UserContext);
-  //console.log( userName);
-  //console.log( userPassword );
+
   const { t } = useTranslation();
   const theme = useTheme();
-
   const [name, setName] = useState(userName);
   const [password, setPassword] = useState(userPassword);
+  //const [name, setName] = useState('userName');
+  //const [password, setPassword] = useState('1');
   //useEffect(() => setName(userName), [name]);
   /*useEffect(() => {
     const getData = async () => {
@@ -43,6 +45,7 @@ export const LoginScreen = ({ navigation }) => {
   const saveUser = async (value) => {
     try {
       await AsyncStorage.setItem("@user", JSON.stringify(value));
+      console.log("saving user to AsyncStorage");
     } catch (e) {
       console.log("error saving user to AsyncStorage");
     }
