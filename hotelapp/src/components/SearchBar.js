@@ -46,7 +46,7 @@ export const SearchbarComponent = ({
         //traileringIcon={"skull-crossbones"} //
         //clearIcon={"sword-cross"} // по умолчанию cross, пишем только когда хотим свою иконку
         style={{
-          width: clicked ? WIDTH * 0.85 : WIDTH * 0.95,
+          width: clicked ? WIDTH * 0.75 : WIDTH * 0.95,
           //height: 45,
           //alignItems: "center",
         }}

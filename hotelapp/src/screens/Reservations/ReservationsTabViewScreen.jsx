@@ -169,31 +169,34 @@ export const ReservationsTabViewScreen = ({ navigation }) => {
     }
   };*/
 
-  const RenderTabBar = (props) => (
-    <TabBar
-      //key={key}
-      {...props}
-    
-      activeColor={"white"}
-      inactiveColor={"black"}
-      //style={{  }}
+  const RenderTabBar = (props) => {
+    const { key, ...rest } = props;
 
-      indicatorStyle={{
-        backgroundColor: "white",
-      }}
-      contentContainerStyle={{
-        backgroundColor: "orange",
-        justifyContent: "space-evenly",
-      }}
-      tabStyle={{
-        width: "auto",
-      }}
-      labelStyle={styles.tabBarLabel}
-      getLabelText={({ route }) =>
-        t(`ReservationsTabViewScreen.${route.title}`)
-      }
-    />
-  );
+    return (
+      <TabBar
+        key={({ route }) => route.key}
+        {...rest}
+        activeColor={"white"}
+        inactiveColor={"black"}
+        //style={{  }}
+
+        indicatorStyle={{
+          backgroundColor: "white",
+        }}
+        contentContainerStyle={{
+          backgroundColor: "orange",
+          justifyContent: "space-evenly",
+        }}
+        tabStyle={{
+          width: "auto",
+        }}
+        labelStyle={styles.tabBarLabel}
+        getLabelText={({ route }) =>
+          t(`ReservationsTabViewScreen.${route.title}`)
+        }
+      />
+    );
+  };
 
   return (
     <TouchableWithoutFeedback
@@ -223,7 +226,9 @@ export const ReservationsTabViewScreen = ({ navigation }) => {
             onIndexChange={setIndex}
             initialLayout={{ width: WIDTH }}
             //style={{ backgroundColor: "red" }}
-            renderTabBar={(props) => <RenderTabBar {...props} />}
+            //renderTabBar={(props) => <TabBar {...props} />}
+            //renderTabBar={(props) => <RenderTabBar {...props} />}
+            renderTabBar={RenderTabBar}
             swipeEnabled={false}
             animationEnabled={true}
             lazy
