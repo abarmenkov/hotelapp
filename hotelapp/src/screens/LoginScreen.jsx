@@ -11,7 +11,7 @@ import {
 //import { TestScreen } from "./TestScreen";
 import { useTranslation } from "react-i18next";
 
-import * as Localization from "expo-localization";
+//import * as Localization from "expo-localization";
 import { useTheme } from "react-native-paper";
 //import { UserContext } from "../context/UserContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";

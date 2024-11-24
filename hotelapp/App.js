@@ -35,6 +35,7 @@ import {
 } from "react-native-gesture-handler";
 import { clearStorage } from "./src/API/asyncStorageMethods";
 import { LoadingIndicator } from "./src/components/LoadingIndicator";
+import { useTranslation } from "react-i18next";
 
 const CombinedDefaultTheme = {
   ...MD3LightTheme,
@@ -64,6 +65,7 @@ export default function App() {
   });
   const [userIsLoading, setUserIsLoading] = useState(false);
   const [themeIsLoading, setThemeIsLoading] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     setUserIsLoading(true);
@@ -119,7 +121,7 @@ export default function App() {
     );
   }*/
   if (userIsLoading) {
-    return <LoadingIndicator text={"Загрузка данных приложения"} />;
+    return <LoadingIndicator text={t("Loading.loading")} />;
   }
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

@@ -28,12 +28,11 @@ export const SearchbarComponent = ({
       <Searchbar
         ref={searchBarRef}
         loading={searchLoading}
+        mode="bar"
         placeholder={t(`SearchBar.${route.name}`)}
         //placeholderTextColor={"blue"}
         inputStyle={styles.inputStyle}
-        //style={{ color: "green", backgroundColor: "yellow", }}
         onChangeText={setSearchQuery}
-        //onChangeText={() => setSearchQuery(value)}
         value={searchQuery}
         onClearIconPress={() => {
           if (route.name == "FastPostScreen") {
@@ -46,9 +45,18 @@ export const SearchbarComponent = ({
         //traileringIcon={"skull-crossbones"} //
         //clearIcon={"sword-cross"} // по умолчанию cross, пишем только когда хотим свою иконку
         style={{
+          //flex: 1,
           width: clicked ? WIDTH * 0.75 : WIDTH * 0.95,
-          //height: 45,
-          //alignItems: "center",
+          //maxLength: 5,
+          //color: "green",
+          //backgroundColor: "yellow",
+          //ellipsizeMode: "tail",
+          //multiline: false,
+          //numberOfLines:1
+
+          //устанавливаем height, чтобы не менялась высота при длинном placeholder или длинном вводимом тексте, maxlength не срабатывает
+          height: 60,
+
         }}
         onFocus={() => setClicked(true)}
         keyboardType="email-address"
@@ -94,5 +102,7 @@ const styles = create({
     justifyContent: "center",
     alignItems: "center",
   },
-  inputStyle: { fontSize: 18 },
+  inputStyle: {
+    fontSize: 18,
+  },
 });
