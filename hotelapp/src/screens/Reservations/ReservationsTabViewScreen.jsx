@@ -20,6 +20,7 @@ import { useDrawerStatus } from "@react-navigation/drawer";
 import { useFocusEffect } from "@react-navigation/native";
 import { create } from "../../utils/normalize";
 import { appRoutes } from "../../API/route";
+import { uid } from "uid";
 /*import AllReservationsList from "./AllReservationsList";
 import ArrivalList from "./ArrivalList";
 import DeparturesList from "./DeparturesList";
@@ -170,12 +171,14 @@ export const ReservationsTabViewScreen = ({ navigation }) => {
   };*/
 
   const RenderTabBar = (props) => {
-    const { key, ...rest } = props;
+    const { id, key, ...rest } = props;
+    console.log(id);
+    console.log(rest);
 
     return (
       <TabBar
-        key={({ route }) => route.key}
         {...rest}
+        key={id}
         activeColor={"white"}
         inactiveColor={"black"}
         //style={{  }}
@@ -227,8 +230,11 @@ export const ReservationsTabViewScreen = ({ navigation }) => {
             initialLayout={{ width: WIDTH }}
             //style={{ backgroundColor: "red" }}
             //renderTabBar={(props) => <TabBar {...props} />}
-            //renderTabBar={(props) => <RenderTabBar {...props} />}
-            renderTabBar={RenderTabBar}
+            renderTabBar={(props) => {
+              const { key, ...rest } = props;
+              return <RenderTabBar id={uid()} key={key} {...rest} />;
+            }}
+            //renderTabBar={RenderTabBar}
             swipeEnabled={false}
             animationEnabled={true}
             lazy
