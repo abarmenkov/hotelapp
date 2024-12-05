@@ -6,7 +6,7 @@ export const ServicesControlScreen = ({ route, navigation }) => {
     <View style={styles.container}>
       <Text>Services</Text>
 
-      <Pressable onPress={() => Alert.alert('pressed')}>
+      <Pressable onPress={() => Alert.alert("pressed")}>
         <Text>Services</Text>
       </Pressable>
     </View>

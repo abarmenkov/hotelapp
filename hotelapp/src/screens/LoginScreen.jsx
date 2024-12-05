@@ -42,10 +42,11 @@ export const LoginScreen = ({ navigation }) => {
   }, []);*/
 
   const buttonDisabled = name.length > 0 && password.length > 0 ? false : true;
+
   const saveUser = async (value) => {
     try {
       await AsyncStorage.setItem("@user", JSON.stringify(value));
-      console.log("saving user to AsyncStorage");
+      //console.log("saving user to AsyncStorage");
     } catch (e) {
       console.log("error saving user to AsyncStorage");
     }

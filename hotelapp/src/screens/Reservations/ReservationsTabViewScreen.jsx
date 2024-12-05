@@ -172,8 +172,8 @@ export const ReservationsTabViewScreen = ({ navigation }) => {
 
   const RenderTabBar = (props) => {
     const { id, key, ...rest } = props;
-    console.log(id);
-    console.log(rest);
+    //console.log(id);
+    //console.log(rest);
 
     return (
       <TabBar

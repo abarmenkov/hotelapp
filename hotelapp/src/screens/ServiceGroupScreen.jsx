@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import {
   View,
-  Text,
   ScrollView,
   TouchableWithoutFeedback,
   SafeAreaView,
+  FlatList,
+  Pressable,
+  TouchableOpacity,
 } from "react-native";
+import { Text } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { AccountHeader } from "../components/headers/AccountHeader";
 import { Divider, Button, useTheme } from "react-native-paper";
@@ -26,12 +29,14 @@ const ServiceGroupScreen = ({ route, navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [updateData, setUpdateData] = useState(false);
   const [apiSearch, setApiSearch] = useState(false);
+  const [totalSum, setTotalSum] = useState(0);
 
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
   const { id } = route.params;
   const { t } = useTranslation();
   const theme = useTheme();
+  //console.log(id);
 
   useEffect(() => {
     const endPoint = "/Logus.HMS.Entities.Dictionaries.ServiceItem";
@@ -51,7 +56,7 @@ const ServiceGroupScreen = ({ route, navigation }) => {
         "Content-Type": "application/json",
       },
       /*data: JSON.stringify({
-        ServiceGroupId: id,
+        'ServiceGroupId': id,
         //DepartureDateTo: "2024-04-04T12:00:00+03:00",
       }),*/
       params: {
@@ -67,6 +72,7 @@ const ServiceGroupScreen = ({ route, navigation }) => {
       refreshing,
       controller
     );
+
     return () => {
       setErrorFlag(false);
       controller.abort("Data fetching cancelled");
@@ -83,43 +89,131 @@ const ServiceGroupScreen = ({ route, navigation }) => {
       });
   }, [navigation]);*/
 
-  useEffect(() => {
+  /*useEffect(() => {
     navigation.setOptions({
-      /*header: (props) => (
+      header: (props) => (
         <AccountHeader {...props} title={id} showModal={showModal} />
-      ),*/
+      ),
       //headerBackTitleVisible: false,
       //headerBackVisible: false,
-      headerBackImage: () => <MaterialCommunityIcons name="close" size={24} />,
+      //headerBackImage: () => <MaterialCommunityIcons name="close" size={24} />,
     });
-  }, []);
+  }, []);*/
+  //serviceItems.map((item) => (item.Quantity = 0));
 
-  console.log(route.params);
-  console.log(id);
   const filteredServiceItems = serviceItems.filter(
     (item) => item.ServiceGroupId === id
   );
+  const total = filteredServiceItems
+    .filter((elem) => elem.Quantity > 0)
 
-  console.log(filteredServiceItems);
-  return (
-    <>
-      <SafeAreaView style={{ flex: 1 }}>
-        <Divider />
+    .reduce(
+      (acc, elem) => acc + elem.Quantity * elem.ServiceVariants[0]?.Price,
+      0
+    );
+  console.log(total, totalSum);
 
-        <ScrollView
-          contentContainerStyle={{
+  const ServiceItem = ({ item }) => {
+    const incrementCount = () => {
+      const updatedItems = serviceItems.map((elem) => {
+        if (elem.Id !== item.Id) {
+          return elem;
+        } else {
+          if (elem.hasOwnProperty("Quantity")) {
+            return { ...elem, Quantity: elem.Quantity + 1 };
+          }
+          return { ...elem, Quantity: 1 };
+        }
+      });
+      //console.log(updatedItems);
+      setServiceItems(updatedItems);
+      //setCount(count + 1);
+      setTotalSum(totalSum + item.ServiceVariants[0]?.Price);
+    };
+
+    const decrementCount = () => {
+      const updatedItems = serviceItems.map((elem) => {
+        if (elem.Id === item.Id && item.Quantity > 0) {
+          return { ...elem, Quantity: elem.Quantity - 1 };
+        } else return elem;
+      });
+      //console.log(updatedItems);
+      setServiceItems(updatedItems);
+      //setCount(count - 1);
+      if (item.Quantity > 0)
+        setTotalSum(totalSum - item.ServiceVariants[0]?.Price);
+      //setTotalSum(totalSum - itemPrice);
+    };
+
+    return (
+      <Pressable
+        onPress={() =>
+          console.log(item.Name, item.ServiceVariants[0]?.Price, item)
+        }
+      >
+        <View
+          style={{
             flex: 1,
-            alignItems: "center",
-            justifyContent: "center",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            backgroundColor: "#f9c2ff",
+            padding: 8,
+            marginVertical: 8,
+            marginHorizontal: 26,
           }}
         >
           <View>
-            <Text>Text</Text>
+            <Text>{item.Name}</Text>
+          </View>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "row",
+              justifyContent: "space-evenly",
+
+              backgroundColor: "#f9c2ff",
+              padding: 8,
+              marginVertical: 8,
+              marginHorizontal: 26,
+            }}
+          >
+            <TouchableOpacity onPress={decrementCount}>
+              <Text style={{ fontSize: 24, color: "red" }}>-</Text>
+            </TouchableOpacity>
+            <View>
+              <Text>{item.Quantity ? item.Quantity : 0}</Text>
+            </View>
+            <TouchableOpacity onPress={incrementCount}>
+              <Text style={{ fontSize: 24, color: "red" }}>+</Text>
+            </TouchableOpacity>
           </View>
           <View>
-            <MyModal visible={visible} hideModal={hideModal} />
+            <Text>{item.ServiceVariants[0]?.Price}</Text>
           </View>
-        </ScrollView>
+        </View>
+      </Pressable>
+    );
+  };
+
+  const renderItem = ({ item }) => <ServiceItem item={item} />;
+
+  return (
+    <>
+      <SafeAreaView style={{ flex: 1 }}>
+        <View>
+          <FlatList
+            data={filteredServiceItems}
+            renderItem={renderItem}
+            removeClippedSubviews={true}
+            //initialNumToRender={15}
+            keyExtractor={(item) => item.Id}
+            keyboardShouldPersistTaps={"handled"}
+            justifyContent="space-evenly"
+          />
+        </View>
+        <View>
+          <MyModal visible={visible} hideModal={hideModal} />
+        </View>
 
         <View
           style={{
@@ -127,33 +221,77 @@ const ServiceGroupScreen = ({ route, navigation }) => {
             left: 0,
             right: 0,
             bottom: 0,
-            //alignItems: "flex-end",
-            justifyContent: "center",
+            //alignItems: "center",
+            //justifyContent: "space-between",
             height: 75,
-            //backgroundColor: "red",
+            backgroundColor: "lightblue",
           }}
         >
-          <View>
-            <Divider bold />
-          </View>
           <View
             style={{
               flex: 1,
-              alignItems: "flex-end",
-              justifyContent: "center",
-              height: 75,
-              //backgroundColor: "red",
+              justifyContent: "space-around",
+              alignItems: "center",
+              flexDirection: "row",
             }}
           >
-            <Button
-              mode="text"
-              style={{ marginRight: 30 }}
-              labelStyle={{ fontSize: 20 }}
-              textColor={theme.colors.primary}
-              onPress={() => navigation.goBack()}
+            <View
+              style={
+                {
+                  //flex: 1,
+                  //alignItems: "flex-end",
+                  //justifyContent: "center",
+                  //height: 75,
+                  //width: 200,
+                  //backgroundColor: "red",
+                }
+              }
             >
-              {t("Folio.cancel")}
-            </Button>
+              <Button
+                mode="text"
+                //style={{ marginRight: 30 }}
+                labelStyle={{ fontSize: 20 }}
+                textColor={theme.colors.primary}
+                onPress={() => navigation.goBack()}
+              >
+                {t("Folio.cancel")}
+              </Button>
+            </View>
+            <View
+              style={{
+                //flex: 1,
+                //alignItems: "flex-start",
+                justifyContent: "center",
+                alignItems: "center",
+                //height: 35,
+                //backgroundColor: "green",
+                //width: 200,
+              }}
+            >
+              <Text style={{ textAlign: "center" }}>{totalSum}</Text>
+            </View>
+            <View
+              style={
+                {
+                  //flex: 1,
+                  //alignItems: "flex-end",
+                  //justifyContent: "center",
+                  //height: 75,
+                  //width: 200,
+                  //backgroundColor: "red",
+                }
+              }
+            >
+              <Button
+                mode="text"
+                //style={{ marginRight: 30 }}
+                labelStyle={{ fontSize: 20 }}
+                textColor={theme.colors.primary}
+                onPress={() => navigation.goBack()}
+              >
+                {t("Folio.cancel")}
+              </Button>
+            </View>
           </View>
         </View>
       </SafeAreaView>

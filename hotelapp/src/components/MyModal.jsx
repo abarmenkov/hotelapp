@@ -28,6 +28,8 @@ const MyModal = ({ visible, hideModal }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [updateData, setUpdateData] = useState(false);
   const [apiSearch, setApiSearch] = useState(false);
+
+  const { t } = useTranslation();
   //const endPoint = "/Logus.HMS.Entities.Dictionaries.ServiceItem";
 
   useEffect(() => {
@@ -65,7 +67,8 @@ const MyModal = ({ visible, hideModal }) => {
       controller.abort("Data fetching cancelled");
     };
   }, [updateData]);
-  useEffect(() => {
+
+  /*useEffect(() => {
     const endPoint = "/Logus.HMS.Entities.Dictionaries.ServiceItem";
     const controller = new AbortController();
     const newAbortSignal = (timeoutMs) => {
@@ -101,10 +104,8 @@ const MyModal = ({ visible, hideModal }) => {
     };
   }, [updateData]);
 
-  const { t } = useTranslation();
-
   const serviceItemsFilter = (serviceGropuId) =>
-    serviceItems.filter((item) => item.ServiceGroupId === serviceGropuId);
+    serviceItems.filter((item) => item.ServiceGroupId === serviceGropuId);*/
 
   const ServiceGroupName = ({ item }) => {
     return (
