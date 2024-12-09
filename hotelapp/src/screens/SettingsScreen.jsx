@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,10 +9,40 @@ import {
 import { useTranslation } from "react-i18next";
 //import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Picker } from "@react-native-picker/picker";
+import { postData } from "../API/PostData";
+import { appRoutes } from "../API/route";
+import { token } from "../API/route";
 
 export const SettingsScreen = () => {
   const { t } = useTranslation();
   const { i18n } = useTranslation();
+  
+//получить точки продаж
+  useEffect(() => {
+    const endPoint = "/Logus.HMS.Entities.Dictionaries.PointOfSale";
+    const controller = new AbortController();
+    const newAbortSignal = (timeoutMs) => {
+      setTimeout(() => controller.abort(), timeoutMs || 0);
+
+      return controller.signal;
+    };
+
+    const configurationObject = {
+      method: "get",
+      url: `${appRoutes.dictionariesPath()}${endPoint}`,
+      //url: appRoutes.dictionariesPath(),
+      signal: newAbortSignal(5000),
+      headers: {
+        Authorization: `Token ${token}`,
+        "Content-Type": "application/json",
+      },
+
+      params: {
+        propertyId: 1,
+      },
+    };
+    postData(configurationObject, controller);
+  });
 
   const supportedLngs = i18n.services.resourceStore.data;
   const languageKeys = Object.keys(supportedLngs);

@@ -18,7 +18,7 @@ import { fetchData } from "../API/FetchData";
 import { appRoutes } from "../API/route";
 import { useNavigation } from "@react-navigation/native";
 
-const MyModal = ({ visible, hideModal }) => {
+const MyModal = ({ visible, hideModal, genericNo }) => {
   const navigation = useNavigation();
   const [serviceGroups, setServiceGroups] = useState([]);
   const [serviceItems, setServiceItems] = useState([]);
@@ -115,7 +115,12 @@ const MyModal = ({ visible, hideModal }) => {
           console.log(filteredServiceItems.map((item) => item.Name));
         }}*/
         onPress={() => {
-          navigation.navigate("ServiceGroup", { id: item.Id });
+          navigation.navigate("ServiceGroup", {
+            id: item.Id,
+            groupName: item.Name,
+            genericNo,
+          });
+          //console.log(item);
           hideModal();
         }}
       >

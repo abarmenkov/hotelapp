@@ -60,7 +60,11 @@ const Account = ({ route, navigation }) => {
             <Text>text</Text>
           </View>
           <View>
-            <MyModal visible={visible} hideModal={hideModal} />
+            <MyModal
+              visible={visible}
+              hideModal={hideModal}
+              genericNo={GenericNo}
+            />
           </View>
         </ScrollView>
 

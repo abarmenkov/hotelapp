@@ -18,6 +18,7 @@ import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { appRoutes } from "../API/route";
 import { token } from "../API/route";
 import { fetchData } from "../API/FetchData";
+import { postData } from "../API/PostData";
 
 const ServiceGroupScreen = ({ route, navigation }) => {
   const [visible, setVisible] = useState(false);
@@ -33,10 +34,26 @@ const ServiceGroupScreen = ({ route, navigation }) => {
 
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
-  const { id } = route.params;
+  const { id, groupName, genericNo } = route.params;
   const { t } = useTranslation();
   const theme = useTheme();
-  //console.log(id);
+  //console.log(genericNo);
+  /* {
+  "PropertyId": 1,
+  "Name": "Бон Аква",
+  "Notes": "попили",
+  "PocketCode": "GUEST",
+  "Details": [
+    {
+      "ServiceItemId": 7,
+      "Quantity": 1,
+      "Amount": 110
+    }
+  ],
+  "KeyCardId": "",
+  "ReleaseImmediately": true,
+  "PointOfSaleId": 0
+}*/
 
   useEffect(() => {
     const endPoint = "/Logus.HMS.Entities.Dictionaries.ServiceItem";
@@ -100,6 +117,61 @@ const ServiceGroupScreen = ({ route, navigation }) => {
     });
   }, []);*/
   //serviceItems.map((item) => (item.Quantity = 0));
+  //Logus.HMS.Entities.Dictionaries.PointOfSale
+  const postServiceItems = () => {
+    //const endPoint = "/Logus.HMS.Entities.Dictionaries.PointOfSale";
+    //console.log(genericNo);
+    const controller = new AbortController();
+    const newAbortSignal = (timeoutMs) => {
+      setTimeout(() => controller.abort(), timeoutMs || 0);
+
+      return controller.signal;
+    };
+    const configurationObject = {
+      method: "post",
+      url: `${appRoutes.folioPath()}/${genericNo}`,
+      //url: appRoutes.dictionariesPath(),
+      signal: newAbortSignal(5000),
+      headers: {
+        Authorization: `Token ${token}`,
+        "Content-Type": "application/json",
+      },
+      data: JSON.stringify({
+        PropertyId: 1,
+        Name: `${groupName}`,
+        Notes: "",
+        PocketCode: "ГОСТЬ",
+        Details: [
+          { ServiceItemId: 20, Quantity: 2, Amount: 150 },
+          { ServiceItemId: 18, Quantity: 1, Amount: 650 },
+        ],
+        KeyCardId: "",
+        //если необходима проверка PointOfSaleId
+        //ReleaseImmediately: true,
+        // игнорирует передачу и проверку точки продаж
+        ReleaseImmediately: false,
+        PointOfSaleId: null,
+      }),
+      /*params: {
+        propertyId: 1,
+      },*/
+    };
+    /*const configurationObject = {
+      method: "get",
+      url: `${appRoutes.dictionariesPath()}${endPoint}`,
+      //url: appRoutes.dictionariesPath(),
+      signal: newAbortSignal(5000),
+      headers: {
+        Authorization: `Token ${token}`,
+        "Content-Type": "application/json",
+      },
+
+      params: {
+        propertyId: 1,
+      },
+    };*/
+    postData(configurationObject, controller);
+  };
 
   const filteredServiceItems = serviceItems.filter(
     (item) => item.ServiceGroupId === id
@@ -111,7 +183,8 @@ const ServiceGroupScreen = ({ route, navigation }) => {
       (acc, elem) => acc + elem.Quantity * elem.ServiceVariants[0]?.Price,
       0
     );
-  console.log(total, totalSum);
+
+  //console.log(total, totalSum);
 
   const ServiceItem = ({ item }) => {
     const incrementCount = () => {
@@ -287,9 +360,9 @@ const ServiceGroupScreen = ({ route, navigation }) => {
                 //style={{ marginRight: 30 }}
                 labelStyle={{ fontSize: 20 }}
                 textColor={theme.colors.primary}
-                onPress={() => navigation.goBack()}
+                onPress={postServiceItems}
               >
-                {t("Folio.cancel")}
+                {t("Folio.post")}
               </Button>
             </View>
           </View>

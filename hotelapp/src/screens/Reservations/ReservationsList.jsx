@@ -43,7 +43,7 @@ const ItemPressable = ({ item }) => {
         navigation.navigate("Account", { item: item });
         //navigation.navigate("AddReservation", { item: item });
 
-        //console.log(item);
+        console.log(item);
       }}
     >
       <View style={styles.roomNumberContainer}>
