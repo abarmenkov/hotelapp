@@ -19,6 +19,7 @@ import { appRoutes } from "../API/route";
 import { token } from "../API/route";
 import { fetchData } from "../API/FetchData";
 import { postData } from "../API/PostData";
+//import { Item } from "react-native-paper/lib/typescript/components/Drawer/Drawer";
 
 const ServiceGroupScreen = ({ route, navigation }) => {
   const [visible, setVisible] = useState(false);
@@ -31,29 +32,20 @@ const ServiceGroupScreen = ({ route, navigation }) => {
   const [updateData, setUpdateData] = useState(false);
   const [apiSearch, setApiSearch] = useState(false);
   const [totalSum, setTotalSum] = useState(0);
+  const [cartItems, setCartItems] = useState([]);
 
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
   const { id, groupName, genericNo } = route.params;
   const { t } = useTranslation();
   const theme = useTheme();
-  //console.log(genericNo);
-  /* {
-  "PropertyId": 1,
-  "Name": "Бон Аква",
-  "Notes": "попили",
-  "PocketCode": "GUEST",
-  "Details": [
-    {
-      "ServiceItemId": 7,
-      "Quantity": 1,
-      "Amount": 110
-    }
-  ],
-  "KeyCardId": "",
-  "ReleaseImmediately": true,
-  "PointOfSaleId": 0
-}*/
+
+  const serviceGroupName =
+    cartItems.length > 1
+      ? groupName
+      : cartItems.length === 0
+      ? ""
+      : cartItems[0].Name;
 
   useEffect(() => {
     const endPoint = "/Logus.HMS.Entities.Dictionaries.ServiceItem";
@@ -72,10 +64,7 @@ const ServiceGroupScreen = ({ route, navigation }) => {
         Authorization: `Token ${token}`,
         "Content-Type": "application/json",
       },
-      /*data: JSON.stringify({
-        'ServiceGroupId': id,
-        //DepartureDateTo: "2024-04-04T12:00:00+03:00",
-      }),*/
+
       params: {
         propertyId: 1,
       },
@@ -119,8 +108,6 @@ const ServiceGroupScreen = ({ route, navigation }) => {
   //serviceItems.map((item) => (item.Quantity = 0));
   //Logus.HMS.Entities.Dictionaries.PointOfSale
   const postServiceItems = () => {
-    //const endPoint = "/Logus.HMS.Entities.Dictionaries.PointOfSale";
-    //console.log(genericNo);
     const controller = new AbortController();
     const newAbortSignal = (timeoutMs) => {
       setTimeout(() => controller.abort(), timeoutMs || 0);
@@ -138,7 +125,7 @@ const ServiceGroupScreen = ({ route, navigation }) => {
       },
       data: JSON.stringify({
         PropertyId: 1,
-        Name: `${groupName}`,
+        Name: `${serviceGroupName}`,
         Notes: "",
         PocketCode: "ГОСТЬ",
         Details: [
@@ -156,20 +143,7 @@ const ServiceGroupScreen = ({ route, navigation }) => {
         propertyId: 1,
       },*/
     };
-    /*const configurationObject = {
-      method: "get",
-      url: `${appRoutes.dictionariesPath()}${endPoint}`,
-      //url: appRoutes.dictionariesPath(),
-      signal: newAbortSignal(5000),
-      headers: {
-        Authorization: `Token ${token}`,
-        "Content-Type": "application/json",
-      },
 
-      params: {
-        propertyId: 1,
-      },
-    };*/
     postData(configurationObject, controller);
   };
 
@@ -185,6 +159,53 @@ const ServiceGroupScreen = ({ route, navigation }) => {
     );
 
   //console.log(total, totalSum);
+  const addItemToCart = (item) => {
+    setCartItems((prevItems) => {
+      const isItemInCart = prevItems.find(
+        (elem) => elem.ServiceItemId === item.Id
+      );
+
+      if (!isItemInCart) {
+        return [
+          ...prevItems,
+          {
+            ServiceItemId: item.Id,
+            Name: item.Name,
+            Quantity: 1,
+            Amount: item.ServiceVariants[0]?.Price,
+          },
+        ];
+      } else {
+        return prevItems.map((elem) => {
+          if (elem.ServiceItemId == item.Id) {
+            elem.Quantity++;
+          }
+          return elem;
+        });
+      }
+    });
+  };
+
+  const removeItemFromCart = (item) => {
+    setCartItems((prevItems) => {
+      const isItemInCart = prevItems.find(
+        (elem) => elem.ServiceItemId === item.Id
+      );
+
+      if (!isItemInCart) {
+        return [...prevItems];
+      } else if (isItemInCart && item.Quantity === 1) {
+        return prevItems.filter((elem) => elem.ServiceItemId !== item.Id);
+      } else {
+        return prevItems.map((elem) => {
+          if (elem.ServiceItemId == item.Id) {
+            elem.Quantity--;
+          }
+          return elem;
+        });
+      }
+    });
+  };
 
   const ServiceItem = ({ item }) => {
     const incrementCount = () => {
@@ -200,7 +221,8 @@ const ServiceGroupScreen = ({ route, navigation }) => {
       });
       //console.log(updatedItems);
       setServiceItems(updatedItems);
-      //setCount(count + 1);
+      addItemToCart(item);
+
       setTotalSum(totalSum + item.ServiceVariants[0]?.Price);
     };
 
@@ -212,16 +234,20 @@ const ServiceGroupScreen = ({ route, navigation }) => {
       });
       //console.log(updatedItems);
       setServiceItems(updatedItems);
-      //setCount(count - 1);
+      removeItemFromCart(item);
       if (item.Quantity > 0)
         setTotalSum(totalSum - item.ServiceVariants[0]?.Price);
-      //setTotalSum(totalSum - itemPrice);
     };
 
     return (
       <Pressable
         onPress={() =>
-          console.log(item.Name, item.ServiceVariants[0]?.Price, item)
+          console.log(
+            item.Name,
+            item.ServiceVariants[0]?.Price,
+            item,
+            cartItems
+          )
         }
       >
         <View
