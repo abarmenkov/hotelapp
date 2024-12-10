@@ -29,6 +29,7 @@ const en = {
       transactions_groups: "Transactions groups",
       post: "Post",
       cancel: "Cancel",
+      comment: "Comments",
     },
     Settings: {
       add_hotel: "Add hotel",

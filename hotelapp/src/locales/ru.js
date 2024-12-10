@@ -29,6 +29,7 @@ const ru = {
       transactions_groups: "Группы услуг",
       post: "Начислить",
       cancel: "Отменить",
+      comment: "Комментарий",
     },
     Settings: {
       add_hotel: "Добавить отель",

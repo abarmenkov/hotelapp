@@ -8,7 +8,7 @@ import {
   Pressable,
   TouchableOpacity,
 } from "react-native";
-import { Text } from "react-native-paper";
+import { Text, TextInput } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { AccountHeader } from "../components/headers/AccountHeader";
 import { Divider, Button, useTheme } from "react-native-paper";
@@ -33,6 +33,7 @@ const ServiceGroupScreen = ({ route, navigation }) => {
   const [apiSearch, setApiSearch] = useState(false);
   const [totalSum, setTotalSum] = useState(0);
   const [cartItems, setCartItems] = useState([]);
+  const [notes, setNotes] = useState("");
 
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
@@ -46,6 +47,8 @@ const ServiceGroupScreen = ({ route, navigation }) => {
       : cartItems.length === 0
       ? ""
       : cartItems[0].Name;
+
+  const elemVisible = cartItems.length > 0 ? true : false;
 
   useEffect(() => {
     const endPoint = "/Logus.HMS.Entities.Dictionaries.ServiceItem";
@@ -126,12 +129,9 @@ const ServiceGroupScreen = ({ route, navigation }) => {
       data: JSON.stringify({
         PropertyId: 1,
         Name: `${serviceGroupName}`,
-        Notes: "",
+        Notes: notes,
         PocketCode: "ГОСТЬ",
-        Details: [
-          { ServiceItemId: 20, Quantity: 2, Amount: 150 },
-          { ServiceItemId: 18, Quantity: 1, Amount: 650 },
-        ],
+        Details: cartItems,
         KeyCardId: "",
         //если необходима проверка PointOfSaleId
         //ReleaseImmediately: true,
@@ -300,6 +300,13 @@ const ServiceGroupScreen = ({ route, navigation }) => {
     <>
       <SafeAreaView style={{ flex: 1 }}>
         <View>
+          <TextInput
+            label={t("Folio.comment")}
+            value={notes}
+            onChangeText={(text) => setNotes(text)}
+          />
+        </View>
+        <View>
           <FlatList
             data={filteredServiceItems}
             renderItem={renderItem}
@@ -329,7 +336,7 @@ const ServiceGroupScreen = ({ route, navigation }) => {
           <View
             style={{
               flex: 1,
-              justifyContent: "space-around",
+              justifyContent: elemVisible ? "space-around" : "flex-start",
               alignItems: "center",
               flexDirection: "row",
             }}
@@ -356,41 +363,45 @@ const ServiceGroupScreen = ({ route, navigation }) => {
                 {t("Folio.cancel")}
               </Button>
             </View>
-            <View
-              style={{
-                //flex: 1,
-                //alignItems: "flex-start",
-                justifyContent: "center",
-                alignItems: "center",
-                //height: 35,
-                //backgroundColor: "green",
-                //width: 200,
-              }}
-            >
-              <Text style={{ textAlign: "center" }}>{totalSum}</Text>
-            </View>
-            <View
-              style={
-                {
-                  //flex: 1,
-                  //alignItems: "flex-end",
-                  //justifyContent: "center",
-                  //height: 75,
-                  //width: 200,
-                  //backgroundColor: "red",
-                }
-              }
-            >
-              <Button
-                mode="text"
-                //style={{ marginRight: 30 }}
-                labelStyle={{ fontSize: 20 }}
-                textColor={theme.colors.primary}
-                onPress={postServiceItems}
-              >
-                {t("Folio.post")}
-              </Button>
-            </View>
+            {elemVisible && (
+              <>
+                <View
+                  style={{
+                    //flex: 1,
+                    //alignItems: "flex-start",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    //height: 35,
+                    //backgroundColor: "green",
+                    //width: 200,
+                  }}
+                >
+                  <Text style={{ textAlign: "center" }}>{totalSum}</Text>
+                </View>
+                <View
+                  style={
+                    {
+                      //flex: 1,
+                      //alignItems: "flex-end",
+                      //justifyContent: "center",
+                      //height: 75,
+                      //width: 200,
+                      //backgroundColor: "red",
+                    }
+                  }
+                >
+                  <Button
+                    mode="text"
+                    //style={{ marginRight: 30 }}
+                    labelStyle={{ fontSize: 20 }}
+                    textColor={theme.colors.primary}
+                    onPress={postServiceItems}
+                  >
+                    {t("Folio.post")}
+                  </Button>
+                </View>
+              </>
+            )}
           </View>
         </View>
       </SafeAreaView>
