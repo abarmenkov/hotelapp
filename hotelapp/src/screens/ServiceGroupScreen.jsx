@@ -7,6 +7,7 @@ import {
   FlatList,
   Pressable,
   TouchableOpacity,
+  LogBox,
 } from "react-native";
 import { Text, TextInput } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
@@ -20,6 +21,13 @@ import { token } from "../API/route";
 import { fetchData } from "../API/FetchData";
 import { postData } from "../API/PostData";
 //import { Item } from "react-native-paper/lib/typescript/components/Drawer/Drawer";
+
+// чтобы отключить ошибку, не получилось, возможно в другом месте нужно
+LogBox.ignoreLogs([
+  "Non-serializable values were found in the navigation state",
+]);
+// проброс setVisibleSnackBar вызывает предупреждение Non-serializable values were found in the navigation state.
+//https://reactnavigation.org/docs/troubleshooting#i-get-the-warning-non-serializable-values-were-found-in-the-navigation-state for
 
 const ServiceGroupScreen = ({ route, navigation }) => {
   const [visible, setVisible] = useState(false);
@@ -37,7 +45,7 @@ const ServiceGroupScreen = ({ route, navigation }) => {
 
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
-  const { id, groupName, genericNo } = route.params;
+  const { id, groupName, genericNo, setVisibleSnackBar } = route.params;
   const { t } = useTranslation();
   const theme = useTheme();
 
@@ -358,7 +366,10 @@ const ServiceGroupScreen = ({ route, navigation }) => {
                 //style={{ marginRight: 30 }}
                 labelStyle={{ fontSize: 20 }}
                 textColor={theme.colors.primary}
-                onPress={() => navigation.goBack()}
+                onPress={() => {
+                  navigation.goBack();
+                  setVisibleSnackBar(true);
+                }}
               >
                 {t("Folio.cancel")}
               </Button>

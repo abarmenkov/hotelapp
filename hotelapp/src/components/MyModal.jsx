@@ -18,7 +18,7 @@ import { fetchData } from "../API/FetchData";
 import { appRoutes } from "../API/route";
 import { useNavigation } from "@react-navigation/native";
 
-const MyModal = ({ visible, hideModal, genericNo }) => {
+const MyModal = ({ visible, hideModal, genericNo, setVisibleSnackBar }) => {
   const navigation = useNavigation();
   const [serviceGroups, setServiceGroups] = useState([]);
   const [serviceItems, setServiceItems] = useState([]);
@@ -119,6 +119,7 @@ const MyModal = ({ visible, hideModal, genericNo }) => {
             id: item.Id,
             groupName: item.Name,
             genericNo,
+            setVisibleSnackBar,
           });
           //console.log(item);
           hideModal();

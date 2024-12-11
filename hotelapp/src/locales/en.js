@@ -30,6 +30,7 @@ const en = {
       post: "Post",
       cancel: "Cancel",
       comment: "Comments",
+      snackbar: "Posting is successful",
     },
     Settings: {
       add_hotel: "Add hotel",
