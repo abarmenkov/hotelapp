@@ -31,6 +31,9 @@ const ru = {
       cancel: "Отменить",
       comment: "Комментарий",
       snackbar: "Начисление произведенно успешно",
+      pricemodal_save: "Сохранить",
+      pricemodal_cancel: "Отменить",
+      pricemodal_set_price: "Установить цену",
     },
     Settings: {
       add_hotel: "Добавить отель",

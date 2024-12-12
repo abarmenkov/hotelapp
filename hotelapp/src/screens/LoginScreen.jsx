@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   FlatList,
   Text,
+  PixelRatio,
+  Dimensions,
 } from "react-native";
 //import { TestScreen } from "./TestScreen";
 import { useTranslation } from "react-i18next";
@@ -19,7 +21,10 @@ import { AppStyles } from "../utils/constants";
 import { UserContext } from "../context/UserContext";
 
 export const LoginScreen = ({ navigation }) => {
-  //console.log(UserContext);
+  //const { width, height } = Dimensions.get("window");
+  //const ratio = PixelRatio.get();
+  //console.log(ratio, width, height);
+
   const { userName, userPassword } = useContext(UserContext);
 
   const { t } = useTranslation();

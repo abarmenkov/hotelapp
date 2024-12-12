@@ -8,11 +8,13 @@ import {
   Pressable,
   TouchableOpacity,
   LogBox,
+  Modal,
+  TextInput,
 } from "react-native";
-import { Text, TextInput } from "react-native-paper";
+import { Text, Button, useTheme } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { AccountHeader } from "../components/headers/AccountHeader";
-import { Divider, Button, useTheme } from "react-native-paper";
+
 import { useTranslation } from "react-i18next";
 import MyModal from "../components/MyModal";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
@@ -30,7 +32,6 @@ LogBox.ignoreLogs([
 //https://reactnavigation.org/docs/troubleshooting#i-get-the-warning-non-serializable-values-were-found-in-the-navigation-state for
 
 const ServiceGroupScreen = ({ route, navigation }) => {
-  const [visible, setVisible] = useState(false);
   const [serviceItems, setServiceItems] = useState([]);
 
   const [searchLoading, setSearchLoading] = useState(false);
@@ -43,8 +44,6 @@ const ServiceGroupScreen = ({ route, navigation }) => {
   const [cartItems, setCartItems] = useState([]);
   const [notes, setNotes] = useState("");
 
-  const showModal = () => setVisible(true);
-  const hideModal = () => setVisible(false);
   const { id, groupName, genericNo, setVisibleSnackBar } = route.params;
   const { t } = useTranslation();
   const theme = useTheme();
@@ -216,6 +215,14 @@ const ServiceGroupScreen = ({ route, navigation }) => {
   };
 
   const ServiceItem = ({ item }) => {
+    const [itemPrice, setItemPrice] = useState(
+      item.ServiceVariants[0]?.Price.toString()
+    );
+    //useEffect(() => setItemPrice(item.ServiceVariants[0]?.Price.toString()));
+    const [priceModalVisible, setPriceModalVisible] = useState(false);
+    const showPriceModal = () => setPriceModalVisible(true);
+    const hidePriceModal = () => setPriceModalVisible(false);
+
     const incrementCount = () => {
       const updatedItems = serviceItems.map((elem) => {
         if (elem.Id !== item.Id) {
@@ -258,6 +265,109 @@ const ServiceGroupScreen = ({ route, navigation }) => {
           )
         }
       >
+        <Modal
+          animationType="slide"
+          transparent={false}
+          visible={priceModalVisible}
+          onDismiss={hidePriceModal}
+          onRequestClose={hidePriceModal}
+        >
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <View
+              style={{
+                margin: 20,
+                backgroundColor: "red",
+                borderRadius: 20,
+                padding: 15,
+                justifyContent: "space-evenly",
+                alignItems: "center",
+                shadowColor: "#000",
+                shadowOffset: {
+                  width: 0,
+                  height: 2,
+                },
+                shadowOpacity: 0.25,
+                shadowRadius: 4,
+                elevation: 5,
+                width: "65%",
+                //width: 400,
+                height: "20%",
+              }}
+            >
+              <Text
+                style={{
+                  marginBottom: 15,
+                  textAlign: "center",
+                }}
+              >
+                {t("Folio.pricemodal_set_price")}
+              </Text>
+
+              <TextInput
+                //label={t("Folio.comment")}
+                //placeholder="Enter price"
+                value={itemPrice}
+                onChangeText={setItemPrice}
+                style={{ height: 35, backgroundColor: "grey", width: "85%" }}
+              />
+
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  //backgroundColor: "green",
+                  width: "85%",
+                }}
+              >
+                <Pressable
+                  style={{
+                    borderRadius: 20,
+                    padding: 10,
+                    elevation: 2,
+                    backgroundColor: "yellow",
+                    //marginHorizontal: 10,
+                  }}
+                  onPress={() => {
+                    setItemPrice(item.ServiceVariants[0]?.Price.toString());
+                    hidePriceModal();
+                  }}
+                >
+                  <Text
+                    style={{
+                      textAlign: "center",
+                    }}
+                  >
+                    {t("Folio.pricemodal_cancel")}
+                  </Text>
+                </Pressable>
+                <Pressable
+                  style={{
+                    borderRadius: 20,
+                    padding: 10,
+                    elevation: 2,
+                    backgroundColor: "green",
+                    //marginHorizontal: 20,
+                  }}
+                  onPress={hidePriceModal}
+                >
+                  <Text
+                    style={{
+                      textAlign: "center",
+                    }}
+                  >
+                    {t("Folio.pricemodal_save")}
+                  </Text>
+                </Pressable>
+              </View>
+            </View>
+          </View>
+        </Modal>
         <View
           style={{
             flex: 1,
@@ -294,9 +404,14 @@ const ServiceGroupScreen = ({ route, navigation }) => {
               <Text style={{ fontSize: 24, color: "red" }}>+</Text>
             </TouchableOpacity>
           </View>
-          <View>
-            <Text>{item.ServiceVariants[0]?.Price}</Text>
-          </View>
+          <Pressable
+            style={{ backgroundColor: "grey", width: "25%" }}
+            onPress={() => showPriceModal()}
+          >
+            <View>
+              <Text>{itemPrice}</Text>
+            </View>
+          </Pressable>
         </View>
       </Pressable>
     );
@@ -307,112 +422,225 @@ const ServiceGroupScreen = ({ route, navigation }) => {
   return (
     <>
       <SafeAreaView style={{ flex: 1 }}>
-        <View>
-          <TextInput
-            label={t("Folio.comment")}
-            value={notes}
-            onChangeText={(text) => setNotes(text)}
-          />
-        </View>
-        <View>
-          <FlatList
-            data={filteredServiceItems}
-            renderItem={renderItem}
-            removeClippedSubviews={true}
-            //initialNumToRender={15}
-            keyExtractor={(item) => item.Id}
-            keyboardShouldPersistTaps={"handled"}
-            justifyContent="space-evenly"
-          />
-        </View>
-        <View>
-          <MyModal visible={visible} hideModal={hideModal} />
-        </View>
-
-        <View
-          style={{
-            position: "absolute",
-            left: 0,
-            right: 0,
-            bottom: 0,
-            //alignItems: "center",
-            //justifyContent: "space-between",
-            height: 75,
-            backgroundColor: "lightblue",
-          }}
-        >
+        <View style={{ flex: 1 }}>
           <View
             style={{
-              flex: 1,
-              justifyContent: elemVisible ? "space-around" : "flex-start",
+              //flex: 1,
               alignItems: "center",
-              flexDirection: "row",
+              paddingVertical: 15,
+              //marginVertical: 15,
+            }}
+          >
+            <TextInput
+              //label={t("Folio.comment")}
+              placeholder={t("Folio.comment")}
+              value={notes}
+              onChangeText={(text) => setNotes(text)}
+              style={{
+                height: 50,
+                backgroundColor: "grey",
+                width: "95%",
+              }}
+            />
+          </View>
+          <View style={{ marginVertical: 5 }}>
+            <FlatList
+              data={filteredServiceItems}
+              renderItem={renderItem}
+              removeClippedSubviews={true}
+              //initialNumToRender={15}
+              keyExtractor={(item) => item.Id}
+              keyboardShouldPersistTaps={"handled"}
+              justifyContent="space-evenly"
+            />
+          </View>
+
+          {/* <Modal
+            animationType="slide"
+            transparent={false}
+            visible={priceModalVisible}
+            onDismiss={hidePriceModal}
+            onRequestClose={hidePriceModal}
+          >
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <View
+                style={{
+                  margin: 20,
+                  backgroundColor: "red",
+                  borderRadius: 20,
+                  padding: 15,
+                  justifyContent: "space-evenly",
+                  alignItems: "center",
+                  shadowColor: "#000",
+                  shadowOffset: {
+                    width: 0,
+                    height: 2,
+                  },
+                  shadowOpacity: 0.25,
+                  shadowRadius: 4,
+                  elevation: 5,
+                  width: "65%",
+                  //width: 400,
+                  height: "20%",
+                }}
+              >
+                <Text
+                  style={{
+                    marginBottom: 15,
+                    textAlign: "center",
+                  }}
+                >
+                  {t("Folio.pricemodal_set_price")}
+                </Text>
+
+                <TextInput
+                  //label={t("Folio.comment")}
+                  placeholder="Enter price"
+                  value={notes}
+                  onChangeText={(text) => setNotes(text)}
+                  style={{ height: 35, backgroundColor: "grey", width: "85%" }}
+                />
+
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    //backgroundColor: "green",
+                    width: "85%",
+                  }}
+                >
+                  <Pressable
+                    style={{
+                      borderRadius: 20,
+                      padding: 10,
+                      elevation: 2,
+                      backgroundColor: "yellow",
+                      //marginHorizontal: 10,
+                    }}
+                    onPress={hidePriceModal}
+                  >
+                    <Text
+                      style={{
+                        textAlign: "center",
+                      }}
+                    >
+                      {t("Folio.pricemodal_cancel")}
+                    </Text>
+                  </Pressable>
+                  <Pressable
+                    style={{
+                      borderRadius: 20,
+                      padding: 10,
+                      elevation: 2,
+                      backgroundColor: "green",
+                      //marginHorizontal: 20,
+                    }}
+                    onPress={hidePriceModal}
+                  >
+                    <Text
+                      style={{
+                        textAlign: "center",
+                      }}
+                    >
+                      {t("Folio.pricemodal_save")}
+                    </Text>
+                  </Pressable>
+                </View>
+              </View>
+            </View>
+          </Modal>*/}
+
+          <View
+            style={{
+              position: "absolute",
+              left: 0,
+              right: 0,
+              bottom: 0,
+              //alignItems: "center",
+              //justifyContent: "space-between",
+              height: 75,
+              backgroundColor: "lightblue",
             }}
           >
             <View
-              style={
-                {
-                  //flex: 1,
-                  //alignItems: "flex-end",
-                  //justifyContent: "center",
-                  //height: 75,
-                  //width: 200,
-                  //backgroundColor: "red",
-                }
-              }
+              style={{
+                flex: 1,
+                justifyContent: elemVisible ? "space-around" : "flex-start",
+                alignItems: "center",
+                flexDirection: "row",
+              }}
             >
-              <Button
-                mode="text"
-                //style={{ marginRight: 30 }}
-                labelStyle={{ fontSize: 20 }}
-                textColor={theme.colors.primary}
-                onPress={() => {
-                  navigation.goBack();
-                  setVisibleSnackBar(true);
-                }}
-              >
-                {t("Folio.cancel")}
-              </Button>
-            </View>
-            {elemVisible && (
-              <>
-                <View
-                  style={{
+              <View
+                style={
+                  {
                     //flex: 1,
-                    //alignItems: "flex-start",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    //height: 35,
-                    //backgroundColor: "green",
+                    //alignItems: "flex-end",
+                    //justifyContent: "center",
+                    //height: 75,
                     //width: 200,
+                    //backgroundColor: "red",
+                  }
+                }
+              >
+                <Button
+                  mode="text"
+                  //style={{ marginRight: 30 }}
+                  labelStyle={{ fontSize: 20 }}
+                  textColor={theme.colors.primary}
+                  onPress={() => {
+                    navigation.goBack();
+                    setVisibleSnackBar(true);
                   }}
                 >
-                  <Text style={{ textAlign: "center" }}>{totalSum}</Text>
-                </View>
-                <View
-                  style={
-                    {
+                  {t("Folio.cancel")}
+                </Button>
+              </View>
+              {elemVisible && (
+                <>
+                  <View
+                    style={{
                       //flex: 1,
-                      //alignItems: "flex-end",
-                      //justifyContent: "center",
-                      //height: 75,
+                      //alignItems: "flex-start",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      //height: 35,
+                      //backgroundColor: "green",
                       //width: 200,
-                      //backgroundColor: "red",
-                    }
-                  }
-                >
-                  <Button
-                    mode="text"
-                    //style={{ marginRight: 30 }}
-                    labelStyle={{ fontSize: 20 }}
-                    textColor={theme.colors.primary}
-                    onPress={postServiceItems}
+                    }}
                   >
-                    {t("Folio.post")}
-                  </Button>
-                </View>
-              </>
-            )}
+                    <Text style={{ textAlign: "center" }}>{totalSum}</Text>
+                  </View>
+                  <View
+                    style={
+                      {
+                        //flex: 1,
+                        //alignItems: "flex-end",
+                        //justifyContent: "center",
+                        //height: 75,
+                        //width: 200,
+                        //backgroundColor: "red",
+                      }
+                    }
+                  >
+                    <Button
+                      mode="text"
+                      //style={{ marginRight: 30 }}
+                      labelStyle={{ fontSize: 20 }}
+                      textColor={theme.colors.primary}
+                      onPress={postServiceItems}
+                    >
+                      {t("Folio.post")}
+                    </Button>
+                  </View>
+                </>
+              )}
+            </View>
           </View>
         </View>
       </SafeAreaView>

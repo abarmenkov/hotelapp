@@ -31,6 +31,9 @@ const en = {
       cancel: "Cancel",
       comment: "Comments",
       snackbar: "Posting is successful",
+      pricemodal_save: "Save",
+      pricemodal_cancel: "Cancel",
+      pricemodal_set_price: "Set Price",
     },
     Settings: {
       add_hotel: "Add hotel",

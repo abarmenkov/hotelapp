@@ -1,7 +1,9 @@
 import { PixelRatio, Dimensions, StyleSheet } from "react-native";
 
 const ratio = PixelRatio.get();
-
+//1.7000000476837158 423.5293998850261 855.2940936567056
+//s10 3.5 411.42857142857144 778
+// планшет 2 800 1232
 const normalize = (size) => {
   const { width, height } = Dimensions.get("window");
 
@@ -25,7 +27,7 @@ const normalize = (size) => {
     }
 
     return size * 1.25;
-  } else if (ratio >= 3.5) {
+  } else if (ratio >= 3.5 || ratio < 2) {
     if (width < 360) {
       return size;
     } else if (height < 667) {

@@ -70,7 +70,7 @@ const Account = ({ route, navigation }) => {
           <Portal>
             <Snackbar
               visible={visibleSnackBar}
-              duration={4000}
+              duration={2000}
               onDismiss={() => setVisibleSnackBar(false)}
             >
               {t("Folio.snackbar")}
