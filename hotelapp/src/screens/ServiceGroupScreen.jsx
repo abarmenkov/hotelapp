@@ -57,6 +57,7 @@ const ServiceGroupScreen = ({ route, navigation }) => {
 
   const elemVisible = cartItems.length > 0 ? true : false;
 
+  // получение всех услуг, не нашел как через АПИ получить только услуги одной группы по id группы
   useEffect(() => {
     const endPoint = "/Logus.HMS.Entities.Dictionaries.ServiceItem";
     const controller = new AbortController();
@@ -117,6 +118,8 @@ const ServiceGroupScreen = ({ route, navigation }) => {
   }, []);*/
   //serviceItems.map((item) => (item.Quantity = 0));
   //Logus.HMS.Entities.Dictionaries.PointOfSale
+
+  // начисление услуг на фолио гостя по его genericNo
   const postServiceItems = () => {
     const controller = new AbortController();
     const newAbortSignal = (timeoutMs) => {
@@ -127,7 +130,6 @@ const ServiceGroupScreen = ({ route, navigation }) => {
     const configurationObject = {
       method: "post",
       url: `${appRoutes.folioPath()}/${genericNo}`,
-      //url: appRoutes.dictionariesPath(),
       signal: newAbortSignal(5000),
       headers: {
         Authorization: `Token ${token}`,
@@ -146,26 +148,26 @@ const ServiceGroupScreen = ({ route, navigation }) => {
         ReleaseImmediately: false,
         PointOfSaleId: null,
       }),
-      /*params: {
-        propertyId: 1,
-      },*/
     };
 
     postData(configurationObject, controller);
   };
 
+  // Фильтрация массива услуг по ID выбранной группы услуг
   const filteredServiceItems = serviceItems.filter(
     (item) => item.ServiceGroupId === id
   );
-  const total = filteredServiceItems
+
+  //сумма стоимости услуг в корзине, дублирует totalSum, пока не использую
+  /*const total = filteredServiceItems
     .filter((elem) => elem.Quantity > 0)
 
     .reduce(
       (acc, elem) => acc + elem.Quantity * elem.ServiceVariants[0]?.Price,
       0
-    );
+    );*/
 
-  //console.log(total, totalSum);
+  //добавление услуг в корзину
   const addItemToCart = (item) => {
     setCartItems((prevItems) => {
       const isItemInCart = prevItems.find(
@@ -179,7 +181,7 @@ const ServiceGroupScreen = ({ route, navigation }) => {
             ServiceItemId: item.Id,
             Name: item.Name,
             Quantity: 1,
-            Amount: item.ServiceVariants[0]?.Price,
+            Amount: item.Price ? item.Price : item.ServiceVariants[0]?.Price,
           },
         ];
       } else {
@@ -193,6 +195,7 @@ const ServiceGroupScreen = ({ route, navigation }) => {
     });
   };
 
+  // удаление услуг из корзины
   const removeItemFromCart = (item) => {
     setCartItems((prevItems) => {
       const isItemInCart = prevItems.find(
@@ -215,13 +218,23 @@ const ServiceGroupScreen = ({ route, navigation }) => {
   };
 
   const ServiceItem = ({ item }) => {
-    const [itemPrice, setItemPrice] = useState(
-      item.ServiceVariants[0]?.Price.toString()
-    );
-    //useEffect(() => setItemPrice(item.ServiceVariants[0]?.Price.toString()));
+    const [itemPrice, setItemPrice] = useState("0");
     const [priceModalVisible, setPriceModalVisible] = useState(false);
+
     const showPriceModal = () => setPriceModalVisible(true);
     const hidePriceModal = () => setPriceModalVisible(false);
+
+    const setNewItemPrice = () => {
+      const updatedItems = serviceItems.map((elem) => {
+        if (elem.Id !== item.Id) {
+          return elem;
+        } else {
+          return { ...elem, Price: Number(itemPrice) };
+        }
+      });
+
+      setServiceItems(updatedItems);
+    };
 
     const incrementCount = () => {
       const updatedItems = serviceItems.map((elem) => {
@@ -234,12 +247,21 @@ const ServiceGroupScreen = ({ route, navigation }) => {
           return { ...elem, Quantity: 1 };
         }
       });
-      //console.log(updatedItems);
+
       setServiceItems(updatedItems);
+
       addItemToCart(item);
 
-      setTotalSum(totalSum + item.ServiceVariants[0]?.Price);
+      if (item.Price) {
+        setTotalSum(totalSum + item.Price);
+      } else {
+        setTotalSum(totalSum + item.ServiceVariants[0]?.Price);
+      }
     };
+
+    /*setNewServiceVariants((prevItems) => {
+      return { ...prevItems, Price: Number(itemPrice) };
+    });*/
 
     const decrementCount = () => {
       const updatedItems = serviceItems.map((elem) => {
@@ -247,10 +269,13 @@ const ServiceGroupScreen = ({ route, navigation }) => {
           return { ...elem, Quantity: elem.Quantity - 1 };
         } else return elem;
       });
-      //console.log(updatedItems);
+
       setServiceItems(updatedItems);
       removeItemFromCart(item);
-      if (item.Quantity > 0)
+
+      if (item.Quantity > 0 && item.Price) setTotalSum(totalSum - item.Price);
+
+      if (item.Quantity > 0 && !item.Price)
         setTotalSum(totalSum - item.ServiceVariants[0]?.Price);
     };
 
@@ -334,7 +359,6 @@ const ServiceGroupScreen = ({ route, navigation }) => {
                     //marginHorizontal: 10,
                   }}
                   onPress={() => {
-                    setItemPrice(item.ServiceVariants[0]?.Price.toString());
                     hidePriceModal();
                   }}
                 >
@@ -354,7 +378,10 @@ const ServiceGroupScreen = ({ route, navigation }) => {
                     backgroundColor: "green",
                     //marginHorizontal: 20,
                   }}
-                  onPress={hidePriceModal}
+                  onPress={() => {
+                    setNewItemPrice();
+                    hidePriceModal();
+                  }}
                 >
                   <Text
                     style={{
@@ -409,7 +436,9 @@ const ServiceGroupScreen = ({ route, navigation }) => {
             onPress={() => showPriceModal()}
           >
             <View>
-              <Text>{itemPrice}</Text>
+              <Text>
+                {item.Price ? item.Price : item.ServiceVariants[0]?.Price}
+              </Text>
             </View>
           </Pressable>
         </View>
