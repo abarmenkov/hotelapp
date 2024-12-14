@@ -40,13 +40,17 @@ const ServiceGroupScreen = ({ route, navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [updateData, setUpdateData] = useState(false);
   const [apiSearch, setApiSearch] = useState(false);
-  const [totalSum, setTotalSum] = useState(0);
+  // total sum считаю проходом по корзине
+  //const [totalSum, setTotalSum] = useState(0);
   const [cartItems, setCartItems] = useState([]);
   const [notes, setNotes] = useState("");
 
   const { id, groupName, genericNo, setVisibleSnackBar } = route.params;
   const { t } = useTranslation();
+  const { i18n } = useTranslation();
   const theme = useTheme();
+
+  const appLanguage = i18n.language;
 
   const serviceGroupName =
     cartItems.length > 1
@@ -167,6 +171,11 @@ const ServiceGroupScreen = ({ route, navigation }) => {
       0
     );*/
 
+  const total = cartItems.reduce(
+    (acc, elem) => acc + elem.Quantity * elem.Amount,
+    0
+  );
+
   //добавление услуг в корзину
   const addItemToCart = (item) => {
     setCartItems((prevItems) => {
@@ -188,6 +197,24 @@ const ServiceGroupScreen = ({ route, navigation }) => {
         return prevItems.map((elem) => {
           if (elem.ServiceItemId == item.Id) {
             elem.Quantity++;
+          }
+          return elem;
+        });
+      }
+    });
+  };
+  const updateItemInCartPrice = (item, itemPrice) => {
+    setCartItems((prevItems) => {
+      const isItemInCart = prevItems.find(
+        (elem) => elem.ServiceItemId === item.Id
+      );
+
+      if (!isItemInCart) {
+        return [...prevItems];
+      } else {
+        return prevItems.map((elem) => {
+          if (elem.ServiceItemId == item.Id) {
+            elem.Amount = itemPrice;
           }
           return elem;
         });
@@ -239,6 +266,7 @@ const ServiceGroupScreen = ({ route, navigation }) => {
       });
 
       setServiceItems(updatedItems);
+      updateItemInCartPrice(item, itemPrice);
     };
 
     const incrementCount = () => {
@@ -261,11 +289,11 @@ const ServiceGroupScreen = ({ route, navigation }) => {
 
         addItemToCart(item);
 
-        if (item.Price) {
+        /*if (item.Price) {
           setTotalSum(totalSum + item.Price);
         } else {
           setTotalSum(totalSum + item.ServiceVariants[0]?.Price);
-        }
+        }*/
       }
     };
 
@@ -283,10 +311,10 @@ const ServiceGroupScreen = ({ route, navigation }) => {
       setServiceItems(updatedItems);
       removeItemFromCart(item);
 
-      if (item.Quantity > 0 && item.Price) setTotalSum(totalSum - item.Price);
+      /*if (item.Quantity > 0 && item.Price) setTotalSum(totalSum - item.Price);
 
       if (item.Quantity > 0 && !item.Price)
-        setTotalSum(totalSum - item.ServiceVariants[0]?.Price);
+        setTotalSum(totalSum - item.ServiceVariants[0]?.Price);*/
     };
 
     return (
@@ -296,7 +324,8 @@ const ServiceGroupScreen = ({ route, navigation }) => {
             item.Name,
             item.ServiceVariants[0]?.Price,
             item,
-            cartItems
+            cartItems,
+            total
           )
         }
       >
@@ -417,7 +446,9 @@ const ServiceGroupScreen = ({ route, navigation }) => {
           }}
         >
           <View>
-            <Text>{item.Name}</Text>
+            <Text>
+              {appLanguage === "en" && item.NameEn ? item.NameEn : item.Name}
+            </Text>
           </View>
           <View
             style={{
@@ -655,7 +686,7 @@ const ServiceGroupScreen = ({ route, navigation }) => {
                       //width: 200,
                     }}
                   >
-                    <Text style={{ textAlign: "center" }}>{totalSum}</Text>
+                    <Text style={{ textAlign: "center" }}>{total}</Text>
                   </View>
                   <View
                     style={
