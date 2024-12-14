@@ -218,7 +218,12 @@ const ServiceGroupScreen = ({ route, navigation }) => {
   };
 
   const ServiceItem = ({ item }) => {
-    const [itemPrice, setItemPrice] = useState("0");
+    const itemModalPrice =
+      item.Price && item.Price !== 0
+        ? item.Price.toString()
+        : item.ServiceVariants[0]?.Price.toString();
+
+    const [itemPrice, setItemPrice] = useState(itemModalPrice);
     const [priceModalVisible, setPriceModalVisible] = useState(false);
 
     const showPriceModal = () => setPriceModalVisible(true);
@@ -237,25 +242,30 @@ const ServiceGroupScreen = ({ route, navigation }) => {
     };
 
     const incrementCount = () => {
-      const updatedItems = serviceItems.map((elem) => {
-        if (elem.Id !== item.Id) {
-          return elem;
-        } else {
-          if (elem.hasOwnProperty("Quantity")) {
-            return { ...elem, Quantity: elem.Quantity + 1 };
+      if (
+        item.ServiceVariants[0]?.Price !== 0 ||
+        (item.ServiceVariants[0]?.Price === 0 && item.Price && item.Price !== 0)
+      ) {
+        const updatedItems = serviceItems.map((elem) => {
+          if (elem.Id !== item.Id) {
+            return elem;
+          } else {
+            if (elem.hasOwnProperty("Quantity")) {
+              return { ...elem, Quantity: elem.Quantity + 1 };
+            }
+            return { ...elem, Quantity: 1 };
           }
-          return { ...elem, Quantity: 1 };
+        });
+
+        setServiceItems(updatedItems);
+
+        addItemToCart(item);
+
+        if (item.Price) {
+          setTotalSum(totalSum + item.Price);
+        } else {
+          setTotalSum(totalSum + item.ServiceVariants[0]?.Price);
         }
-      });
-
-      setServiceItems(updatedItems);
-
-      addItemToCart(item);
-
-      if (item.Price) {
-        setTotalSum(totalSum + item.Price);
-      } else {
-        setTotalSum(totalSum + item.ServiceVariants[0]?.Price);
       }
     };
 
@@ -433,7 +443,9 @@ const ServiceGroupScreen = ({ route, navigation }) => {
           </View>
           <Pressable
             style={{ backgroundColor: "grey", width: "25%" }}
-            onPress={() => showPriceModal()}
+            onPress={() => {
+              if (item.ServiceVariants[0]?.AllowCustomPrice) showPriceModal();
+            }}
           >
             <View>
               <Text>
