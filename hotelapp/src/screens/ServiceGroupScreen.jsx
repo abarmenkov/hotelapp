@@ -158,9 +158,20 @@ const ServiceGroupScreen = ({ route, navigation }) => {
   };
 
   // Фильтрация массива услуг по ID выбранной группы услуг
-  const filteredServiceItems = serviceItems.filter(
+  /*const filteredServiceItems = serviceItems.filter(
     (item) => item.ServiceGroupId === id
-  );
+  );*/
+
+  const filteredServiceItems = serviceItems.reduce((acc, item) => {
+    if (item.ServiceGroupId === id) {
+      item.ServiceVariants.map((elem) =>
+        acc.push({ ...item, ServiceVariants: [elem] })
+      );
+    }
+    return acc;
+  }, []);
+
+  console.log(filteredServiceItems);
 
   //сумма стоимости услуг в корзине, дублирует totalSum, пока не использую
   /*const total = filteredServiceItems
@@ -180,22 +191,55 @@ const ServiceGroupScreen = ({ route, navigation }) => {
   const addItemToCart = (item) => {
     setCartItems((prevItems) => {
       const isItemInCart = prevItems.find(
-        (elem) => elem.ServiceItemId === item.Id
+        (elem) => elem.ServiceItemId === item.ServiceVariants[0].Id
       );
 
       if (!isItemInCart) {
+        let itemName = "";
+        switch (appLanguage) {
+          case "en":
+            {
+              if (item.NameEn && item.ServiceVariants[0].NameEn) {
+                itemName =
+                  item.NameEn === item.ServiceVariants[0].NameEn
+                    ? item.NameEn
+                    : `${item.NameEn} (${item.ServiceVariants[0].NameEn})`;
+              }
+              if (item.NameEn && !item.ServiceVariants[0].NameEn) {
+                itemName = item.NameEn;
+              }
+              if (!item.NameEn && !item.ServiceVariants[0].NameEn) {
+                itemName = item.Name;
+              }
+              if (!item.NameEn && item.ServiceVariants[0].NameEn) {
+                itemName = item.ServiceVariants[0].NameEn;
+              }
+            }
+            break;
+          case "ru":
+            {
+              itemName =
+                item.Name === item.ServiceVariants[0].Name
+                  ? item.Name
+                  : `${item.Name} (${item.ServiceVariants[0].Name})`;
+            }
+            break;
+          default:
+            itemName = "название неопределенно";
+        }
         return [
           ...prevItems,
           {
-            ServiceItemId: item.Id,
-            Name: item.Name,
+            ServiceItemId: item.ServiceVariants[0].Id,
+            Name: itemName,
             Quantity: 1,
-            Amount: item.Price ? item.Price : item.ServiceVariants[0]?.Price,
+            Amount: item.Price ? item.Price : item.ServiceVariants[0].Price,
+            MarkingCategory: item.MarkingCategory,
           },
         ];
       } else {
         return prevItems.map((elem) => {
-          if (elem.ServiceItemId == item.Id) {
+          if (elem.ServiceItemId == item.ServiceVariants[0].Id) {
             elem.Quantity++;
           }
           return elem;
@@ -203,17 +247,18 @@ const ServiceGroupScreen = ({ route, navigation }) => {
       }
     });
   };
+
   const updateItemInCartPrice = (item, itemPrice) => {
     setCartItems((prevItems) => {
       const isItemInCart = prevItems.find(
-        (elem) => elem.ServiceItemId === item.Id
+        (elem) => elem.ServiceItemId === item.ServiceVariants[0].Id
       );
 
       if (!isItemInCart) {
         return [...prevItems];
       } else {
         return prevItems.map((elem) => {
-          if (elem.ServiceItemId == item.Id) {
+          if (elem.ServiceItemId == item.ServiceVariants[0].Id) {
             elem.Amount = itemPrice;
           }
           return elem;
@@ -226,16 +271,18 @@ const ServiceGroupScreen = ({ route, navigation }) => {
   const removeItemFromCart = (item) => {
     setCartItems((prevItems) => {
       const isItemInCart = prevItems.find(
-        (elem) => elem.ServiceItemId === item.Id
+        (elem) => elem.ServiceItemId === item.ServiceVariants[0].Id
       );
 
       if (!isItemInCart) {
         return [...prevItems];
       } else if (isItemInCart && item.Quantity === 1) {
-        return prevItems.filter((elem) => elem.ServiceItemId !== item.Id);
+        return prevItems.filter(
+          (elem) => elem.ServiceItemId !== item.ServiceVariants[0].Id
+        );
       } else {
         return prevItems.map((elem) => {
-          if (elem.ServiceItemId == item.Id) {
+          if (elem.ServiceItemId == item.ServiceVariants[0].Id) {
             elem.Quantity--;
           }
           return elem;
@@ -248,7 +295,7 @@ const ServiceGroupScreen = ({ route, navigation }) => {
     const itemModalPrice =
       item.Price && item.Price !== 0
         ? item.Price.toString()
-        : item.ServiceVariants[0]?.Price.toString();
+        : item.ServiceVariants[0].Price.toString();
 
     const [itemPrice, setItemPrice] = useState(itemModalPrice);
     const [priceModalVisible, setPriceModalVisible] = useState(false);
@@ -257,8 +304,8 @@ const ServiceGroupScreen = ({ route, navigation }) => {
     const hidePriceModal = () => setPriceModalVisible(false);
 
     const setNewItemPrice = () => {
-      const updatedItems = serviceItems.map((elem) => {
-        if (elem.Id !== item.Id) {
+      const updatedItems = filteredServiceItems.map((elem) => {
+        if (elem.ServiceVariants[0].Id !== item.ServiceVariants[0].Id) {
           return elem;
         } else {
           return { ...elem, Price: Number(itemPrice) };
@@ -270,7 +317,7 @@ const ServiceGroupScreen = ({ route, navigation }) => {
     };
 
     const incrementCount = () => {
-      if (
+      /*if (
         item.ServiceVariants[0]?.Price !== 0 ||
         (item.ServiceVariants[0]?.Price === 0 && item.Price && item.Price !== 0)
       ) {
@@ -283,8 +330,21 @@ const ServiceGroupScreen = ({ route, navigation }) => {
             }
             return { ...elem, Quantity: 1 };
           }
+        });*/
+      if (
+        item.ServiceVariants[0].Price !== 0 ||
+        (item.ServiceVariants[0].Price === 0 && item.Price && item.Price !== 0)
+      ) {
+        const updatedItems = filteredServiceItems.map((elem) => {
+          if (elem.ServiceVariants[0].Id !== item.ServiceVariants[0].Id) {
+            return elem;
+          } else {
+            if (elem.hasOwnProperty("Quantity")) {
+              return { ...elem, Quantity: elem.Quantity + 1 };
+            }
+            return { ...elem, Quantity: 1 };
+          }
         });
-
         setServiceItems(updatedItems);
 
         addItemToCart(item);
@@ -302,8 +362,11 @@ const ServiceGroupScreen = ({ route, navigation }) => {
     });*/
 
     const decrementCount = () => {
-      const updatedItems = serviceItems.map((elem) => {
-        if (elem.Id === item.Id && item.Quantity > 0) {
+      const updatedItems = filteredServiceItems.map((elem) => {
+        if (
+          elem.ServiceVariants[0].Id === item.ServiceVariants[0].Id &&
+          item.Quantity > 0
+        ) {
           return { ...elem, Quantity: elem.Quantity - 1 };
         } else return elem;
       });
@@ -322,10 +385,11 @@ const ServiceGroupScreen = ({ route, navigation }) => {
         onPress={() =>
           console.log(
             item.Name,
-            item.ServiceVariants[0]?.Price,
-            item,
-            cartItems,
-            total
+            item.ServiceVariants[0],
+            //item.ServiceVariants[0].Price,
+            //item,
+            cartItems
+            //total
           )
         }
       >
@@ -447,7 +511,9 @@ const ServiceGroupScreen = ({ route, navigation }) => {
         >
           <View>
             <Text>
-              {appLanguage === "en" && item.NameEn ? item.NameEn : item.Name}
+              {appLanguage === "en" && item.ServiceVariants[0].NameEn
+                ? item.ServiceVariants[0].NameEn
+                : item.ServiceVariants[0].Name}
             </Text>
           </View>
           <View
@@ -475,12 +541,12 @@ const ServiceGroupScreen = ({ route, navigation }) => {
           <Pressable
             style={{ backgroundColor: "grey", width: "25%" }}
             onPress={() => {
-              if (item.ServiceVariants[0]?.AllowCustomPrice) showPriceModal();
+              if (item.ServiceVariants[0].AllowCustomPrice) showPriceModal();
             }}
           >
             <View>
               <Text>
-                {item.Price ? item.Price : item.ServiceVariants[0]?.Price}
+                {item.Price ? item.Price : item.ServiceVariants[0].Price}
               </Text>
             </View>
           </Pressable>
@@ -521,7 +587,7 @@ const ServiceGroupScreen = ({ route, navigation }) => {
               renderItem={renderItem}
               removeClippedSubviews={true}
               //initialNumToRender={15}
-              keyExtractor={(item) => item.Id}
+              keyExtractor={(item) => item.ServiceVariants[0].Id}
               keyboardShouldPersistTaps={"handled"}
               justifyContent="space-evenly"
             />
