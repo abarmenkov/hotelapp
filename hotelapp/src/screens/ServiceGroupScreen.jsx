@@ -33,6 +33,7 @@ LogBox.ignoreLogs([
 
 const ServiceGroupScreen = ({ route, navigation }) => {
   const [serviceItems, setServiceItems] = useState([]);
+  const [folioPockets, setFolioPockets] = useState([]);
 
   const [searchLoading, setSearchLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -45,12 +46,17 @@ const ServiceGroupScreen = ({ route, navigation }) => {
   const [cartItems, setCartItems] = useState([]);
   const [notes, setNotes] = useState("");
 
-  const { id, groupName, genericNo, setVisibleSnackBar } = route.params;
+  const { id, groupName, genericNo, setVisibleSnackBar, DefaultFolioPocketId } =
+    route.params;
   const { t } = useTranslation();
   const { i18n } = useTranslation();
   const theme = useTheme();
 
   const appLanguage = i18n.language;
+
+  const defaultFolioPocketCode = folioPockets.find(
+    (elem) => elem.Id == DefaultFolioPocketId
+  )?.Code;
 
   const serviceGroupName =
     cartItems.length > 1
@@ -58,6 +64,47 @@ const ServiceGroupScreen = ({ route, navigation }) => {
       : cartItems.length === 0
       ? ""
       : cartItems[0].Name;
+
+  const pocketCode =
+    cartItems.length === 1 && cartItems[0].DefaultFolioPocketCode
+      ? cartItems[0].DefaultFolioPocketCode
+      : cartItems.length === 1 &&
+        !cartItems[0].DefaultFolioPocketCode &&
+        defaultFolioPocketCode
+      ? defaultFolioPocketCode
+      : cartItems.length > 1 && defaultFolioPocketCode
+      ? defaultFolioPocketCode
+      : "ГОСТЬ";
+  /*let pocketCode = "";
+  switch (cartItems) {
+    case cartItems.length === 0:
+      {
+        pocketCode = "ГОСТЬ2222";
+      }
+      break;
+    case cartItems.length === 1:
+      {
+        pocketCode = cartItems[0].DefaultFolioPocketCode;
+      }
+      break;
+    case cartItems.length > 1:
+      {
+        pocketCode = defaultFolioPocketCode
+          ? defaultFolioPocketCode
+          : "ГОСТЬ111";
+      }
+      break;
+    default:
+      pocketCode = "ГОСТЬ3333";
+  }*/
+
+  //console.log(pocketCode, cartItems);
+  /*const pocketCode =
+    cartItems.length > 1
+      ? getFolioPocketCode(folioPockets, DefaultFolioPocketId)
+      : cartItems.length === 0
+      ? ""
+      : getFolioPocketCode(folioPockets, cartItems[0].defaultFolioPocketId);*/
 
   const elemVisible = cartItems.length > 0 ? true : false;
 
@@ -100,6 +147,45 @@ const ServiceGroupScreen = ({ route, navigation }) => {
     };
   }, []);
 
+  useEffect(() => {
+    const endPoint = "/Logus.HMS.Entities.Dictionaries.StandardFolioPocket";
+    const controller = new AbortController();
+    const newAbortSignal = (timeoutMs) => {
+      setTimeout(() => controller.abort(), timeoutMs || 0);
+
+      return controller.signal;
+    };
+    const configurationObject = {
+      method: "get",
+      url: `${appRoutes.dictionariesPath()}${endPoint}`,
+      //url: appRoutes.dictionariesPath(),
+      signal: newAbortSignal(5000),
+      headers: {
+        Authorization: `Token ${token}`,
+        "Content-Type": "application/json",
+      },
+
+      params: {
+        propertyId: 1,
+      },
+    };
+    fetchData(
+      setIsLoading,
+      setFolioPockets,
+      configurationObject,
+      setErrorFlag,
+      setRefreshing,
+      refreshing,
+      controller
+    );
+
+    return () => {
+      setErrorFlag(false);
+      controller.abort("Data fetching cancelled");
+    };
+  }, []);
+
+  //Logus.HMS.Entities.Dictionaries.StandardFolioPocket
   /*useEffect(() => {
     navigation.getParent()?.setOptions({
       headerShown: false,
@@ -143,7 +229,7 @@ const ServiceGroupScreen = ({ route, navigation }) => {
         PropertyId: 1,
         Name: `${serviceGroupName}`,
         Notes: notes,
-        PocketCode: "ГОСТЬ",
+        PocketCode: `${pocketCode}`,
         Details: cartItems,
         KeyCardId: "",
         //если необходима проверка PointOfSaleId
@@ -157,21 +243,19 @@ const ServiceGroupScreen = ({ route, navigation }) => {
     postData(configurationObject, controller);
   };
 
-  // Фильтрация массива услуг по ID выбранной группы услуг
-  /*const filteredServiceItems = serviceItems.filter(
-    (item) => item.ServiceGroupId === id
-  );*/
+  // Фильтрация массива услуг по ID выбранной группы услуг, раскрытие массива вариантов цены, отбрасывая удаленные варианты
 
   const filteredServiceItems = serviceItems.reduce((acc, item) => {
     if (item.ServiceGroupId === id) {
-      item.ServiceVariants.map((elem) =>
-        acc.push({ ...item, ServiceVariants: [elem] })
-      );
+      //console.log(item);
+      item.ServiceVariants.map((elem) => {
+        if (!elem.DeletedDate) acc.push({ ...item, ServiceVariants: [elem] });
+      });
     }
     return acc;
   }, []);
 
-  console.log(filteredServiceItems);
+  //console.log(filteredServiceItems);
 
   //сумма стоимости услуг в корзине, дублирует totalSum, пока не использую
   /*const total = filteredServiceItems
@@ -195,6 +279,12 @@ const ServiceGroupScreen = ({ route, navigation }) => {
       );
 
       if (!isItemInCart) {
+        // если у группы услуг определен Id дефолтного кармана счета, находим это Id в массиве карманов и возвращаем его Code
+        const itemPocketCode = item.DefaultFolioPocketId
+          ? folioPockets.find((elem) => elem.Id == item.DefaultFolioPocketId)
+              ?.Code
+          : "ГОСТЬ";
+
         let itemName = "";
         switch (appLanguage) {
           case "en":
@@ -235,6 +325,7 @@ const ServiceGroupScreen = ({ route, navigation }) => {
             Quantity: 1,
             Amount: item.Price ? item.Price : item.ServiceVariants[0].Price,
             MarkingCategory: item.MarkingCategory,
+            DefaultFolioPocketCode: itemPocketCode,
           },
         ];
       } else {
@@ -385,7 +476,7 @@ const ServiceGroupScreen = ({ route, navigation }) => {
         onPress={() =>
           console.log(
             item.Name,
-            item.ServiceVariants[0],
+            item,
             //item.ServiceVariants[0].Price,
             //item,
             cartItems
@@ -511,10 +602,21 @@ const ServiceGroupScreen = ({ route, navigation }) => {
         >
           <View>
             <Text>
-              {appLanguage === "en" && item.ServiceVariants[0].NameEn
-                ? item.ServiceVariants[0].NameEn
-                : item.ServiceVariants[0].Name}
+              {appLanguage === "en" && item.NameEn ? item.NameEn : item.Name}
             </Text>
+            {item.Name !== item.ServiceVariants[0].Name && (
+              <Text>
+                {appLanguage === "en" && item.ServiceVariants[0].NameEn
+                  ? item.ServiceVariants[0].NameEn
+                  : appLanguage === "en" &&
+                    item.NameEn &&
+                    !item.ServiceVariants[0].NameEn
+                  ? item.NameEn
+                  : appLanguage !== "en" && item.ServiceVariants[0].Name
+                  ? item.ServiceVariants[0].Name
+                  : item.Name}
+              </Text>
+            )}
           </View>
           <View
             style={{
@@ -733,7 +835,6 @@ const ServiceGroupScreen = ({ route, navigation }) => {
                   textColor={theme.colors.primary}
                   onPress={() => {
                     navigation.goBack();
-                    setVisibleSnackBar(true);
                   }}
                 >
                   {t("Folio.cancel")}
@@ -771,7 +872,11 @@ const ServiceGroupScreen = ({ route, navigation }) => {
                       //style={{ marginRight: 30 }}
                       labelStyle={{ fontSize: 20 }}
                       textColor={theme.colors.primary}
-                      onPress={postServiceItems}
+                      onPress={() => {
+                        postServiceItems();
+                        navigation.goBack();
+                        setVisibleSnackBar(true);
+                      }}
                     >
                       {t("Folio.post")}
                     </Button>

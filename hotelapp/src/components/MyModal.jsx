@@ -106,7 +106,7 @@ const MyModal = ({ visible, hideModal, genericNo, setVisibleSnackBar }) => {
 
   const serviceItemsFilter = (serviceGropuId) =>
     serviceItems.filter((item) => item.ServiceGroupId === serviceGropuId);*/
-
+  //console.log(serviceGroups);
   const ServiceGroupName = ({ item }) => {
     return (
       <Pressable
@@ -120,8 +120,9 @@ const MyModal = ({ visible, hideModal, genericNo, setVisibleSnackBar }) => {
             groupName: item.Name,
             genericNo,
             setVisibleSnackBar,
+            DefaultFolioPocketId: item.DefaultFolioPocketId,
           });
-          //console.log(item);
+          //console.log(item, item.DefaultFolioPocketId);
           hideModal();
         }}
       >
