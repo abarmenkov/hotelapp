@@ -243,13 +243,14 @@ const ServiceGroupScreen = ({ route, navigation }) => {
     postData(configurationObject, controller);
   };
 
-  // Фильтрация массива услуг по ID выбранной группы услуг, раскрытие массива вариантов цены, отбрасывая удаленные варианты
+  // Фильтрация массива услуг по ID выбранной группы услуг, раскрытие массива вариантов цены, отбрасывая удаленные варианты и включенные в пакет
 
   const filteredServiceItems = serviceItems.reduce((acc, item) => {
     if (item.ServiceGroupId === id) {
-      //console.log(item);
+      console.log(item);
       item.ServiceVariants.map((elem) => {
-        if (!elem.DeletedDate) acc.push({ ...item, ServiceVariants: [elem] });
+        if (!elem.DeletedDate && !elem.IsPackageOnly)
+          acc.push({ ...item, ServiceVariants: [elem] });
       });
     }
     return acc;
@@ -608,13 +609,9 @@ const ServiceGroupScreen = ({ route, navigation }) => {
               <Text>
                 {appLanguage === "en" && item.ServiceVariants[0].NameEn
                   ? item.ServiceVariants[0].NameEn
-                  : appLanguage === "en" &&
-                    item.NameEn &&
-                    !item.ServiceVariants[0].NameEn
-                  ? item.NameEn
                   : appLanguage !== "en" && item.ServiceVariants[0].Name
                   ? item.ServiceVariants[0].Name
-                  : item.Name}
+                  : null}
               </Text>
             )}
           </View>
