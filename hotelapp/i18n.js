@@ -4,20 +4,22 @@ import { initReactI18next } from "react-i18next";
 import ru from "./src/locales/ru";
 import en from "./src/locales/en";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { getData, saveData } from "./src/API/asyncStorageMethods";
 //import i18n as i18next from 'i18next';
+
 const i18next = i18n.createInstance();
 
 const LanguageDetector = {
   type: "languageDetector",
   async: true,
   init: () => {},
-  detect: async function (callback) {
+  detect: (callback) => getData("@language", callback, "ru"),
+  /*detect: async function (callback) {
     try {
       await AsyncStorage.getItem("@language").then((language) => {
         if (language) {
-          //console.log(language);
-          return callback(language);
+          console.log(language);
+          return callback(JSON.parse(language));
         } else {
           return callback(Localization.getLocales()[0]);
         }
@@ -25,16 +27,19 @@ const LanguageDetector = {
     } catch (error) {
       console.log("error reading language");
       //console.log(Localization.getLocales()[0]);
-      callback('ru');
+      callback("ru");
     }
   },
-  cacheUserLanguage: async function (language) {
+  */
+  cacheUserLanguage: (language) => saveData("@language", language),
+  /*cacheUserLanguage: async function (language) {
     try {
+      console.log(language, JSON.stringify(language));
       await AsyncStorage.setItem("@language", language);
     } catch (error) {
       console.log("error saving language");
     }
-  },
+  },*/
   // async detection
   /*detect: (callback) => {
     // We will get back a string like "en-UK".

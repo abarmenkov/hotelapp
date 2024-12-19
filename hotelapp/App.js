@@ -81,23 +81,7 @@ export default function App() {
   useEffect(() => {
     //clearStorage();
     setDataIsLoading(true);
-
     getData("@user", setUser, { userName: "testman", userPassword: "test1" });
-    /*const getUser = async () => {
-      const value = await AsyncStorage.getItem("@user");
-
-      if (value) {
-        //console.log(value);
-        setUser(JSON.parse(value));
-        setTimeout(() => setDataIsLoading(false), 3000);
-        //console.log("value ok");
-      } else {
-        setUser({ userName: "test", userPassword: "test1" });
-        setDataIsLoading(false);
-        //console.log(user)
-      }
-    };
-    getUser();*/
     setTimeout(() => setDataIsLoading(false), 3000);
   }, []);
 
