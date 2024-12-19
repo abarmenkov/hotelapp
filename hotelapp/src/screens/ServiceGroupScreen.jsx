@@ -38,7 +38,6 @@ const ServiceGroupScreen = ({ route, navigation }) => {
   const { defaultPocketCode, setDefaultPocketCode } = useContext(
     DefaultPocketCodeContext
   );
-  console.log(defaultPocketCode);
 
   const [searchLoading, setSearchLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);

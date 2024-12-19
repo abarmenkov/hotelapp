@@ -31,6 +31,7 @@ import { Picker } from "@react-native-picker/picker";
 //import { useAuth } from "../hooks/useAuth";
 import { WIDTH } from "../utils/constants";
 import { create } from "../utils/normalize";
+import { saveData } from "../API/asyncStorageMethods";
 
 export const DrawerContent = (props) => {
   //const { fontScale, width } = useWindowDimensions();
@@ -42,7 +43,7 @@ export const DrawerContent = (props) => {
   const theme = useTheme();
   const { toggleTheme, isThemeDark } = useContext(PreferencesContext);
   const { userName } = useContext(UserContext);
-  const [dark, setDark] = useState(isThemeDark);
+  //const [dark, setDark] = useState(isThemeDark);
 
   const supportedLngs = i18n.services.resourceStore.data;
   const languageKeys = Object.keys(supportedLngs);
@@ -61,7 +62,7 @@ export const DrawerContent = (props) => {
     setTimeout(() => navigation.closeDrawer(), 1000);
   };
 
-  useEffect(() => {
+  /*useEffect(() => {
     const saveTheme = async () => {
       try {
         await AsyncStorage.setItem("@theme", JSON.stringify(dark));
@@ -70,7 +71,7 @@ export const DrawerContent = (props) => {
       }
     };
     saveTheme();
-  }, [dark]);
+  }, [dark]);*/
 
   const pickerRef = useRef();
 
@@ -113,7 +114,8 @@ export const DrawerContent = (props) => {
           <TouchableRipple
             onPress={() => {
               toggleTheme();
-              setDark(!dark);
+              saveData("@theme", !isThemeDark);
+              //setDark(!dark);
               setTimeout(() => navigation.closeDrawer(), 1000);
             }}
           >
@@ -127,7 +129,8 @@ export const DrawerContent = (props) => {
                 value={isThemeDark}
                 onValueChange={() => {
                   toggleTheme();
-                  setDark(!dark);
+                  saveData("@theme", !isThemeDark);
+                  //setDark(!dark);
                   setTimeout(() => navigation.closeDrawer(), 1000);
                 }}
               />

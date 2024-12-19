@@ -38,6 +38,7 @@ import { clearStorage } from "./src/API/asyncStorageMethods";
 import { LoadingIndicator } from "./src/components/LoadingIndicator";
 import { useTranslation } from "react-i18next";
 import { DefaultPocketCodeContext } from "./src/context/DefaultPocketCodeContext";
+import { getData } from "./src/API/asyncStorageMethods";
 
 const CombinedDefaultTheme = {
   ...MD3LightTheme,
@@ -67,38 +68,37 @@ export default function App() {
   });
   const [defaultPocketCode, setDefaultPocketCode] = useState("ГОСТЬ");
 
-  const [userIsLoading, setUserIsLoading] = useState(false);
-  const [themeIsLoading, setThemeIsLoading] = useState(false);
+  const [dataIsLoading, setDataIsLoading] = useState(false);
+
   const { t } = useTranslation();
 
   useEffect(() => {
-    setUserIsLoading(true);
-    const getTheme = async () => {
-      const value = await AsyncStorage.getItem("@theme");
-      setIsThemeDark(JSON.parse(value));
-    };
-    getTheme();
-    setUserIsLoading(false);
+    setDataIsLoading(true);
+    getData("@theme", setIsThemeDark, false);
+    setDataIsLoading(false);
   }, []);
 
   useEffect(() => {
     //clearStorage();
-    setUserIsLoading(true);
-    const getUser = async () => {
+    setDataIsLoading(true);
+
+    getData("@user", setUser, { userName: "testman", userPassword: "test1" });
+    /*const getUser = async () => {
       const value = await AsyncStorage.getItem("@user");
-      //console.log(JSON.parse(value));
+
       if (value) {
         //console.log(value);
         setUser(JSON.parse(value));
-        setTimeout(() => setUserIsLoading(false), 3000);
+        setTimeout(() => setDataIsLoading(false), 3000);
         //console.log("value ok");
       } else {
         setUser({ userName: "test", userPassword: "test1" });
-        setUserIsLoading(false);
+        setDataIsLoading(false);
         //console.log(user)
       }
     };
-    getUser();
+    getUser();*/
+    setTimeout(() => setDataIsLoading(false), 3000);
   }, []);
 
   let theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme;
@@ -120,7 +120,7 @@ export default function App() {
     [defaultPocketCode]
   );
   //console.log("user1:", user);
-  /*if (userIsLoading) {
+  /*if (dataIsLoading) {
     return (
       <View
         style={{ flex: 1, justifyContent: "center", alignContent: "center" }}
@@ -129,7 +129,7 @@ export default function App() {
       </View>
     );
   }*/
-  if (userIsLoading) {
+  if (dataIsLoading) {
     return <LoadingIndicator text={t("Loading.loading")} />;
   }
   return (
