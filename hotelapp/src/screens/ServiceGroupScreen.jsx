@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
   View,
   ScrollView,
@@ -22,6 +22,7 @@ import { appRoutes } from "../API/route";
 import { token } from "../API/route";
 import { fetchData } from "../API/FetchData";
 import { postData } from "../API/PostData";
+import { DefaultPocketCodeContext } from "../context/DefaultPocketCodeContext";
 //import { Item } from "react-native-paper/lib/typescript/components/Drawer/Drawer";
 
 // чтобы отключить ошибку, не получилось, возможно в другом месте нужно
@@ -34,6 +35,10 @@ LogBox.ignoreLogs([
 const ServiceGroupScreen = ({ route, navigation }) => {
   const [serviceItems, setServiceItems] = useState([]);
   const [folioPockets, setFolioPockets] = useState([]);
+  const { defaultPocketCode, setDefaultPocketCode } = useContext(
+    DefaultPocketCodeContext
+  );
+  console.log(defaultPocketCode);
 
   const [searchLoading, setSearchLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -74,37 +79,7 @@ const ServiceGroupScreen = ({ route, navigation }) => {
       ? defaultFolioPocketCode
       : cartItems.length > 1 && defaultFolioPocketCode
       ? defaultFolioPocketCode
-      : "ГОСТЬ";
-  /*let pocketCode = "";
-  switch (cartItems) {
-    case cartItems.length === 0:
-      {
-        pocketCode = "ГОСТЬ2222";
-      }
-      break;
-    case cartItems.length === 1:
-      {
-        pocketCode = cartItems[0].DefaultFolioPocketCode;
-      }
-      break;
-    case cartItems.length > 1:
-      {
-        pocketCode = defaultFolioPocketCode
-          ? defaultFolioPocketCode
-          : "ГОСТЬ111";
-      }
-      break;
-    default:
-      pocketCode = "ГОСТЬ3333";
-  }*/
-
-  //console.log(pocketCode, cartItems);
-  /*const pocketCode =
-    cartItems.length > 1
-      ? getFolioPocketCode(folioPockets, DefaultFolioPocketId)
-      : cartItems.length === 0
-      ? ""
-      : getFolioPocketCode(folioPockets, cartItems[0].defaultFolioPocketId);*/
+      : { defaultPocketCode };
 
   const elemVisible = cartItems.length > 0 ? true : false;
 
@@ -146,7 +121,7 @@ const ServiceGroupScreen = ({ route, navigation }) => {
       controller.abort("Data fetching cancelled");
     };
   }, []);
-
+  //Logus.HMS.Entities.Dictionaries.PointOfSale
   useEffect(() => {
     const endPoint = "/Logus.HMS.Entities.Dictionaries.StandardFolioPocket";
     const controller = new AbortController();
@@ -158,7 +133,6 @@ const ServiceGroupScreen = ({ route, navigation }) => {
     const configurationObject = {
       method: "get",
       url: `${appRoutes.dictionariesPath()}${endPoint}`,
-      //url: appRoutes.dictionariesPath(),
       signal: newAbortSignal(5000),
       headers: {
         Authorization: `Token ${token}`,
@@ -234,6 +208,8 @@ const ServiceGroupScreen = ({ route, navigation }) => {
         KeyCardId: "",
         //если необходима проверка PointOfSaleId
         //ReleaseImmediately: true,
+        //берем из settings PointOfSaleId
+        //PointOfSaleId: 3,
         // игнорирует передачу и проверку точки продаж
         ReleaseImmediately: false,
         PointOfSaleId: null,
@@ -247,7 +223,7 @@ const ServiceGroupScreen = ({ route, navigation }) => {
 
   const filteredServiceItems = serviceItems.reduce((acc, item) => {
     if (item.ServiceGroupId === id) {
-      console.log(item);
+      //console.log(item);
       item.ServiceVariants.map((elem) => {
         if (!elem.DeletedDate && !elem.IsPackageOnly)
           acc.push({ ...item, ServiceVariants: [elem] });

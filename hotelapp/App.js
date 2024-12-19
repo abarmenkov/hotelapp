@@ -23,6 +23,7 @@ import {
 import { appDarkColors, appDefaultColors } from "./src/utils/constants";
 import { PreferencesContext } from "./src/context/PreferencesContext";
 import { UserContext } from "./src/context/UserContext";
+
 import { name as appName } from "./app.json";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
@@ -36,6 +37,7 @@ import {
 import { clearStorage } from "./src/API/asyncStorageMethods";
 import { LoadingIndicator } from "./src/components/LoadingIndicator";
 import { useTranslation } from "react-i18next";
+import { DefaultPocketCodeContext } from "./src/context/DefaultPocketCodeContext";
 
 const CombinedDefaultTheme = {
   ...MD3LightTheme,
@@ -63,6 +65,8 @@ export default function App() {
     userName: "test",
     userPassword: "testpassword",
   });
+  const [defaultPocketCode, setDefaultPocketCode] = useState("ГОСТЬ");
+
   const [userIsLoading, setUserIsLoading] = useState(false);
   const [themeIsLoading, setThemeIsLoading] = useState(false);
   const { t } = useTranslation();
@@ -110,6 +114,11 @@ export default function App() {
     }),
     [toggleTheme, isThemeDark]
   );
+
+  const defaultPocket = useMemo(
+    () => ({ defaultPocketCode, setDefaultPocketCode }),
+    [defaultPocketCode]
+  );
   //console.log("user1:", user);
   /*if (userIsLoading) {
     return (
@@ -128,13 +137,15 @@ export default function App() {
       <Suspense fallback={<ActivityIndicator size="large" color="red" />}>
         <PreferencesContext.Provider value={preferences}>
           <UserContext.Provider value={user}>
-            <PaperProvider theme={theme}>
-              <I18nextProvider i18n={i18next}>
-                <SafeAreaProvider>
-                  <StartingStack />
-                </SafeAreaProvider>
-              </I18nextProvider>
-            </PaperProvider>
+            <DefaultPocketCodeContext.Provider value={defaultPocket}>
+              <PaperProvider theme={theme}>
+                <I18nextProvider i18n={i18next}>
+                  <SafeAreaProvider>
+                    <StartingStack />
+                  </SafeAreaProvider>
+                </I18nextProvider>
+              </PaperProvider>
+            </DefaultPocketCodeContext.Provider>
           </UserContext.Provider>
         </PreferencesContext.Provider>
       </Suspense>
