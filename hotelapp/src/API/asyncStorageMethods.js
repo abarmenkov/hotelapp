@@ -6,13 +6,16 @@ export const getData = async (key, cb, initialState) => {
     const value = await AsyncStorage.getItem(key);
 
     if (value !== null) {
+      //console.log(JSON.parse(value), value);
       cb(JSON.parse(value));
     } else {
+      //console.log(initialState);
       cb(initialState);
     }
   } catch (e) {
-    //console.log(e);
+    console.log(e);
     console.log("Failed to load data");
+    cb(initialState);
   }
 };
 

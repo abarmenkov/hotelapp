@@ -23,7 +23,6 @@ import { token } from "../API/route";
 import { fetchData } from "../API/FetchData";
 import { postData } from "../API/PostData";
 import { DefaultPocketCodeContext } from "../context/DefaultPocketCodeContext";
-//import { Item } from "react-native-paper/lib/typescript/components/Drawer/Drawer";
 
 // чтобы отключить ошибку, не получилось, возможно в другом месте нужно
 LogBox.ignoreLogs([

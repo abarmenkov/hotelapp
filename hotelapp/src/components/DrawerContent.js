@@ -42,9 +42,9 @@ export const DrawerContent = (props) => {
   const { i18n } = useTranslation();
   const theme = useTheme();
   const { toggleTheme, isThemeDark } = useContext(PreferencesContext);
-  const { userName } = useContext(UserContext);
+  const { user } = useContext(UserContext);
   //const [dark, setDark] = useState(isThemeDark);
-
+  const { userName } = user;
   const supportedLngs = i18n.services.resourceStore.data;
   const languageKeys = Object.keys(supportedLngs);
   const appLanguage = i18n.language;

@@ -38,6 +38,7 @@ import { clearStorage } from "./src/API/asyncStorageMethods";
 import { LoadingIndicator } from "./src/components/LoadingIndicator";
 import { useTranslation } from "react-i18next";
 import { DefaultPocketCodeContext } from "./src/context/DefaultPocketCodeContext";
+import { PointOfSalesContext } from "./src/context/PointOfSalesContext";
 import { getData } from "./src/API/asyncStorageMethods";
 
 const CombinedDefaultTheme = {
@@ -63,26 +64,45 @@ export default function App() {
   const [isThemeDark, setIsThemeDark] = useState(null);
   //const [language, setLanguage] = useState(null);
   const [user, setUser] = useState({
-    userName: "test",
-    userPassword: "testpassword",
+    userName: "testman",
+    userPassword: "tester",
   });
   const [defaultPocketCode, setDefaultPocketCode] = useState("ГОСТЬ");
 
-  const [dataIsLoading, setDataIsLoading] = useState(false);
+  const [defaultPointOfSales, setDefaultPointOfSales] = useState(0);
+
+  const [userIsLoading, setUserIsLoading] = useState(false);
+  const [themeIsLoading, setThemeIsLoading] = useState(false);
+  const [pointOfSaleIsLoading, setPointOfSaleIsLoading] = useState(false);
+  const [pocketIsLoading, setPocketIsLoading] = useState(false);
 
   const { t } = useTranslation();
-
+  //useEffect(() => clearStorage(),[]);
   useEffect(() => {
-    setDataIsLoading(true);
-    getData("@theme", setIsThemeDark, false);
-    setDataIsLoading(false);
+    //clearStorage();
+    setUserIsLoading(true);
+
+    getData("@user", setUser, { userName: "testman", userPassword: "tester" });
+
+    setTimeout(() => setUserIsLoading(false), 3000);
   }, []);
 
   useEffect(() => {
-    //clearStorage();
-    setDataIsLoading(true);
-    getData("@user", setUser, { userName: "testman", userPassword: "test1" });
-    setTimeout(() => setDataIsLoading(false), 3000);
+    setThemeIsLoading(true);
+    getData("@theme", setIsThemeDark, false);
+    setThemeIsLoading(false);
+  }, []);
+
+  useEffect(() => {
+    setPointOfSaleIsLoading(true);
+    getData("@pointofsales", setDefaultPointOfSales, 0);
+    setPointOfSaleIsLoading(false);
+  }, []);
+
+  useEffect(() => {
+    setPocketIsLoading(true);
+    getData("@defaultpocket", setDefaultPocketCode, "ГОСТЬ");
+    setPocketIsLoading(false);
   }, []);
 
   let theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme;
@@ -103,6 +123,14 @@ export default function App() {
     () => ({ defaultPocketCode, setDefaultPocketCode }),
     [defaultPocketCode]
   );
+
+  const defaultPointOfSale = useMemo(
+    () => ({ defaultPointOfSales, setDefaultPointOfSales }),
+    [defaultPointOfSales]
+  );
+
+  const savedUser = useMemo(() => ({ user, setUser }), [user]);
+
   //console.log("user1:", user);
   /*if (dataIsLoading) {
     return (
@@ -113,22 +141,29 @@ export default function App() {
       </View>
     );
   }*/
-  if (dataIsLoading) {
+  if (
+    userIsLoading ||
+    pocketIsLoading ||
+    themeIsLoading ||
+    pointOfSaleIsLoading
+  ) {
     return <LoadingIndicator text={t("Loading.loading")} />;
   }
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Suspense fallback={<ActivityIndicator size="large" color="red" />}>
         <PreferencesContext.Provider value={preferences}>
-          <UserContext.Provider value={user}>
+          <UserContext.Provider value={savedUser}>
             <DefaultPocketCodeContext.Provider value={defaultPocket}>
-              <PaperProvider theme={theme}>
-                <I18nextProvider i18n={i18next}>
-                  <SafeAreaProvider>
-                    <StartingStack />
-                  </SafeAreaProvider>
-                </I18nextProvider>
-              </PaperProvider>
+              <PointOfSalesContext.Provider value={defaultPointOfSale}>
+                <PaperProvider theme={theme}>
+                  <I18nextProvider i18n={i18next}>
+                    <SafeAreaProvider>
+                      <StartingStack />
+                    </SafeAreaProvider>
+                  </I18nextProvider>
+                </PaperProvider>
+              </PointOfSalesContext.Provider>
             </DefaultPocketCodeContext.Provider>
           </UserContext.Provider>
         </PreferencesContext.Provider>

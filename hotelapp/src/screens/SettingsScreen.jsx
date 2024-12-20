@@ -1,23 +1,33 @@
-import React, { useState, useRef, useEffect } from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
+import React, { useState, useRef, useEffect, useContext } from "react";
+import { View, FlatList, TouchableOpacity, StyleSheet } from "react-native";
+import { RadioButton, Text, TouchableRipple, Button } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 //import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Picker } from "@react-native-picker/picker";
 import { postData } from "../API/PostData";
 import { appRoutes } from "../API/route";
 import { token } from "../API/route";
+import { fetchData } from "../API/FetchData";
+import { saveData } from "../API/asyncStorageMethods";
+import { PointOfSalesContext } from "../context/PointOfSalesContext";
 
 export const SettingsScreen = () => {
   const { t } = useTranslation();
   const { i18n } = useTranslation();
-  
-//получить точки продаж
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasError, setErrorFlag] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const { defaultPointOfSales, setDefaultPointOfSales } =
+    useContext(PointOfSalesContext);
+  const [pointsOfSales, setPointsOfSales] = useState();
+  const [checkedPointOfSales, setPointOfSalesChecked] =
+    useState(defaultPointOfSales);
+    
+  //console.log(defaultPointOfSales, checkedPointOfSales);
+
+  //получить точки продаж
   useEffect(() => {
     const endPoint = "/Logus.HMS.Entities.Dictionaries.PointOfSale";
     const controller = new AbortController();
@@ -41,8 +51,16 @@ export const SettingsScreen = () => {
         propertyId: 1,
       },
     };
-    postData(configurationObject, controller);
-  });
+    fetchData(
+      setIsLoading,
+      setPointsOfSales,
+      configurationObject,
+      setErrorFlag,
+      setRefreshing,
+      refreshing,
+      controller
+    );
+  }, []);
 
   const supportedLngs = i18n.services.resourceStore.data;
   const languageKeys = Object.keys(supportedLngs);
@@ -62,17 +80,51 @@ export const SettingsScreen = () => {
   const openPicker = () => pickerRef.current.focus();
 
   const closePicker = () => pickerRef.current.blur();
+
+  const PointOfSalesItem = ({ item }) => {
+    return (
+      <TouchableRipple
+        onPress={() => {
+          setPointOfSalesChecked(item.Id);
+          setDefaultPointOfSales(item.Id);
+        }}
+      >
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            width: "90%",
+          }}
+        >
+          <Text>{item.Name}</Text>
+          <RadioButton
+            value={item.Id}
+            status={checkedPointOfSales === item.Id ? "checked" : "unchecked"}
+            onPress={() => {
+              setPointOfSalesChecked(item.Id);
+              setDefaultPointOfSales(item.Id);
+            }}
+          />
+        </View>
+      </TouchableRipple>
+    );
+  };
+  const renderItem = ({ item }) => <PointOfSalesItem item={item} />;
   return (
-    <View style={{ alignItems: "center" }}>
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <Text>{t("Settings.add_hotel")}</Text>
       <View
         style={{
           flexDirection: "row",
           backgroundColor: "red",
           alignItems: "center",
+          width: "90%",
+          justifyContent: "space-between",
         }}
       >
         <Text>{t("Settings.select_language")}</Text>
+
         <View style={styles.container}>
           <Picker
             ref={pickerRef}
@@ -99,6 +151,26 @@ export const SettingsScreen = () => {
           </Picker>
         </View>
       </View>
+
+      <View style={{ flex: 1 }}>
+        <FlatList
+          data={pointsOfSales}
+          renderItem={renderItem}
+          removeClippedSubviews={true}
+          //initialNumToRender={15}
+          keyExtractor={(item) => item.Id}
+          keyboardShouldPersistTaps={"handled"}
+          justifyContent="space-evenly"
+        />
+      </View>
+      <View style={{ flex: 1 }}>
+        <Button
+          mode="contained"
+          onPress={() => saveData("@pointofsales", checkedPointOfSales)}
+        >
+          Save settings
+        </Button>
+      </View>
     </View>
   );
 };
@@ -111,7 +183,7 @@ const styles = StyleSheet.create({
     marginVertical: 50,
   },
   pickerStyles: {
-    width: "70%",
+    width: "90%",
     backgroundColor: "green",
     color: "red",
     width: 150,

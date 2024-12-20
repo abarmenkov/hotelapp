@@ -29,8 +29,8 @@ const LanguageDetector = {
       //console.log(Localization.getLocales()[0]);
       callback("ru");
     }
-  },
-  */
+  },*/
+  
   cacheUserLanguage: (language) => saveData("@language", language),
   /*cacheUserLanguage: async function (language) {
     try {

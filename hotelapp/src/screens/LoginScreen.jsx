@@ -1,38 +1,20 @@
 import React, { useContext, useEffect, useState } from "react";
-import {
-  View,
-  TextInput,
-  Alert,
-  Button,
-  TouchableOpacity,
-  FlatList,
-  Text,
-  PixelRatio,
-  Dimensions,
-} from "react-native";
-//import { TestScreen } from "./TestScreen";
+import { View, TextInput, Alert, Button } from "react-native";
 import { useTranslation } from "react-i18next";
-
-//import * as Localization from "expo-localization";
 import { useTheme } from "react-native-paper";
-//import { UserContext } from "../context/UserContext";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AppStyles } from "../utils/constants";
 import { UserContext } from "../context/UserContext";
+import { saveData } from "../API/asyncStorageMethods";
 
 export const LoginScreen = ({ navigation }) => {
-  //const { width, height } = Dimensions.get("window");
-  //const ratio = PixelRatio.get();
-  //console.log(ratio, width, height);
-
-  const { userName, userPassword } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
+  const { userName, userPassword } = user;
 
   const { t } = useTranslation();
   const theme = useTheme();
   const [name, setName] = useState(userName);
   const [password, setPassword] = useState(userPassword);
-  //const [name, setName] = useState('userName');
-  //const [password, setPassword] = useState('1');
+
   //useEffect(() => setName(userName), [name]);
   /*useEffect(() => {
     const getData = async () => {
@@ -48,29 +30,17 @@ export const LoginScreen = ({ navigation }) => {
 
   const buttonDisabled = name.length > 0 && password.length > 0 ? false : true;
 
-  const saveUser = async (value) => {
-    try {
-      await AsyncStorage.setItem("@user", JSON.stringify(value));
-      //console.log("saving user to AsyncStorage");
-    } catch (e) {
-      console.log("error saving user to AsyncStorage");
-    }
-  };
-
   const onButtonPress = () => {
     if (password === "1") {
       navigation.navigate("UserStack");
-      saveUser({ userName: name, userPassword: password });
+      //saveUser({ userName: name, userPassword: password });
+      saveData("@user", { userName: name, userPassword: password });
+      setUser({ userName: name, userPassword: password });
     } else if (name === "admin" && password === "admin") {
       navigation.navigate("AdminStack");
     } else {
       Alert.alert("Wrong password!");
     }
-    /*return password === "1"
-      ? navigation.navigate("RootStack")
-      : name === "admin" && password === "admin"
-      ? navigation.navigate("Settings")
-      : Alert.alert("Wrong password!");*/
   };
 
   return (
