@@ -119,7 +119,7 @@ const ServiceGroupScreen = ({ route, navigation }) => {
       controller.abort("Data fetching cancelled");
     };
   }, []);
-  //Logus.HMS.Entities.Dictionaries.PointOfSale
+  //загрузка словаря карманов(секций) счета(фолио)
   useEffect(() => {
     const endPoint = "/Logus.HMS.Entities.Dictionaries.StandardFolioPocket";
     const controller = new AbortController();

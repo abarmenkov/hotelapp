@@ -10,6 +10,7 @@ import { token } from "../API/route";
 import { fetchData } from "../API/FetchData";
 import { saveData } from "../API/asyncStorageMethods";
 import { PointOfSalesContext } from "../context/PointOfSalesContext";
+import { DefaultPocketCodeContext } from "../context/DefaultPocketCodeContext";
 
 export const SettingsScreen = () => {
   const { t } = useTranslation();
@@ -24,8 +25,14 @@ export const SettingsScreen = () => {
   const [pointsOfSales, setPointsOfSales] = useState();
   const [checkedPointOfSales, setPointOfSalesChecked] =
     useState(defaultPointOfSales);
-    
-  //console.log(defaultPointOfSales, checkedPointOfSales);
+
+  const [folioPockets, setFolioPockets] = useState([]);
+  const { defaultPocketCode, setDefaultPocketCode } = useContext(
+    DefaultPocketCodeContext
+  );
+
+  const [checkedFolioPocket, setFolioPocketChecked] =
+    useState(defaultPocketCode);
 
   //получить точки продаж
   useEffect(() => {
@@ -60,6 +67,43 @@ export const SettingsScreen = () => {
       refreshing,
       controller
     );
+  }, []);
+  //загрузка словаря карманов(секций) счета(фолио)
+  useEffect(() => {
+    const endPoint = "/Logus.HMS.Entities.Dictionaries.StandardFolioPocket";
+    const controller = new AbortController();
+    const newAbortSignal = (timeoutMs) => {
+      setTimeout(() => controller.abort(), timeoutMs || 0);
+
+      return controller.signal;
+    };
+    const configurationObject = {
+      method: "get",
+      url: `${appRoutes.dictionariesPath()}${endPoint}`,
+      signal: newAbortSignal(5000),
+      headers: {
+        Authorization: `Token ${token}`,
+        "Content-Type": "application/json",
+      },
+
+      params: {
+        propertyId: 1,
+      },
+    };
+    fetchData(
+      setIsLoading,
+      setFolioPockets,
+      configurationObject,
+      setErrorFlag,
+      setRefreshing,
+      refreshing,
+      controller
+    );
+
+    return () => {
+      setErrorFlag(false);
+      controller.abort("Data fetching cancelled");
+    };
   }, []);
 
   const supportedLngs = i18n.services.resourceStore.data;
@@ -110,7 +154,38 @@ export const SettingsScreen = () => {
       </TouchableRipple>
     );
   };
-  const renderItem = ({ item }) => <PointOfSalesItem item={item} />;
+  const FolioPocketItem = ({ item }) => {
+    return (
+      <TouchableRipple
+        onPress={() => {
+          setFolioPocketChecked(item.Id);
+          setDefaultPocketCode(item.Code);
+        }}
+      >
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            width: "90%",
+          }}
+        >
+          <Text>{item.Code}</Text>
+          <RadioButton
+            value={item.Code}
+            status={checkedFolioPocket === item.Code ? "checked" : "unchecked"}
+            onPress={() => {
+              setFolioPocketChecked(item.Code);
+              setDefaultPocketCode(item.Code);
+            }}
+          />
+        </View>
+      </TouchableRipple>
+    );
+  };
+
+  const renderPointOfSaleItem = ({ item }) => <PointOfSalesItem item={item} />;
+  const renderFolioPocketItem = ({ item }) => <FolioPocketItem item={item} />;
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <Text>{t("Settings.add_hotel")}</Text>
@@ -155,7 +230,18 @@ export const SettingsScreen = () => {
       <View style={{ flex: 1 }}>
         <FlatList
           data={pointsOfSales}
-          renderItem={renderItem}
+          renderItem={renderPointOfSaleItem}
+          removeClippedSubviews={true}
+          //initialNumToRender={15}
+          keyExtractor={(item) => item.Id}
+          keyboardShouldPersistTaps={"handled"}
+          justifyContent="space-evenly"
+        />
+      </View>
+      <View style={{ flex: 1 }}>
+        <FlatList
+          data={folioPockets}
+          renderItem={renderFolioPocketItem}
           removeClippedSubviews={true}
           //initialNumToRender={15}
           keyExtractor={(item) => item.Id}
@@ -166,7 +252,10 @@ export const SettingsScreen = () => {
       <View style={{ flex: 1 }}>
         <Button
           mode="contained"
-          onPress={() => saveData("@pointofsales", checkedPointOfSales)}
+          onPress={() => {
+            saveData("@pointofsales", checkedPointOfSales);
+            saveData("@defaultpocket", checkedFolioPocket);
+          }}
         >
           Save settings
         </Button>

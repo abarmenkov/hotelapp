@@ -19,9 +19,31 @@ export const getData = async (key, cb, initialState) => {
   }
 };
 
+export const getUser = async (key, cb, setIsLoading, initialState) => {
+  try {
+    const value = await AsyncStorage.getItem(key);
+
+    if (value !== null) {
+      //console.log(JSON.parse(value), value);
+      cb(JSON.parse(value));
+      setIsLoading(false);
+    } else {
+      //console.log(initialState);
+      cb(initialState);
+      setIsLoading(false);
+    }
+  } catch (e) {
+    console.log(e);
+    console.log("Failed to load data");
+    cb(initialState);
+    setIsLoading(false);
+  }
+};
+
 export const saveData = async (key, data) => {
   try {
     await AsyncStorage.setItem(key, JSON.stringify(data));
+    console.log("Data is saved");
   } catch (e) {
     console.log("Failed to save data");
   }

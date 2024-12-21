@@ -39,7 +39,7 @@ import { LoadingIndicator } from "./src/components/LoadingIndicator";
 import { useTranslation } from "react-i18next";
 import { DefaultPocketCodeContext } from "./src/context/DefaultPocketCodeContext";
 import { PointOfSalesContext } from "./src/context/PointOfSalesContext";
-import { getData } from "./src/API/asyncStorageMethods";
+import { getData, getUser } from "./src/API/asyncStorageMethods";
 
 const CombinedDefaultTheme = {
   ...MD3LightTheme,
@@ -64,10 +64,10 @@ export default function App() {
   const [isThemeDark, setIsThemeDark] = useState(null);
   //const [language, setLanguage] = useState(null);
   const [user, setUser] = useState({
-    userName: "testman",
+    userName: "test",
     userPassword: "tester",
   });
-  const [defaultPocketCode, setDefaultPocketCode] = useState("ГОСТЬ");
+  const [defaultPocketCode, setDefaultPocketCode] = useState("");
 
   const [defaultPointOfSales, setDefaultPointOfSales] = useState(0);
 
@@ -78,13 +78,17 @@ export default function App() {
 
   const { t } = useTranslation();
   //useEffect(() => clearStorage(),[]);
+
   useEffect(() => {
     //clearStorage();
     setUserIsLoading(true);
+    getUser("@user", setUser, setUserIsLoading, {
+      userName: "testman",
+      userPassword: "tester",
+    });
+    /*getData("@user", setUser, { userName: "testman", userPassword: "tester" });
 
-    getData("@user", setUser, { userName: "testman", userPassword: "tester" });
-
-    setTimeout(() => setUserIsLoading(false), 3000);
+    setTimeout(() => setUserIsLoading(false), 3000);*/
   }, []);
 
   useEffect(() => {
@@ -101,7 +105,7 @@ export default function App() {
 
   useEffect(() => {
     setPocketIsLoading(true);
-    getData("@defaultpocket", setDefaultPocketCode, "ГОСТЬ");
+    getData("@defaultpocket", setDefaultPocketCode, "");
     setPocketIsLoading(false);
   }, []);
 
