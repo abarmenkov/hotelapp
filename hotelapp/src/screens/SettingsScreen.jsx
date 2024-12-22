@@ -1,6 +1,12 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
 import { View, FlatList, TouchableOpacity, StyleSheet } from "react-native";
-import { RadioButton, Text, TouchableRipple, Button } from "react-native-paper";
+import {
+  RadioButton,
+  Text,
+  TouchableRipple,
+  Button,
+  TextInput,
+} from "react-native-paper";
 import { useTranslation } from "react-i18next";
 //import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Picker } from "@react-native-picker/picker";
@@ -33,7 +39,8 @@ export const SettingsScreen = () => {
 
   const [checkedFolioPocket, setFolioPocketChecked] =
     useState(defaultPocketCode);
-
+  const [settingsIsLoading, setSettingsIsLoading] = useState(false);
+  const [hotelName, setHotelName] = useState("");
   //получить точки продаж
   useEffect(() => {
     const endPoint = "/Logus.HMS.Entities.Dictionaries.PointOfSale";
@@ -186,16 +193,47 @@ export const SettingsScreen = () => {
 
   const renderPointOfSaleItem = ({ item }) => <PointOfSalesItem item={item} />;
   const renderFolioPocketItem = ({ item }) => <FolioPocketItem item={item} />;
+
+  const saveSettings = () => {
+    setSettingsIsLoading(true);
+    saveData("@pointofsales", checkedPointOfSales);
+    saveData("@defaultpocket", checkedFolioPocket);
+    setTimeout(() => setSettingsIsLoading(false), 3000);
+  };
+
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
       <Text>{t("Settings.add_hotel")}</Text>
       <View
         style={{
           flexDirection: "row",
-          backgroundColor: "red",
+          justifyContent: "space-between",
+          alignItems: "center",
+          //backgroundColor: "yellow",
+          width: "90%",
+          //height: "15%",
+          marginVertical: 15,
+          padding: 15,
+        }}
+      >
+        <Text>Название отеля</Text>
+        <TextInput
+          mode="outlined"
+          value={hotelName}
+          label={"Hotel Name"}
+          placeholder="Название отеля"
+          onChangeText={(value) => setHotelName(value)}
+          style={{ width: "70%" }}
+        />
+      </View>
+      <View
+        style={{
+          flexDirection: "row",
+          //backgroundColor: "red",
           alignItems: "center",
           width: "90%",
           justifyContent: "space-between",
+          padding: 15,
         }}
       >
         <Text>{t("Settings.select_language")}</Text>
@@ -251,13 +289,11 @@ export const SettingsScreen = () => {
       </View>
       <View style={{ flex: 1 }}>
         <Button
+          loading={settingsIsLoading}
           mode="contained"
-          onPress={() => {
-            saveData("@pointofsales", checkedPointOfSales);
-            saveData("@defaultpocket", checkedFolioPocket);
-          }}
+          onPress={saveSettings}
         >
-          Save settings
+          {settingsIsLoading ? "Saving settings..." : "Save settings"}
         </Button>
       </View>
     </View>
@@ -266,14 +302,14 @@ export const SettingsScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "yellow",
+    backgroundColor: "lightgrey",
     alignItems: "center",
     justifyContent: "center",
-    marginVertical: 50,
+    marginVertical: 15,
   },
   pickerStyles: {
     width: "90%",
-    backgroundColor: "green",
+    //backgroundColor: "green",
     color: "red",
     width: 150,
   },

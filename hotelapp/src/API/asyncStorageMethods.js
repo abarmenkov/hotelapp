@@ -43,7 +43,7 @@ export const getUser = async (key, cb, setIsLoading, initialState) => {
 export const saveData = async (key, data) => {
   try {
     await AsyncStorage.setItem(key, JSON.stringify(data));
-    console.log("Data is saved");
+    //console.log("Data is saved");
   } catch (e) {
     console.log("Failed to save data");
   }
