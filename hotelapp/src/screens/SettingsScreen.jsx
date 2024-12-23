@@ -1,11 +1,18 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
-import { View, FlatList, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  View,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+  Keyboard,
+} from "react-native";
 import {
   RadioButton,
   Text,
   TouchableRipple,
   Button,
   TextInput,
+  ActivityIndicator,
 } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 //import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -18,6 +25,7 @@ import { saveData } from "../API/asyncStorageMethods";
 import { PointOfSalesContext } from "../context/PointOfSalesContext";
 import { DefaultPocketCodeContext } from "../context/DefaultPocketCodeContext";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import axios from "axios";
 
 export const SettingsScreen = () => {
   const { t } = useTranslation();
@@ -26,21 +34,24 @@ export const SettingsScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setErrorFlag] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [settingsIsLoading, setSettingsIsLoading] = useState(false);
+  const [checkNetworkColor, setCheckNetworkColor] = useState("grey");
+  const [networkIsLoading, setNetworkIsLoading] = useState(false);
 
   const { defaultPointOfSales, setDefaultPointOfSales } =
     useContext(PointOfSalesContext);
+  const { defaultPocketCode, setDefaultPocketCode } = useContext(
+    DefaultPocketCodeContext
+  );
+
   const [pointsOfSales, setPointsOfSales] = useState();
   const [checkedPointOfSales, setPointOfSalesChecked] =
     useState(defaultPointOfSales);
 
   const [folioPockets, setFolioPockets] = useState([]);
-  const { defaultPocketCode, setDefaultPocketCode } = useContext(
-    DefaultPocketCodeContext
-  );
-
   const [checkedFolioPocket, setFolioPocketChecked] =
     useState(defaultPocketCode);
-  const [settingsIsLoading, setSettingsIsLoading] = useState(false);
+
   const [hotelName, setHotelName] = useState("Отель");
   const [serverAddress, setServerAddress] = useState(
     "http://109.236.70.42:9090"
@@ -136,12 +147,13 @@ export const SettingsScreen = () => {
 
   const closePicker = () => pickerRef.current.blur();
 
-  const checkNetworkColor = hasError ? "red" : "green";
+  //const checkNetworkColor = hasError ? "red" : "green";
 
   const PointOfSalesItem = ({ item }) => {
     return (
       <TouchableRipple
         onPress={() => {
+          Keyboard.dismiss();
           setPointOfSalesChecked(item.Id);
           setDefaultPointOfSales(item.Id);
         }}
@@ -161,6 +173,7 @@ export const SettingsScreen = () => {
             value={item.Id}
             status={checkedPointOfSales === item.Id ? "checked" : "unchecked"}
             onPress={() => {
+              Keyboard.dismiss();
               setPointOfSalesChecked(item.Id);
               setDefaultPointOfSales(item.Id);
             }}
@@ -173,6 +186,7 @@ export const SettingsScreen = () => {
     return (
       <TouchableRipple
         onPress={() => {
+          Keyboard.dismiss();
           setFolioPocketChecked(item.Code);
           setDefaultPocketCode(item.Code);
         }}
@@ -191,6 +205,7 @@ export const SettingsScreen = () => {
             value={item.Code}
             status={checkedFolioPocket === item.Code ? "checked" : "unchecked"}
             onPress={() => {
+              Keyboard.dismiss();
               setFolioPocketChecked(item.Code);
               setDefaultPocketCode(item.Code);
             }}
@@ -208,6 +223,55 @@ export const SettingsScreen = () => {
     saveData("@pointofsales", checkedPointOfSales);
     saveData("@defaultpocket", checkedFolioPocket);
     setTimeout(() => setSettingsIsLoading(false), 3000);
+  };
+
+  const checkNetwork = async () => {
+    const endPoint = "/api/Account/Ping";
+    setNetworkIsLoading(true);
+    const controller = new AbortController();
+    const newAbortSignal = (timeoutMs) => {
+      setTimeout(() => controller.abort(), timeoutMs || 0);
+      return controller.signal;
+    };
+
+    const configurationObject = {
+      method: "get",
+      url: `${serverAddress}${endPoint}`,
+      //url: appRoutes.dictionariesPath(),
+      signal: newAbortSignal(5000),
+      headers: {
+        Authorization: `Token ${token}`,
+        "Content-Type": "application/json",
+      },
+
+      params: {
+        propertyId: 1,
+      },
+    };
+    try {
+      const response = await axios(configurationObject);
+      //console.log(response.data);
+
+      if (response.status === 200) {
+        setCheckNetworkColor("green");
+        setTimeout(() => setNetworkIsLoading(false), 3000);
+
+        return;
+      } else {
+        throw new Error("Failed to get server");
+      }
+    } catch (error) {
+      if (controller.signal.aborted) {
+        console.log("Data fetching cancelled");
+        setCheckNetworkColor("red");
+        setNetworkIsLoading(false);
+      } else {
+        console.log(error);
+        //console.log("Data fetching cancelled");
+        setCheckNetworkColor("red");
+        setNetworkIsLoading(false);
+      }
+    }
   };
 
   return (
@@ -234,6 +298,8 @@ export const SettingsScreen = () => {
           placeholder={t("Settings.hotel_name")}
           onChangeText={(value) => setHotelName(value)}
           style={{ width: "70%" }}
+          //onBlur={() => Keyboard.dismiss()}
+          //onSubmitEditing={() => Keyboard.dismiss()}
         />
       </View>
       <View
@@ -255,19 +321,37 @@ export const SettingsScreen = () => {
           value={serverAddress}
           label={t("Settings.server_address")}
           placeholder={t("Settings.server_address")}
-          onChangeText={(value) => setServerAddress(value)}
+          onChangeText={(value) => {
+            setServerAddress(value);
+            setCheckNetworkColor("grey");
+          }}
           style={{ width: "70%" }}
+          //onSubmitEditing={() => Keyboard.dismiss()}
+          //onBlur={() => Keyboard.dismiss()}
           //secureTextEntry
           right={
-            <TextInput.Icon
-              icon={({ color, size }) => (
-                <MaterialCommunityIcons
-                  name="check-network"
-                  color={checkNetworkColor}
-                  size={size}
-                />
-              )}
-            />
+            !networkIsLoading ? (
+              <TextInput.Icon
+                icon={({ color, size }) => (
+                  <MaterialCommunityIcons
+                    name="check-network"
+                    color={checkNetworkColor}
+                    size={size}
+                    onPress={checkNetwork}
+                  />
+                )}
+              />
+            ) : (
+              <TextInput.Icon
+                icon={({ color, size }) => (
+                  <MaterialCommunityIcons
+                    name="loading"
+                    color={"green"}
+                    size={size}
+                  />
+                )}
+              />
+            )
           }
         />
       </View>
