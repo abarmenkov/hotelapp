@@ -38,6 +38,12 @@ const en = {
     Settings: {
       add_hotel: "Add hotel",
       select_language: "Select default language",
+      hotel_name: "Hotel Name",
+      server_address: "Server Address",
+      point_of_sale: "Points of Sales",
+      default_folio_pocket: "Default Folio Pocket",
+      save_settings: "Save",
+      saving_settings: "Saving in process ...",
     },
     SearchBar: {
       ReservationsScreen: "Enter name, room or reservation number",

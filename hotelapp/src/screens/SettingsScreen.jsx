@@ -40,7 +40,10 @@ export const SettingsScreen = () => {
   const [checkedFolioPocket, setFolioPocketChecked] =
     useState(defaultPocketCode);
   const [settingsIsLoading, setSettingsIsLoading] = useState(false);
-  const [hotelName, setHotelName] = useState("");
+  const [hotelName, setHotelName] = useState("Отель");
+  const [serverAddress, setServerAddress] = useState(
+    "http://109.236.70.42:9090"
+  );
   //получить точки продаж
   useEffect(() => {
     const endPoint = "/Logus.HMS.Entities.Dictionaries.PointOfSale";
@@ -145,7 +148,9 @@ export const SettingsScreen = () => {
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-between",
-            width: "90%",
+            width: "100%",
+            paddingHorizontal: 5,
+            //backgroundColor: "yellow",
           }}
         >
           <Text>{item.Name}</Text>
@@ -174,7 +179,8 @@ export const SettingsScreen = () => {
             flexDirection: "row",
             alignItems: "center",
             justifyContent: "space-between",
-            width: "90%",
+            width: "100%",
+            paddingHorizontal: 5,
           }}
         >
           <Text>{item.Code}</Text>
@@ -202,7 +208,7 @@ export const SettingsScreen = () => {
   };
 
   return (
-    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+    <View style={{ flex: 1, alignItems: "center" }}>
       <Text>{t("Settings.add_hotel")}</Text>
       <View
         style={{
@@ -213,16 +219,40 @@ export const SettingsScreen = () => {
           width: "90%",
           //height: "15%",
           marginVertical: 15,
-          padding: 15,
+          padding: 5,
         }}
       >
-        <Text>Название отеля</Text>
+        <Text>{t("Settings.hotel_name")}</Text>
         <TextInput
           mode="outlined"
+          //focused={true}
           value={hotelName}
-          label={"Hotel Name"}
-          placeholder="Название отеля"
+          label={t("Settings.hotel_name")}
+          placeholder={t("Settings.hotel_name")}
           onChangeText={(value) => setHotelName(value)}
+          style={{ width: "70%" }}
+        />
+      </View>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          //backgroundColor: "yellow",
+          width: "90%",
+          //height: "15%",
+          marginVertical: 15,
+          padding: 5,
+        }}
+      >
+        <Text>{t("Settings.server_address")}</Text>
+        <TextInput
+          mode="outlined"
+          //focused={true}
+          value={serverAddress}
+          label={t("Settings.server_address")}
+          placeholder={t("Settings.server_address")}
+          onChangeText={(value) => setServerAddress(value)}
           style={{ width: "70%" }}
         />
       </View>
@@ -233,7 +263,7 @@ export const SettingsScreen = () => {
           alignItems: "center",
           width: "90%",
           justifyContent: "space-between",
-          padding: 15,
+          padding: 5,
         }}
       >
         <Text>{t("Settings.select_language")}</Text>
@@ -265,7 +295,8 @@ export const SettingsScreen = () => {
         </View>
       </View>
 
-      <View style={{ flex: 1 }}>
+      <View style={{ width: "90%", padding: 5, marginVertical: 10 }}>
+        <Text>{t("Settings.point_of_sale")}</Text>
         <FlatList
           data={pointsOfSales}
           renderItem={renderPointOfSaleItem}
@@ -273,10 +304,12 @@ export const SettingsScreen = () => {
           //initialNumToRender={15}
           keyExtractor={(item) => item.Id}
           keyboardShouldPersistTaps={"handled"}
-          justifyContent="space-evenly"
+          //justifyContent="space-between"
+          //contentContainerStyle={{ alignItems: "center" }}
         />
       </View>
-      <View style={{ flex: 1 }}>
+      <View style={{ width: "90%", padding: 5 }}>
+        <Text>{t("Settings.default_folio_pocket")}</Text>
         <FlatList
           data={folioPockets}
           renderItem={renderFolioPocketItem}
@@ -284,16 +317,19 @@ export const SettingsScreen = () => {
           //initialNumToRender={15}
           keyExtractor={(item) => item.Id}
           keyboardShouldPersistTaps={"handled"}
-          justifyContent="space-evenly"
+          //justifyContent="space-between"
         />
       </View>
-      <View style={{ flex: 1 }}>
+      <View style={{ width: "25%" }}>
         <Button
           loading={settingsIsLoading}
           mode="contained"
           onPress={saveSettings}
+          //style={{ width: "55%" }}
         >
-          {settingsIsLoading ? "Saving settings..." : "Save settings"}
+          {settingsIsLoading
+            ? `${t("Settings.saving_settings")}`
+            : `${t("Settings.save_settings")}`}
         </Button>
       </View>
     </View>
@@ -312,5 +348,6 @@ const styles = StyleSheet.create({
     //backgroundColor: "green",
     color: "red",
     width: 150,
+    //padding: 15,
   },
 });

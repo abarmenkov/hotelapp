@@ -38,6 +38,12 @@ const ru = {
     Settings: {
       add_hotel: "Добавить отель",
       select_language: "Выбрать язык по умолчанию",
+      hotel_name: "Название Отеля",
+      server_address: "Адрес сервера",
+      point_of_sale: "Точка продаж",
+      default_folio_pocket: "Карман счета для начисления по-умолчанию",
+      save_settings: "Сохранить",
+      saving_settings: "Сохранение ...",
     },
     SearchBar: {
       ReservationsScreen: "ФИО, номер комнаты или брони",
