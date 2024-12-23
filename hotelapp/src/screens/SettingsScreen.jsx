@@ -17,6 +17,7 @@ import { fetchData } from "../API/FetchData";
 import { saveData } from "../API/asyncStorageMethods";
 import { PointOfSalesContext } from "../context/PointOfSalesContext";
 import { DefaultPocketCodeContext } from "../context/DefaultPocketCodeContext";
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 
 export const SettingsScreen = () => {
   const { t } = useTranslation();
@@ -135,6 +136,8 @@ export const SettingsScreen = () => {
 
   const closePicker = () => pickerRef.current.blur();
 
+  const checkNetworkColor = hasError ? "red" : "green";
+
   const PointOfSalesItem = ({ item }) => {
     return (
       <TouchableRipple
@@ -170,7 +173,7 @@ export const SettingsScreen = () => {
     return (
       <TouchableRipple
         onPress={() => {
-          setFolioPocketChecked(item.Id);
+          setFolioPocketChecked(item.Code);
           setDefaultPocketCode(item.Code);
         }}
       >
@@ -254,6 +257,18 @@ export const SettingsScreen = () => {
           placeholder={t("Settings.server_address")}
           onChangeText={(value) => setServerAddress(value)}
           style={{ width: "70%" }}
+          //secureTextEntry
+          right={
+            <TextInput.Icon
+              icon={({ color, size }) => (
+                <MaterialCommunityIcons
+                  name="check-network"
+                  color={checkNetworkColor}
+                  size={size}
+                />
+              )}
+            />
+          }
         />
       </View>
       <View
@@ -344,10 +359,10 @@ const styles = StyleSheet.create({
     marginVertical: 15,
   },
   pickerStyles: {
-    width: "90%",
+    //width: "90%",
     //backgroundColor: "green",
     color: "red",
-    width: 150,
+    width: 200,
     //padding: 15,
   },
 });
