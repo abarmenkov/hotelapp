@@ -12,6 +12,8 @@ import {
   TouchableRipple,
   Button,
   TextInput,
+  Portal,
+  Snackbar,
   ActivityIndicator,
 } from "react-native-paper";
 import { useTranslation } from "react-i18next";
@@ -26,6 +28,7 @@ import { PointOfSalesContext } from "../context/PointOfSalesContext";
 import { DefaultPocketCodeContext } from "../context/DefaultPocketCodeContext";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import axios from "axios";
+import { SettingsContext } from "../context/SettingsContext";
 
 export const SettingsScreen = () => {
   const { t } = useTranslation();
@@ -35,27 +38,40 @@ export const SettingsScreen = () => {
   const [hasError, setErrorFlag] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [settingsIsLoading, setSettingsIsLoading] = useState(false);
+  const [networkError, setNetworkError] = useState(false);
+  const [networkCheck, setNetworkCheck] = useState(false);
   const [checkNetworkColor, setCheckNetworkColor] = useState("grey");
   const [networkIsLoading, setNetworkIsLoading] = useState(false);
 
-  const { defaultPointOfSales, setDefaultPointOfSales } =
+  const { settings, setSettings } = useContext(SettingsContext);
+  //console.log(settings[0]);
+
+  /*const { defaultPointOfSales, setDefaultPointOfSales } =
     useContext(PointOfSalesContext);
   const { defaultPocketCode, setDefaultPocketCode } = useContext(
     DefaultPocketCodeContext
-  );
+  );*/
 
-  const [pointsOfSales, setPointsOfSales] = useState();
-  const [checkedPointOfSales, setPointOfSalesChecked] =
-    useState(defaultPointOfSales);
+  const [pointsOfSales, setPointsOfSales] = useState([]);
+  const [checkedPointOfSales, setPointOfSalesChecked] = useState(
+    settings[0].defaultPointOfSales
+  );
 
   const [folioPockets, setFolioPockets] = useState([]);
-  const [checkedFolioPocket, setFolioPocketChecked] =
-    useState(defaultPocketCode);
-
-  const [hotelName, setHotelName] = useState("Отель");
-  const [serverAddress, setServerAddress] = useState(
-    "http://109.236.70.42:9090"
+  const [checkedFolioPocket, setFolioPocketChecked] = useState(
+    settings[0].defaultPocketCode
   );
+
+  const [hotelName, setHotelName] = useState(settings[0].hotelName);
+  const [serverAddress, setServerAddress] = useState(settings[0].serverAddress);
+
+  const [visibleSnackBar, setVisibleSnackBar] = useState(false);
+
+  //"http://109.236.70.42:9090"
+
+  //получить данные отеля data[0].Name
+  ///Logus.HMS.Entities.Dictionaries.Property
+
   //получить точки продаж
   useEffect(() => {
     const endPoint = "/Logus.HMS.Entities.Dictionaries.PointOfSale";
@@ -148,6 +164,14 @@ export const SettingsScreen = () => {
   const closePicker = () => pickerRef.current.blur();
 
   //const checkNetworkColor = hasError ? "red" : "green";
+  const snackbarMessage =
+    hasError && !networkCheck
+      ? t("Settings.snackbar_failed")
+      : !hasError && !networkCheck
+      ? t("Settings.snackbar")
+      : !hasError && networkCheck && !networkError
+      ? t("Settings.snackbar_network_checked")
+      : t("Settings.snackbar_network_failed");
 
   const PointOfSalesItem = ({ item }) => {
     return (
@@ -155,7 +179,7 @@ export const SettingsScreen = () => {
         onPress={() => {
           Keyboard.dismiss();
           setPointOfSalesChecked(item.Id);
-          setDefaultPointOfSales(item.Id);
+          //setDefaultPointOfSales(item.Id);
         }}
       >
         <View
@@ -175,7 +199,7 @@ export const SettingsScreen = () => {
             onPress={() => {
               Keyboard.dismiss();
               setPointOfSalesChecked(item.Id);
-              setDefaultPointOfSales(item.Id);
+              //setDefaultPointOfSales(item.Id);
             }}
           />
         </View>
@@ -188,7 +212,7 @@ export const SettingsScreen = () => {
         onPress={() => {
           Keyboard.dismiss();
           setFolioPocketChecked(item.Code);
-          setDefaultPocketCode(item.Code);
+          //setDefaultPocketCode(item.Code);
         }}
       >
         <View
@@ -207,7 +231,7 @@ export const SettingsScreen = () => {
             onPress={() => {
               Keyboard.dismiss();
               setFolioPocketChecked(item.Code);
-              setDefaultPocketCode(item.Code);
+              //setDefaultPocketCode(item.Code);
             }}
           />
         </View>
@@ -219,13 +243,37 @@ export const SettingsScreen = () => {
   const renderFolioPocketItem = ({ item }) => <FolioPocketItem item={item} />;
 
   const saveSettings = () => {
+    Keyboard.dismiss();
     setSettingsIsLoading(true);
-    saveData("@pointofsales", checkedPointOfSales);
-    saveData("@defaultpocket", checkedFolioPocket);
-    setTimeout(() => setSettingsIsLoading(false), 3000);
+    //saveData("@pointofsales", checkedPointOfSales);
+    setSettings([
+      {
+        ...settings[0],
+        hotelName,
+        serverAddress,
+        defaultPointOfSales: checkedPointOfSales,
+        defaultPocketCode: checkedFolioPocket,
+      },
+    ]);
+    saveData("@settings", [
+      {
+        ...settings[0],
+        hotelName,
+        serverAddress,
+        defaultPointOfSales: checkedPointOfSales,
+        defaultPocketCode: checkedFolioPocket,
+      },
+    ]);
+    //saveData("@defaultpocket", checkedFolioPocket);
+    setTimeout(() => {
+      setSettingsIsLoading(false);
+      setVisibleSnackBar(true);
+    }, 3000);
   };
 
   const checkNetwork = async () => {
+    setNetworkCheck(true);
+    Keyboard.dismiss();
     const endPoint = "/api/Account/Ping";
     setNetworkIsLoading(true);
     const controller = new AbortController();
@@ -254,7 +302,10 @@ export const SettingsScreen = () => {
 
       if (response.status === 200) {
         setCheckNetworkColor("green");
-        setTimeout(() => setNetworkIsLoading(false), 3000);
+        setTimeout(() => {
+          setNetworkIsLoading(false);
+          setVisibleSnackBar(true);
+        }, 3000);
 
         return;
       } else {
@@ -263,13 +314,21 @@ export const SettingsScreen = () => {
     } catch (error) {
       if (controller.signal.aborted) {
         console.log("Data fetching cancelled");
-        setCheckNetworkColor("red");
-        setNetworkIsLoading(false);
+        setTimeout(() => {
+          setNetworkIsLoading(false);
+          setNetworkError(true);
+          setCheckNetworkColor("red");
+          setVisibleSnackBar(true);
+        }, 3000);
       } else {
         console.log(error);
         //console.log("Data fetching cancelled");
-        setCheckNetworkColor("red");
-        setNetworkIsLoading(false);
+        setTimeout(() => {
+          setNetworkIsLoading(false);
+          setNetworkError(true);
+          setCheckNetworkColor("red");
+          setVisibleSnackBar(true);
+        }, 3000);
       }
     }
   };
@@ -297,7 +356,7 @@ export const SettingsScreen = () => {
           label={t("Settings.hotel_name")}
           placeholder={t("Settings.hotel_name")}
           onChangeText={(value) => setHotelName(value)}
-          style={{ width: "70%" }}
+          style={{ width: "65%" }}
           //onBlur={() => Keyboard.dismiss()}
           //onSubmitEditing={() => Keyboard.dismiss()}
         />
@@ -325,7 +384,7 @@ export const SettingsScreen = () => {
             setServerAddress(value);
             setCheckNetworkColor("grey");
           }}
-          style={{ width: "70%" }}
+          style={{ width: "65%" }}
           //onSubmitEditing={() => Keyboard.dismiss()}
           //onBlur={() => Keyboard.dismiss()}
           //secureTextEntry
@@ -431,6 +490,20 @@ export const SettingsScreen = () => {
             : `${t("Settings.save_settings")}`}
         </Button>
       </View>
+      <Portal>
+        <Snackbar
+          visible={visibleSnackBar}
+          duration={2000}
+          onDismiss={() => {
+            setVisibleSnackBar(false);
+            setErrorFlag(false);
+            setNetworkError(false);
+            setNetworkCheck(false);
+          }}
+        >
+          {snackbarMessage}
+        </Snackbar>
+      </Portal>
     </View>
   );
 };
@@ -446,7 +519,7 @@ const styles = StyleSheet.create({
     //width: "90%",
     //backgroundColor: "green",
     color: "red",
-    width: 200,
+    width: 135,
     //padding: 15,
   },
 });

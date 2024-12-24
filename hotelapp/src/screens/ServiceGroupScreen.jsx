@@ -23,6 +23,7 @@ import { token } from "../API/route";
 import { fetchData } from "../API/FetchData";
 import { postData } from "../API/PostData";
 import { DefaultPocketCodeContext } from "../context/DefaultPocketCodeContext";
+import { SettingsContext } from "../context/SettingsContext";
 
 // чтобы отключить ошибку, не получилось, возможно в другом месте нужно
 LogBox.ignoreLogs([
@@ -34,9 +35,11 @@ LogBox.ignoreLogs([
 const ServiceGroupScreen = ({ route, navigation }) => {
   const [serviceItems, setServiceItems] = useState([]);
   const [folioPockets, setFolioPockets] = useState([]);
-  const { defaultPocketCode, setDefaultPocketCode } = useContext(
+  const { settings, setSettings } = useContext(SettingsContext);
+  /*const { defaultPocketCode, setDefaultPocketCode } = useContext(
     DefaultPocketCodeContext
-  );
+  );*/
+  const { defaultPocketCode } = settings[0];
 
   const [searchLoading, setSearchLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);

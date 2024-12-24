@@ -40,6 +40,7 @@ import { useTranslation } from "react-i18next";
 import { DefaultPocketCodeContext } from "./src/context/DefaultPocketCodeContext";
 import { PointOfSalesContext } from "./src/context/PointOfSalesContext";
 import { getData, getUser } from "./src/API/asyncStorageMethods";
+import { SettingsContext } from "./src/context/SettingsContext";
 
 const CombinedDefaultTheme = {
   ...MD3LightTheme,
@@ -67,17 +68,66 @@ export default function App() {
     userName: "test",
     userPassword: "tester",
   });
-  const [defaultPocketCode, setDefaultPocketCode] = useState("");
 
+  //заменил отдельные контексты одним settings
+  /*const [defaultPocketCode, setDefaultPocketCode] = useState("");
   const [defaultPointOfSales, setDefaultPointOfSales] = useState(0);
+  const [pointOfSaleIsLoading, setPointOfSaleIsLoading] = useState(false);
+  const [pocketIsLoading, setPocketIsLoading] = useState(false);
+  useEffect(() => {
+    setPointOfSaleIsLoading(true);
+    getData("@pointofsales", setDefaultPointOfSales, 0);
+    setPointOfSaleIsLoading(false);
+  }, []);
+
+  useEffect(() => {
+    setPocketIsLoading(true);
+    getData("@defaultpocket", setDefaultPocketCode, "");
+    setPocketIsLoading(false);
+  }, []);
+    const defaultPocket = useMemo(
+    () => ({ defaultPocketCode, setDefaultPocketCode }),
+    [defaultPocketCode]
+  );
+
+  const defaultPointOfSale = useMemo(
+    () => ({ defaultPointOfSales, setDefaultPointOfSales }),
+    [defaultPointOfSales]
+  );
+  */
+
+  const [settings, setSettings] = useState([
+    {
+      hotelName: "",
+      serverAddress: "",
+      defaultPointOfSales: "",
+      defaultPocketCode: "",
+      user: { userName: "", userPassword: "" },
+      language: "",
+    },
+  ]);
 
   const [userIsLoading, setUserIsLoading] = useState(false);
   const [themeIsLoading, setThemeIsLoading] = useState(false);
-  const [pointOfSaleIsLoading, setPointOfSaleIsLoading] = useState(false);
-  const [pocketIsLoading, setPocketIsLoading] = useState(false);
+  const [settingsIsLoading, setSettingsIsLoading] = useState(false);
 
   const { t } = useTranslation();
   //useEffect(() => clearStorage(),[]);
+
+  useEffect(() => {
+    setSettingsIsLoading(true);
+    getData("@settings", setSettings, [
+      {
+        hotelName: "",
+        serverAddress: "",
+        defaultPointOfSales: "",
+        defaultPocketCode: "",
+        user: { userName: "", userPassword: "" },
+        language: "",
+      },
+    ]);
+    setSettingsIsLoading(false);
+  }, []);
 
   useEffect(() => {
     //clearStorage();
@@ -97,18 +147,6 @@ export default function App() {
     setThemeIsLoading(false);
   }, []);
 
-  useEffect(() => {
-    setPointOfSaleIsLoading(true);
-    getData("@pointofsales", setDefaultPointOfSales, 0);
-    setPointOfSaleIsLoading(false);
-  }, []);
-
-  useEffect(() => {
-    setPocketIsLoading(true);
-    getData("@defaultpocket", setDefaultPocketCode, "");
-    setPocketIsLoading(false);
-  }, []);
-
   let theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme;
 
   const toggleTheme = useCallback(() => {
@@ -123,34 +161,11 @@ export default function App() {
     [toggleTheme, isThemeDark]
   );
 
-  const defaultPocket = useMemo(
-    () => ({ defaultPocketCode, setDefaultPocketCode }),
-    [defaultPocketCode]
-  );
-
-  const defaultPointOfSale = useMemo(
-    () => ({ defaultPointOfSales, setDefaultPointOfSales }),
-    [defaultPointOfSales]
-  );
+  const savedSettings = useMemo(() => ({ settings, setSettings }), [settings]);
 
   const savedUser = useMemo(() => ({ user, setUser }), [user]);
 
-  //console.log("user1:", user);
-  /*if (dataIsLoading) {
-    return (
-      <View
-        style={{ flex: 1, justifyContent: "center", alignContent: "center" }}
-      >
-        <ActivityIndicator size="large" color="green"/>
-      </View>
-    );
-  }*/
-  if (
-    userIsLoading ||
-    pocketIsLoading ||
-    themeIsLoading ||
-    pointOfSaleIsLoading
-  ) {
+  if (userIsLoading || themeIsLoading || settingsIsLoading) {
     return <LoadingIndicator text={t("Loading.loading")} />;
   }
   return (
@@ -158,17 +173,15 @@ export default function App() {
       <Suspense fallback={<ActivityIndicator size="large" color="red" />}>
         <PreferencesContext.Provider value={preferences}>
           <UserContext.Provider value={savedUser}>
-            <DefaultPocketCodeContext.Provider value={defaultPocket}>
-              <PointOfSalesContext.Provider value={defaultPointOfSale}>
-                <PaperProvider theme={theme}>
-                  <I18nextProvider i18n={i18next}>
-                    <SafeAreaProvider>
-                      <StartingStack />
-                    </SafeAreaProvider>
-                  </I18nextProvider>
-                </PaperProvider>
-              </PointOfSalesContext.Provider>
-            </DefaultPocketCodeContext.Provider>
+            <SettingsContext.Provider value={savedSettings}>
+              <PaperProvider theme={theme}>
+                <I18nextProvider i18n={i18next}>
+                  <SafeAreaProvider>
+                    <StartingStack />
+                  </SafeAreaProvider>
+                </I18nextProvider>
+              </PaperProvider>
+            </SettingsContext.Provider>
           </UserContext.Provider>
         </PreferencesContext.Provider>
       </Suspense>

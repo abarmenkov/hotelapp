@@ -44,6 +44,10 @@ const en = {
       default_folio_pocket: "Default Folio Pocket",
       save_settings: "Save",
       saving_settings: "Saving in process ...",
+      snackbar: "Settings are saved",
+      snackbar_failed: "Error while saving",
+      snackbar_network_checked: "Server is available",
+      snackbar_network_failed: "Server is NOT available, check address",
     },
     SearchBar: {
       ReservationsScreen: "Enter name, room or reservation number",

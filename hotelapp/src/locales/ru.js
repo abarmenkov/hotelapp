@@ -44,6 +44,10 @@ const ru = {
       default_folio_pocket: "Карман счета для начисления по-умолчанию",
       save_settings: "Сохранить",
       saving_settings: "Сохранение ...",
+      snackbar: "Настройки сохраненны",
+      snackbar_failed: "Ошибка при сохранении настроек",
+      snackbar_network_checked: "Сервер доступен",
+      snackbar_network_failed: "Сервер не доступен, проверьте адрес",
     },
     SearchBar: {
       ReservationsScreen: "ФИО, номер комнаты или брони",
