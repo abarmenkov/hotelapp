@@ -258,6 +258,7 @@ export const SettingsScreen = () => {
         defaultPointOfSales: checkedPointOfSales,
         defaultPocketCode: checkedFolioPocket,
         user: { userName: name, userPassword: password },
+        token: userToken,
       },
     ]);
     saveData("@settings", [
@@ -268,6 +269,7 @@ export const SettingsScreen = () => {
         defaultPointOfSales: checkedPointOfSales,
         defaultPocketCode: checkedFolioPocket,
         user: { userName: name, userPassword: password },
+        token: userToken,
       },
     ]);
     //saveData("@defaultpocket", checkedFolioPocket);
@@ -433,7 +435,7 @@ export const SettingsScreen = () => {
     try {
       const response = await axios(configurationObject);
       if (response.status === 200) {
-        console.log(response.data.Token);
+        //console.log(response.data.Token);
         setUserToken(response.data.Token);
         //setCheckNetworkColor("green");
         setTimeout(() => {
@@ -693,7 +695,7 @@ export const SettingsScreen = () => {
                 value={item}
                 style={{
                   color:
-                    appLanguage === supportedLngs[item].code ? "red" : "blue",
+                    appLanguage === supportedLngs[item].code ? "green" : "blue",
                 }}
               />
             ))}
@@ -766,7 +768,7 @@ const styles = StyleSheet.create({
   pickerStyles: {
     //width: "90%",
     //backgroundColor: "green",
-    color: "red",
+    color: "green",
     width: 135,
     //padding: 15,
   },
