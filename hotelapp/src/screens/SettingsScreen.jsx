@@ -67,6 +67,7 @@ export const SettingsScreen = () => {
 
   const [name, setName] = useState(settings[0].user.userName);
   const [password, setPassword] = useState(settings[0].user.userPassword);
+  const [userToken, setUserToken] = useState(settings[0].token);
 
   const [visibleSnackBar, setVisibleSnackBar] = useState(false);
 
@@ -402,6 +403,108 @@ export const SettingsScreen = () => {
     }
   };
 
+  const getToken = async () => {
+    setIsLoading(true);
+    Keyboard.dismiss();
+    const endPoint = "/api/Account";
+
+    /*const params = new URLSearchParams();
+    params.append("userName", name);
+    params.append("password", password);
+    console.log(params);*/
+
+    const controller = new AbortController();
+    const newAbortSignal = (timeoutMs) => {
+      setTimeout(() => controller.abort(), timeoutMs || 0);
+      return controller.signal;
+    };
+
+    const configurationObject = {
+      method: "get",
+      url: "https://api-hms.logus.pro/api/Account",
+      //url: `${serverAddress}${endPoint}`,
+      signal: newAbortSignal(15000),
+      params: {
+        userName: name,
+        password: password,
+        //propertyId: 1,
+      },
+    };
+    try {
+      const response = await axios(configurationObject);
+      if (response.status === 200) {
+        console.log(response.data.Token);
+        setUserToken(response.data.Token);
+        //setCheckNetworkColor("green");
+        setTimeout(() => {
+          setIsLoading(false);
+          setVisibleSnackBar(true);
+        }, 3000);
+
+        return;
+      } else {
+        throw new Error("Failed to get server");
+      }
+    } catch (error) {
+      if (controller.signal.aborted) {
+        console.log("Data fetching cancelled");
+        console.log(error);
+        setTimeout(() => {
+          setIsLoading(false);
+          setNetworkError(true);
+          setVisibleSnackBar(true);
+        }, 3000);
+      } else {
+        console.log(error);
+        console.log(error.message);
+        console.log(error.request);
+
+        //console.log("Data fetching cancelled");
+        setTimeout(() => {
+          setIsLoading(false);
+          setNetworkError(true);
+          setVisibleSnackBar(true);
+        }, 3000);
+      }
+    }
+  };
+  /*try {
+      const response = await fetch(
+        `https://api-hms.logus.pro/api/Account?userName=${name}&password=${password}`
+      );
+      /*const response = await fetch(
+        `${serverAddress}${endPoint}?userName=${name}&password=${password}`
+      );
+      //console.log(response.status);
+      const data = await response.json();
+      //console.log(response.data);
+      if (response.status === 200) {
+        console.log(data.Token);
+        setUserToken(data.Token);
+        //setCheckNetworkColor("green");
+        setTimeout(() => {
+          setIsLoading(false);
+          setVisibleSnackBar(true);
+        }, 3000);
+
+        return;
+      } else {
+        throw new Error("Failed to get server");
+      }
+    } catch (error) {
+      console.log(error);
+      console.log(error.message);
+      console.log(error.request);
+      //console.log("Data fetching cancelled");
+      setTimeout(() => {
+        setIsLoading(false);
+        setNetworkError(true);
+        setVisibleSnackBar(true);
+      }, 3000);
+    }
+  };*/
+  const checkTokenColor = userToken ? "green" : "red";
+
   return (
     <View style={{ flex: 1, alignItems: "center" }}>
       <Text>{t("Settings.add_hotel")}</Text>
@@ -542,6 +645,18 @@ export const SettingsScreen = () => {
           placeholder={t("Settings.password_placeholder")}
           onChangeText={(value) => setPassword(value)}
           style={{ width: "65%" }}
+          right={
+            <TextInput.Icon
+              icon={({ color, size }) => (
+                <MaterialCommunityIcons
+                  name="account-check"
+                  color={checkTokenColor}
+                  size={size}
+                  onPress={getToken}
+                />
+              )}
+            />
+          }
           //onSubmitEditing={() => Keyboard.dismiss()}
           //onBlur={() => Keyboard.dismiss()}
           //secureTextEntry

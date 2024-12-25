@@ -9,6 +9,8 @@ export const SettingsContext = createContext([
     user: { userName: "", userPassword: "" },
     language: "",
     token: "",
+    isDefault: false,
+    PropertyId: null,
   },
 ]);
 
