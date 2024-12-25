@@ -19,7 +19,7 @@ export const getData = async (key, cb, initialState) => {
   }
 };
 
-export const getUser = async (key, cb, setIsLoading, initialState) => {
+export const getSettings = async (key, cb, setIsLoading, initialState) => {
   try {
     const value = await AsyncStorage.getItem(key);
 

@@ -65,6 +65,9 @@ export const SettingsScreen = () => {
   const [hotelName, setHotelName] = useState(settings[0].hotelName);
   const [serverAddress, setServerAddress] = useState(settings[0].serverAddress);
 
+  const [name, setName] = useState(settings[0].user.userName);
+  const [password, setPassword] = useState(settings[0].user.userPassword);
+
   const [visibleSnackBar, setVisibleSnackBar] = useState(false);
 
   //"http://109.236.70.42:9090"
@@ -253,6 +256,7 @@ export const SettingsScreen = () => {
         serverAddress,
         defaultPointOfSales: checkedPointOfSales,
         defaultPocketCode: checkedFolioPocket,
+        user: { userName: name, userPassword: password },
       },
     ]);
     saveData("@settings", [
@@ -262,6 +266,7 @@ export const SettingsScreen = () => {
         serverAddress,
         defaultPointOfSales: checkedPointOfSales,
         defaultPocketCode: checkedFolioPocket,
+        user: { userName: name, userPassword: password },
       },
     ]);
     //saveData("@defaultpocket", checkedFolioPocket);
@@ -286,15 +291,15 @@ export const SettingsScreen = () => {
       method: "get",
       url: `${serverAddress}${endPoint}`,
       //url: appRoutes.dictionariesPath(),
-      signal: newAbortSignal(5000),
-      headers: {
+      signal: newAbortSignal(15000),
+      /*headers: {
         Authorization: `Token ${token}`,
         "Content-Type": "application/json",
       },
 
       params: {
         propertyId: 1,
-      },
+      },*/
     };
     try {
       const response = await axios(configurationObject);
@@ -333,34 +338,73 @@ export const SettingsScreen = () => {
     }
   };
 
+  const getHotelName = async () => {
+    setNetworkCheck(true);
+    Keyboard.dismiss();
+    const endPoint =
+      "/api/Dictionaries/Logus.HMS.Entities.Dictionaries.Property";
+    setIsLoading(true);
+    const controller = new AbortController();
+    const newAbortSignal = (timeoutMs) => {
+      setTimeout(() => controller.abort(), timeoutMs || 0);
+      return controller.signal;
+    };
+
+    const configurationObject = {
+      method: "get",
+      url: `${serverAddress}${endPoint}`,
+      //url: appRoutes.dictionariesPath(),
+      signal: newAbortSignal(35000),
+      headers: {
+        Authorization: `Token ${token}`,
+        "Content-Type": "application/json",
+      },
+
+      /*params: {
+        propertyId: 1,
+      },*/
+    };
+    try {
+      const response = await axios(configurationObject);
+      //console.log(response.data);
+
+      if (response.status === 200) {
+        //console.log(response.data[0].Name);
+        setHotelName(response.data[0].Name);
+        setTimeout(() => {
+          setIsLoading(false);
+          setVisibleSnackBar(true);
+        }, 3000);
+
+        return;
+      } else {
+        throw new Error("Failed to get server");
+      }
+    } catch (error) {
+      if (controller.signal.aborted) {
+        console.log("Data fetching cancelled");
+        setTimeout(() => {
+          setIsLoading(false);
+          setNetworkError(true);
+          setVisibleSnackBar(true);
+        }, 3000);
+      } else {
+        console.log(error);
+        console.log(error.message);
+        console.log(error.request);
+        //console.log("Data fetching cancelled");
+        setTimeout(() => {
+          setIsLoading(false);
+          setNetworkError(true);
+          setVisibleSnackBar(true);
+        }, 3000);
+      }
+    }
+  };
+
   return (
     <View style={{ flex: 1, alignItems: "center" }}>
       <Text>{t("Settings.add_hotel")}</Text>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          //backgroundColor: "yellow",
-          width: "90%",
-          //height: "15%",
-          marginVertical: 15,
-          padding: 5,
-        }}
-      >
-        <Text>{t("Settings.hotel_name")}</Text>
-        <TextInput
-          mode="outlined"
-          //focused={true}
-          value={hotelName}
-          label={t("Settings.hotel_name")}
-          placeholder={t("Settings.hotel_name")}
-          onChangeText={(value) => setHotelName(value)}
-          style={{ width: "65%" }}
-          //onBlur={() => Keyboard.dismiss()}
-          //onSubmitEditing={() => Keyboard.dismiss()}
-        />
-      </View>
       <View
         style={{
           flexDirection: "row",
@@ -412,6 +456,95 @@ export const SettingsScreen = () => {
               />
             )
           }
+        />
+      </View>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          //backgroundColor: "yellow",
+          width: "90%",
+          //height: "15%",
+          marginVertical: 15,
+          padding: 5,
+        }}
+      >
+        <Text>{t("Settings.hotel_name")}</Text>
+        <TextInput
+          mode="outlined"
+          //focused={true}
+          value={hotelName}
+          label={t("Settings.hotel_name")}
+          placeholder={t("Settings.hotel_name")}
+          onChangeText={(value) => setHotelName(value)}
+          style={{ width: "65%" }}
+          right={
+            <TextInput.Icon
+              icon={({ color, size }) => (
+                <MaterialCommunityIcons
+                  name="check-network"
+                  color={"green"}
+                  size={size}
+                  onPress={getHotelName}
+                />
+              )}
+            />
+          }
+          //onBlur={() => Keyboard.dismiss()}
+          //onSubmitEditing={() => Keyboard.dismiss()}
+        />
+      </View>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          //backgroundColor: "yellow",
+          width: "90%",
+          //height: "15%",
+          marginVertical: 15,
+          padding: 5,
+        }}
+      >
+        <Text>{t("Settings.login_text")}</Text>
+        <TextInput
+          mode="outlined"
+          //focused={true}
+          value={name}
+          label={t("Settings.login_input_value")}
+          placeholder={t("Settings.login_placeholder")}
+          onChangeText={(value) => setName(value)}
+          style={{ width: "65%" }}
+          //onSubmitEditing={() => Keyboard.dismiss()}
+          //onBlur={() => Keyboard.dismiss()}
+          //secureTextEntry
+        />
+      </View>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          //backgroundColor: "yellow",
+          width: "90%",
+          //height: "15%",
+          marginVertical: 15,
+          padding: 5,
+        }}
+      >
+        <Text>{t("Settings.password_text")}</Text>
+        <TextInput
+          mode="outlined"
+          //focused={true}
+          value={password}
+          label={t("Settings.password_input_value")}
+          placeholder={t("Settings.password_placeholder")}
+          onChangeText={(value) => setPassword(value)}
+          style={{ width: "65%" }}
+          //onSubmitEditing={() => Keyboard.dismiss()}
+          //onBlur={() => Keyboard.dismiss()}
+          //secureTextEntry
         />
       </View>
       <View

@@ -48,6 +48,12 @@ const en = {
       snackbar_failed: "Error while saving",
       snackbar_network_checked: "Server is available",
       snackbar_network_failed: "Server is NOT available, check address",
+      login_placeholder: "Enter your login",
+      login_input_value: "Login",
+      login_text: "Login",
+      password_placeholder: "Enter your password",
+      password_input_value: "Password",
+      password_text: "Password",
     },
     SearchBar: {
       ReservationsScreen: "Enter name, room or reservation number",

@@ -8,6 +8,7 @@ export const SettingsContext = createContext([
     defaultPocketCode: "",
     user: { userName: "", userPassword: "" },
     language: "",
+    token: "",
   },
 ]);
 

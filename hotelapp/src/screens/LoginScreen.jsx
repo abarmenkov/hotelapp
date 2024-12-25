@@ -5,10 +5,12 @@ import { useTheme } from "react-native-paper";
 import { AppStyles } from "../utils/constants";
 import { UserContext } from "../context/UserContext";
 import { saveData } from "../API/asyncStorageMethods";
+import { SettingsContext } from "../context/SettingsContext";
 
 export const LoginScreen = ({ navigation }) => {
-  const { user, setUser } = useContext(UserContext);
-  const { userName, userPassword } = user;
+  const { settings, setSettings } = useContext(SettingsContext);
+  //const { user, setUser } = useContext(UserContext);
+  const { userName, userPassword } = settings[0].user;
 
   const { t } = useTranslation();
   const theme = useTheme();
@@ -34,8 +36,14 @@ export const LoginScreen = ({ navigation }) => {
     if (password === "1") {
       navigation.navigate("UserStack");
       //saveUser({ userName: name, userPassword: password });
-      saveData("@user", { userName: name, userPassword: password });
-      setUser({ userName: name, userPassword: password });
+      //saveData("@user", { userName: name, userPassword: password });
+      //setUser({ userName: name, userPassword: password });
+      setSettings([
+        { ...settings[0], user: { userName: name, userPassword: password } },
+      ]);
+      saveData("@settings", [
+        { ...settings[0], user: { userName: name, userPassword: password } },
+      ]);
     } else if (name === "admin" && password === "admin") {
       navigation.navigate("AdminStack");
     } else {

@@ -48,6 +48,13 @@ const ru = {
       snackbar_failed: "Ошибка при сохранении настроек",
       snackbar_network_checked: "Сервер доступен",
       snackbar_network_failed: "Сервер не доступен, проверьте адрес",
+      login_placeholder: 'Введите Ваш логин',
+      login_input_value: 'Логин',
+      login_text: 'Логин',
+      password_placeholder: 'Введите Ваш пароль',
+      password_input_value: 'Пароль',
+      password_text: 'Пароль',
+
     },
     SearchBar: {
       ReservationsScreen: "ФИО, номер комнаты или брони",

@@ -32,6 +32,7 @@ import { Picker } from "@react-native-picker/picker";
 import { WIDTH } from "../utils/constants";
 import { create } from "../utils/normalize";
 import { saveData } from "../API/asyncStorageMethods";
+import { SettingsContext } from "../context/SettingsContext";
 
 export const DrawerContent = (props) => {
   //const { fontScale, width } = useWindowDimensions();
@@ -42,9 +43,12 @@ export const DrawerContent = (props) => {
   const { i18n } = useTranslation();
   const theme = useTheme();
   const { toggleTheme, isThemeDark } = useContext(PreferencesContext);
-  const { user } = useContext(UserContext);
+  const { settings, setSettings } = useContext(SettingsContext);
+  //const { user, setUser } = useContext(UserContext);
+  const { userName, userPassword } = settings[0].user;
+  //const { user } = useContext(UserContext);
   //const [dark, setDark] = useState(isThemeDark);
-  const { userName } = user;
+  //const { userName } = user;
   const supportedLngs = i18n.services.resourceStore.data;
   const languageKeys = Object.keys(supportedLngs);
   const appLanguage = i18n.language;
