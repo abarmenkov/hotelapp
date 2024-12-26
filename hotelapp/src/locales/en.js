@@ -54,6 +54,7 @@ const en = {
       password_placeholder: "Enter your password",
       password_input_value: "Password",
       password_text: "Password",
+      defaulthotel: "Set hotel as default",
     },
     SearchBar: {
       ReservationsScreen: "Enter name, room or reservation number",

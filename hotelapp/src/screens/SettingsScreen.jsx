@@ -14,7 +14,9 @@ import {
   TextInput,
   Portal,
   Snackbar,
+  Switch,
   ActivityIndicator,
+  useTheme,
 } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 //import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -31,6 +33,7 @@ import axios from "axios";
 import { SettingsContext } from "../context/SettingsContext";
 
 export const SettingsScreen = () => {
+  const theme = useTheme();
   const { t } = useTranslation();
   const { i18n } = useTranslation();
 
@@ -64,6 +67,7 @@ export const SettingsScreen = () => {
 
   const [hotelName, setHotelName] = useState(settings[0].hotelName);
   const [serverAddress, setServerAddress] = useState(settings[0].serverAddress);
+  const [isHotelDefault, setIsHotelDefault] = useState(settings[0].isDefault);
 
   const [name, setName] = useState(settings[0].user.userName);
   const [password, setPassword] = useState(settings[0].user.userPassword);
@@ -259,6 +263,7 @@ export const SettingsScreen = () => {
         defaultPocketCode: checkedFolioPocket,
         user: { userName: name, userPassword: password },
         token: userToken,
+        isDefault: isHotelDefault,
       },
     ]);
     saveData("@settings", [
@@ -270,6 +275,7 @@ export const SettingsScreen = () => {
         defaultPocketCode: checkedFolioPocket,
         user: { userName: name, userPassword: password },
         token: userToken,
+        isDefault: isHotelDefault,
       },
     ]);
     //saveData("@defaultpocket", checkedFolioPocket);
@@ -664,6 +670,19 @@ export const SettingsScreen = () => {
           //secureTextEntry
         />
       </View>
+      <TouchableRipple onPress={() => setIsHotelDefault(!isHotelDefault)}>
+        <View style={{ ...styles.preference, width: "90%" }}>
+          <Text style={styles.preferenceTitle}>
+            {t("Settings.defaulthotel")}
+          </Text>
+
+          <Switch
+            color={theme.colors.primary}
+            value={isHotelDefault}
+            onValueChange={() => setIsHotelDefault(!isHotelDefault)}
+          />
+        </View>
+      </TouchableRipple>
       <View
         style={{
           flexDirection: "row",
@@ -772,4 +791,12 @@ const styles = StyleSheet.create({
     width: 135,
     //padding: 15,
   },
+  preference: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    //paddingVertical: 120,
+    paddingHorizontal: 5,
+  },
+  preferenceTitle: { fontSize: 14 },
 });
