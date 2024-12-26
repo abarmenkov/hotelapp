@@ -151,6 +151,13 @@ export const SettingsScreen = () => {
       controller.abort("Data fetching cancelled");
     };
   }, []);
+  
+  const activePointOfSales = pointsOfSales.filter(
+    (item) => item.IsActive && !item.DeletedDate
+  );
+  const activeFolioPockets = folioPockets.filter(
+    (item) => item.IsActive && !item.DeletedDate
+  );
 
   const supportedLngs = i18n.services.resourceStore.data;
   const languageKeys = Object.keys(supportedLngs);
@@ -725,7 +732,7 @@ export const SettingsScreen = () => {
       <View style={{ width: "90%", padding: 5, marginVertical: 10 }}>
         <Text>{t("Settings.point_of_sale")}</Text>
         <FlatList
-          data={pointsOfSales}
+          data={activePointOfSales}
           renderItem={renderPointOfSaleItem}
           removeClippedSubviews={true}
           //initialNumToRender={15}
@@ -738,7 +745,7 @@ export const SettingsScreen = () => {
       <View style={{ width: "90%", padding: 5 }}>
         <Text>{t("Settings.default_folio_pocket")}</Text>
         <FlatList
-          data={folioPockets}
+          data={activeFolioPockets}
           renderItem={renderFolioPocketItem}
           removeClippedSubviews={true}
           //initialNumToRender={15}
