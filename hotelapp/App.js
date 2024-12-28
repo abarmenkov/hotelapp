@@ -67,8 +67,10 @@ export default function App() {
       serverAddress: "",
       defaultPointOfSales: "",
       defaultPocketCode: "",
-      user: { userName: "", userPassword: "" },
+      user: { userName: "", userPassword: "", token: "" },
       language: "",
+      isDefault: false,
+      PropertyId: null,
     },
   ]);
 
@@ -81,17 +83,7 @@ export default function App() {
     //clearStorage();
     // долго загружается user(причина???), передаю в функцию isLoading, либо здесь по setTimeout
     setSettingsIsLoading(true);
-    getSettings("@settings", setSettings, setSettingsIsLoading, [
-      {
-        hotelName: "",
-        serverAddress: "",
-        defaultPointOfSales: "",
-        defaultPocketCode: "",
-        user: { userName: "", userPassword: "" },
-        language: "",
-        token: "",
-      },
-    ]);
+    getSettings("@settings", setSettings, setSettingsIsLoading, settings);
     //setTimeout(() => setSettingsIsLoading(false), 5000);
   }, []);
 

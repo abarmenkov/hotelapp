@@ -10,7 +10,7 @@ import { SettingsContext } from "../context/SettingsContext";
 export const LoginScreen = ({ navigation }) => {
   const { settings, setSettings } = useContext(SettingsContext);
   //const { user, setUser } = useContext(UserContext);
-  const { userName, userPassword } = settings[0].user;
+  const { userName, userPassword, token } = settings[0].user;
 
   const { t } = useTranslation();
   const theme = useTheme();
@@ -39,10 +39,16 @@ export const LoginScreen = ({ navigation }) => {
       //saveData("@user", { userName: name, userPassword: password });
       //setUser({ userName: name, userPassword: password });
       setSettings([
-        { ...settings[0], user: { userName: name, userPassword: password } },
+        {
+          ...settings[0],
+          user: { userName: name, userPassword: password, token },
+        },
       ]);
       saveData("@settings", [
-        { ...settings[0], user: { userName: name, userPassword: password } },
+        {
+          ...settings[0],
+          user: { userName: name, userPassword: password, token },
+        },
       ]);
     } else if (name === "admin" && password === "admin") {
       navigation.navigate("AdminStack");

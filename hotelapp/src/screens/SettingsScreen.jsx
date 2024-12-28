@@ -26,8 +26,7 @@ import { appRoutes } from "../API/route";
 import { token } from "../API/route";
 import { fetchData } from "../API/FetchData";
 import { saveData } from "../API/asyncStorageMethods";
-import { PointOfSalesContext } from "../context/PointOfSalesContext";
-import { DefaultPocketCodeContext } from "../context/DefaultPocketCodeContext";
+
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import axios from "axios";
 import { SettingsContext } from "../context/SettingsContext";
@@ -42,18 +41,12 @@ export const SettingsScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [settingsIsLoading, setSettingsIsLoading] = useState(false);
   const [networkError, setNetworkError] = useState(false);
+
   const [networkCheck, setNetworkCheck] = useState(false);
   const [checkNetworkColor, setCheckNetworkColor] = useState("grey");
   const [networkIsLoading, setNetworkIsLoading] = useState(false);
 
   const { settings, setSettings } = useContext(SettingsContext);
-  //console.log(settings[0]);
-
-  /*const { defaultPointOfSales, setDefaultPointOfSales } =
-    useContext(PointOfSalesContext);
-  const { defaultPocketCode, setDefaultPocketCode } = useContext(
-    DefaultPocketCodeContext
-  );*/
 
   const [pointsOfSales, setPointsOfSales] = useState([]);
   const [checkedPointOfSales, setPointOfSalesChecked] = useState(
@@ -71,7 +64,7 @@ export const SettingsScreen = () => {
 
   const [name, setName] = useState(settings[0].user.userName);
   const [password, setPassword] = useState(settings[0].user.userPassword);
-  const [userToken, setUserToken] = useState(settings[0].token);
+  const [userToken, setUserToken] = useState(settings[0].user.token);
 
   const [visibleSnackBar, setVisibleSnackBar] = useState(false);
 
@@ -151,7 +144,7 @@ export const SettingsScreen = () => {
       controller.abort("Data fetching cancelled");
     };
   }, []);
-  
+
   const activePointOfSales = pointsOfSales.filter(
     (item) => item.IsActive && !item.DeletedDate
   );
@@ -268,8 +261,7 @@ export const SettingsScreen = () => {
         serverAddress,
         defaultPointOfSales: checkedPointOfSales,
         defaultPocketCode: checkedFolioPocket,
-        user: { userName: name, userPassword: password },
-        token: userToken,
+        user: { userName: name, userPassword: password, token: userToken },
         isDefault: isHotelDefault,
       },
     ]);
@@ -280,8 +272,7 @@ export const SettingsScreen = () => {
         serverAddress,
         defaultPointOfSales: checkedPointOfSales,
         defaultPocketCode: checkedFolioPocket,
-        user: { userName: name, userPassword: password },
-        token: userToken,
+        user: { userName: name, userPassword: password, token: userToken },
         isDefault: isHotelDefault,
       },
     ]);
@@ -368,11 +359,13 @@ export const SettingsScreen = () => {
 
     const configurationObject = {
       method: "get",
-      url: `${serverAddress}${endPoint}`,
+      //url: `${serverAddress}${endPoint}`,
       //url: appRoutes.dictionariesPath(),
+      url: "https://api-hms.logus.pro/api/Dictionaries/Logus.HMS.Entities.Dictionaries.Property",
       signal: newAbortSignal(35000),
       headers: {
-        Authorization: `Token ${token}`,
+        //Authorization: `Token ${token}`,
+        Authorization: `Token ${userToken}`,
         "Content-Type": "application/json",
       },
 
@@ -385,7 +378,7 @@ export const SettingsScreen = () => {
       //console.log(response.data);
 
       if (response.status === 200) {
-        //console.log(response.data[0].Name);
+        console.log(response.data[0].Name);
         setHotelName(response.data[0].Name);
         setTimeout(() => {
           setIsLoading(false);
@@ -450,11 +443,12 @@ export const SettingsScreen = () => {
       if (response.status === 200) {
         //console.log(response.data.Token);
         setUserToken(response.data.Token);
-        //setCheckNetworkColor("green");
-        setTimeout(() => {
+        getHotelName();
+        setCheckNetworkColor("green");
+        /*setTimeout(() => {
           setIsLoading(false);
           setVisibleSnackBar(true);
-        }, 3000);
+        }, 3000);*/
 
         return;
       } else {
@@ -518,6 +512,7 @@ export const SettingsScreen = () => {
       }, 3000);
     }
   };*/
+
   const checkTokenColor = userToken ? "green" : "red";
 
   return (
@@ -545,6 +540,7 @@ export const SettingsScreen = () => {
           onChangeText={(value) => {
             setServerAddress(value);
             setCheckNetworkColor("grey");
+            setUserToken("");
           }}
           style={{ width: "65%" }}
           //onSubmitEditing={() => Keyboard.dismiss()}
@@ -595,9 +591,11 @@ export const SettingsScreen = () => {
           value={hotelName}
           label={t("Settings.hotel_name")}
           placeholder={t("Settings.hotel_name")}
-          onChangeText={(value) => setHotelName(value)}
+          //onChangeText={(value) => setHotelName(value)}
           style={{ width: "65%" }}
-          right={
+          editable={false}
+
+          /*right={
             <TextInput.Icon
               icon={({ color, size }) => (
                 <MaterialCommunityIcons
@@ -608,7 +606,7 @@ export const SettingsScreen = () => {
                 />
               )}
             />
-          }
+          }*/
           //onBlur={() => Keyboard.dismiss()}
           //onSubmitEditing={() => Keyboard.dismiss()}
         />
@@ -632,7 +630,10 @@ export const SettingsScreen = () => {
           value={name}
           label={t("Settings.login_input_value")}
           placeholder={t("Settings.login_placeholder")}
-          onChangeText={(value) => setName(value)}
+          onChangeText={(value) => {
+            setName(value);
+            setUserToken("");
+          }}
           style={{ width: "65%" }}
           //onSubmitEditing={() => Keyboard.dismiss()}
           //onBlur={() => Keyboard.dismiss()}
@@ -658,7 +659,10 @@ export const SettingsScreen = () => {
           value={password}
           label={t("Settings.password_input_value")}
           placeholder={t("Settings.password_placeholder")}
-          onChangeText={(value) => setPassword(value)}
+          onChangeText={(value) => {
+            setPassword(value);
+            setUserToken("");
+          }}
           style={{ width: "65%" }}
           right={
             <TextInput.Icon
@@ -759,6 +763,7 @@ export const SettingsScreen = () => {
           loading={settingsIsLoading}
           mode="contained"
           onPress={saveSettings}
+          disabled={userToken ? false : true}
           //style={{ width: "55%" }}
         >
           {settingsIsLoading

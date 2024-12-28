@@ -1,4 +1,5 @@
 import { createContext, useContext } from "react";
+import { token } from "../API/route";
 
 export const SettingsContext = createContext([
   {
@@ -6,9 +7,8 @@ export const SettingsContext = createContext([
     serverAddress: "",
     defaultPointOfSales: "",
     defaultPocketCode: "",
-    user: { userName: "", userPassword: "" },
+    user: { userName: "", userPassword: "", token: "" },
     language: "",
-    token: "",
     isDefault: false,
     PropertyId: null,
   },
