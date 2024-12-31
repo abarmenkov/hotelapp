@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Keyboard,
+  SafeAreaView,
 } from "react-native";
 import {
   RadioButton,
@@ -515,277 +516,530 @@ export const SettingsScreen = () => {
 
   const checkTokenColor = userToken ? "green" : "red";
 
-  return (
-    <View style={{ flex: 1, alignItems: "center" }}>
-      <Text>{t("Settings.add_hotel")}</Text>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          //backgroundColor: "yellow",
-          width: "90%",
-          //height: "15%",
-          marginVertical: 15,
-          padding: 5,
-        }}
-      >
-        <Text>{t("Settings.server_address")}</Text>
-        <TextInput
-          mode="outlined"
-          //focused={true}
-          value={serverAddress}
-          label={t("Settings.server_address")}
-          placeholder={t("Settings.server_address")}
-          onChangeText={(value) => {
-            setServerAddress(value);
-            setCheckNetworkColor("grey");
-            setUserToken("");
+  const HeaderComponent = () => {
+    return (
+      <View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            //backgroundColor: "yellow",
+            //width: "90%",
+            //height: "15%",
+            marginVertical: 15,
+            padding: 5,
           }}
-          style={{ width: "65%" }}
-          //onSubmitEditing={() => Keyboard.dismiss()}
-          //onBlur={() => Keyboard.dismiss()}
-          //secureTextEntry
-          right={
-            !networkIsLoading ? (
-              <TextInput.Icon
-                icon={({ color, size }) => (
-                  <MaterialCommunityIcons
-                    name="check-network"
-                    color={checkNetworkColor}
-                    size={size}
-                    onPress={checkNetwork}
-                  />
-                )}
-              />
-            ) : (
-              <TextInput.Icon
-                icon={({ color, size }) => (
-                  <MaterialCommunityIcons
-                    name="loading"
-                    color={"green"}
-                    size={size}
-                  />
-                )}
-              />
-            )
-          }
-        />
-      </View>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          //backgroundColor: "yellow",
-          width: "90%",
-          //height: "15%",
-          marginVertical: 15,
-          padding: 5,
-        }}
-      >
-        <Text>{t("Settings.hotel_name")}</Text>
-        <TextInput
-          mode="outlined"
-          //focused={true}
-          value={hotelName}
-          label={t("Settings.hotel_name")}
-          placeholder={t("Settings.hotel_name")}
-          //onChangeText={(value) => setHotelName(value)}
-          style={{ width: "65%" }}
-          editable={false}
-
-          /*right={
-            <TextInput.Icon
-              icon={({ color, size }) => (
-                <MaterialCommunityIcons
-                  name="check-network"
-                  color={"green"}
-                  size={size}
-                  onPress={getHotelName}
+        >
+          <Text>{t("Settings.server_address")}</Text>
+          <TextInput
+            mode="outlined"
+            //focused={true}
+            value={serverAddress}
+            label={t("Settings.server_address")}
+            placeholder={t("Settings.server_address")}
+            onChangeText={(value) => {
+              setServerAddress(value);
+              setCheckNetworkColor("grey");
+              setUserToken("");
+            }}
+            style={{ width: "65%" }}
+            right={
+              !networkIsLoading ? (
+                <TextInput.Icon
+                  disabled={serverAddress ? false : true}
+                  icon={({ color, size }) => (
+                    <MaterialCommunityIcons
+                      name="check-network"
+                      color={checkNetworkColor}
+                      size={size}
+                      onPress={checkNetwork}
+                    />
+                  )}
                 />
-              )}
-            />
-          }*/
-          //onBlur={() => Keyboard.dismiss()}
-          //onSubmitEditing={() => Keyboard.dismiss()}
-        />
-      </View>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          //backgroundColor: "yellow",
-          width: "90%",
-          //height: "15%",
-          marginVertical: 15,
-          padding: 5,
-        }}
-      >
-        <Text>{t("Settings.login_text")}</Text>
-        <TextInput
-          mode="outlined"
-          //focused={true}
-          value={name}
-          label={t("Settings.login_input_value")}
-          placeholder={t("Settings.login_placeholder")}
-          onChangeText={(value) => {
-            setName(value);
-            setUserToken("");
-          }}
-          style={{ width: "65%" }}
-          //onSubmitEditing={() => Keyboard.dismiss()}
-          //onBlur={() => Keyboard.dismiss()}
-          //secureTextEntry
-        />
-      </View>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          //backgroundColor: "yellow",
-          width: "90%",
-          //height: "15%",
-          marginVertical: 15,
-          padding: 5,
-        }}
-      >
-        <Text>{t("Settings.password_text")}</Text>
-        <TextInput
-          mode="outlined"
-          //focused={true}
-          value={password}
-          label={t("Settings.password_input_value")}
-          placeholder={t("Settings.password_placeholder")}
-          onChangeText={(value) => {
-            setPassword(value);
-            setUserToken("");
-          }}
-          style={{ width: "65%" }}
-          right={
-            <TextInput.Icon
-              icon={({ color, size }) => (
-                <MaterialCommunityIcons
-                  name="account-check"
-                  color={checkTokenColor}
-                  size={size}
-                  onPress={getToken}
+              ) : (
+                <TextInput.Icon
+                  icon={({ color, size }) => (
+                    <MaterialCommunityIcons
+                      name="loading"
+                      color={"green"}
+                      size={size}
+                    />
+                  )}
                 />
-              )}
-            />
-          }
-          //onSubmitEditing={() => Keyboard.dismiss()}
-          //onBlur={() => Keyboard.dismiss()}
-          //secureTextEntry
-        />
-      </View>
-      <TouchableRipple onPress={() => setIsHotelDefault(!isHotelDefault)}>
-        <View style={{ ...styles.preference, width: "90%" }}>
-          <Text style={styles.preferenceTitle}>
-            {t("Settings.defaulthotel")}
-          </Text>
-
-          <Switch
-            color={theme.colors.primary}
-            value={isHotelDefault}
-            onValueChange={() => setIsHotelDefault(!isHotelDefault)}
+              )
+            }
           />
         </View>
-      </TouchableRipple>
-      <View
-        style={{
-          flexDirection: "row",
-          //backgroundColor: "red",
-          alignItems: "center",
-          width: "90%",
-          justifyContent: "space-between",
-          padding: 5,
-        }}
-      >
-        <Text>{t("Settings.select_language")}</Text>
-
-        <View style={styles.container}>
-          <Picker
-            ref={pickerRef}
-            mode="dropdown"
-            //mode="dialog"
-            selectedValue={selectedLanguage}
-            onValueChange={handleLanguageChange}
-            style={styles.pickerStyles}
-            dropdownIconColor={"red"}
-            dropdownIconRippleColor={"yellow"}
-            prompt="Выберите язык" // header окна в режиме dialog
-          >
-            {sortedLanguages.map((item) => (
-              <Picker.Item
-                key={supportedLngs[item].code}
-                label={supportedLngs[item].locale}
-                value={item}
-                style={{
-                  color:
-                    appLanguage === supportedLngs[item].code ? "green" : "blue",
-                }}
-              />
-            ))}
-          </Picker>
-        </View>
-      </View>
-
-      <View style={{ width: "90%", padding: 5, marginVertical: 10 }}>
-        <Text>{t("Settings.point_of_sale")}</Text>
-        <FlatList
-          data={activePointOfSales}
-          renderItem={renderPointOfSaleItem}
-          removeClippedSubviews={true}
-          //initialNumToRender={15}
-          keyExtractor={(item) => item.Id}
-          keyboardShouldPersistTaps={"handled"}
-          //justifyContent="space-between"
-          //contentContainerStyle={{ alignItems: "center" }}
-        />
-      </View>
-      <View style={{ width: "90%", padding: 5 }}>
-        <Text>{t("Settings.default_folio_pocket")}</Text>
-        <FlatList
-          data={activeFolioPockets}
-          renderItem={renderFolioPocketItem}
-          removeClippedSubviews={true}
-          //initialNumToRender={15}
-          keyExtractor={(item) => item.Id}
-          keyboardShouldPersistTaps={"handled"}
-          //justifyContent="space-between"
-        />
-      </View>
-      <View style={{ width: "25%" }}>
-        <Button
-          loading={settingsIsLoading}
-          mode="contained"
-          onPress={saveSettings}
-          disabled={userToken ? false : true}
-          //style={{ width: "55%" }}
-        >
-          {settingsIsLoading
-            ? `${t("Settings.saving_settings")}`
-            : `${t("Settings.save_settings")}`}
-        </Button>
-      </View>
-      <Portal>
-        <Snackbar
-          visible={visibleSnackBar}
-          duration={2000}
-          onDismiss={() => {
-            setVisibleSnackBar(false);
-            setErrorFlag(false);
-            setNetworkError(false);
-            setNetworkCheck(false);
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            //backgroundColor: "yellow",
+            //width: "90%",
+            //height: "15%",
+            marginVertical: 15,
+            padding: 5,
           }}
         >
-          {snackbarMessage}
-        </Snackbar>
-      </Portal>
-    </View>
+          <Text>{t("Settings.hotel_name")}</Text>
+          <TextInput
+            mode="outlined"
+            //focused={true}
+            value={hotelName}
+            label={t("Settings.hotel_name")}
+            placeholder={t("Settings.hotel_name")}
+            //onChangeText={(value) => setHotelName(value)}
+            style={{ width: "65%" }}
+            editable={false}
+          />
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            //backgroundColor: "yellow",
+            //width: "90%",
+            //height: "15%",
+            marginVertical: 15,
+            padding: 5,
+          }}
+        >
+          <Text>{t("Settings.login_text")}</Text>
+          <TextInput
+            mode="outlined"
+            //focused={true}
+            value={name}
+            label={t("Settings.login_input_value")}
+            placeholder={t("Settings.login_placeholder")}
+            onChangeText={(value) => {
+              setName(value);
+              setUserToken("");
+            }}
+            style={{ width: "65%" }}
+            //onSubmitEditing={() => Keyboard.dismiss()}
+            //onBlur={() => Keyboard.dismiss()}
+            //secureTextEntry
+          />
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            //backgroundColor: "yellow",
+            //idth: "90%",
+            //height: "15%",
+            marginVertical: 5,
+            padding: 5,
+          }}
+        >
+          <Text>{t("Settings.password_text")}</Text>
+          <TextInput
+            mode="outlined"
+            //focused={true}
+            value={password}
+            label={t("Settings.password_input_value")}
+            placeholder={t("Settings.password_placeholder")}
+            onChangeText={(value) => {
+              setPassword(value);
+              setUserToken("");
+            }}
+            style={{ width: "65%" }}
+            right={
+              <TextInput.Icon
+                icon={({ color, size }) => (
+                  <MaterialCommunityIcons
+                    disabled={serverAddress && password && name ? false : true}
+                    name="account-check"
+                    color={checkTokenColor}
+                    size={size}
+                    onPress={getToken}
+                  />
+                )}
+              />
+            }
+            //onSubmitEditing={() => Keyboard.dismiss()}
+            //onBlur={() => Keyboard.dismiss()}
+            //secureTextEntry
+          />
+        </View>
+        <TouchableRipple onPress={() => setIsHotelDefault(!isHotelDefault)}>
+          <View style={{ ...styles.preference, width: "100%" }}>
+            <Text style={styles.preferenceTitle}>
+              {t("Settings.defaulthotel")}
+            </Text>
+
+            <Switch
+              color={theme.colors.primary}
+              value={isHotelDefault}
+              onValueChange={() => setIsHotelDefault(!isHotelDefault)}
+            />
+          </View>
+        </TouchableRipple>
+        <View
+          style={{
+            flexDirection: "row",
+            //backgroundColor: "red",
+            alignItems: "center",
+            //width: "90%",
+            justifyContent: "space-between",
+            padding: 5,
+          }}
+        >
+          <Text>{t("Settings.select_language")}</Text>
+
+          <View style={styles.container}>
+            <Picker
+              ref={pickerRef}
+              mode="dropdown"
+              //mode="dialog"
+              selectedValue={selectedLanguage}
+              onValueChange={handleLanguageChange}
+              style={styles.pickerStyles}
+              dropdownIconColor={"red"}
+              dropdownIconRippleColor={"yellow"}
+              prompt="Выберите язык" // header окна в режиме dialog
+            >
+              {sortedLanguages.map((item) => (
+                <Picker.Item
+                  key={supportedLngs[item].code}
+                  label={supportedLngs[item].locale}
+                  value={item}
+                  style={{
+                    color:
+                      appLanguage === supportedLngs[item].code
+                        ? "green"
+                        : "blue",
+                  }}
+                />
+              ))}
+            </Picker>
+          </View>
+        </View>
+        <View>
+          <Text>{t("Settings.point_of_sale")}</Text>
+        </View>
+      </View>
+    );
+  };
+
+  const FooterComponent = () => {
+    return (
+      <View style={{ flex: 1, alignItems: "center", marginBottom: 35  }}>
+        <View >
+          <Text>{t("Settings.default_folio_pocket")}</Text>
+          <FlatList
+            data={activeFolioPockets}
+            renderItem={renderFolioPocketItem}
+            removeClippedSubviews={true}
+            //initialNumToRender={15}
+            keyExtractor={(item) => item.Id}
+            keyboardShouldPersistTaps={"handled"}
+            //justifyContent="space-between"
+          />
+        </View>
+        <View style={{ width: "45%" }}>
+          <Button
+            loading={settingsIsLoading}
+            mode="contained"
+            onPress={saveSettings}
+            disabled={userToken ? false : true}
+            //style={{ width: "55%" }}
+          >
+            {settingsIsLoading
+              ? `${t("Settings.saving_settings")}`
+              : `${t("Settings.save_settings")}`}
+          </Button>
+        </View>
+        <Portal>
+          <Snackbar
+            visible={visibleSnackBar}
+            duration={2000}
+            onDismiss={() => {
+              setVisibleSnackBar(false);
+              setErrorFlag(false);
+              setNetworkError(false);
+              setNetworkCheck(false);
+            }}
+          >
+            {snackbarMessage}
+          </Snackbar>
+        </Portal>
+      </View>
+    );
+  };
+
+  return (
+    
+      <View style={{ flex: 1, alignItems: "center" }}>
+        <Text>{t("Settings.add_hotel")}</Text>
+        {/*<View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            //backgroundColor: "yellow",
+            width: "90%",
+            //height: "15%",
+            marginVertical: 15,
+            padding: 5,
+          }}
+        >
+          <Text>{t("Settings.server_address")}</Text>
+          <TextInput
+            mode="outlined"
+            //focused={true}
+            value={serverAddress}
+            label={t("Settings.server_address")}
+            placeholder={t("Settings.server_address")}
+            onChangeText={(value) => {
+              setServerAddress(value);
+              setCheckNetworkColor("grey");
+              setUserToken("");
+            }}
+            style={{ width: "65%" }}
+            //onSubmitEditing={() => Keyboard.dismiss()}
+            //onBlur={() => Keyboard.dismiss()}
+            //secureTextEntry
+            right={
+              !networkIsLoading ? (
+                <TextInput.Icon
+                  disabled={serverAddress ? false : true}
+                  icon={({ color, size }) => (
+                    <MaterialCommunityIcons
+                      name="check-network"
+                      color={checkNetworkColor}
+                      size={size}
+                      onPress={checkNetwork}
+                    />
+                  )}
+                />
+              ) : (
+                <TextInput.Icon
+                  icon={({ color, size }) => (
+                    <MaterialCommunityIcons
+                      name="loading"
+                      color={"green"}
+                      size={size}
+                    />
+                  )}
+                />
+              )
+            }
+          />
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            //backgroundColor: "yellow",
+            width: "90%",
+            //height: "15%",
+            marginVertical: 15,
+            padding: 5,
+          }}
+        >
+          <Text>{t("Settings.hotel_name")}</Text>
+          <TextInput
+            mode="outlined"
+            //focused={true}
+            value={hotelName}
+            label={t("Settings.hotel_name")}
+            placeholder={t("Settings.hotel_name")}
+            //onChangeText={(value) => setHotelName(value)}
+            style={{ width: "65%" }}
+            editable={false}
+
+
+            //onBlur={() => Keyboard.dismiss()}
+            //onSubmitEditing={() => Keyboard.dismiss()}
+          />
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            //backgroundColor: "yellow",
+            width: "90%",
+            //height: "15%",
+            marginVertical: 15,
+            padding: 5,
+          }}
+        >
+          <Text>{t("Settings.login_text")}</Text>
+          <TextInput
+            mode="outlined"
+            //focused={true}
+            value={name}
+            label={t("Settings.login_input_value")}
+            placeholder={t("Settings.login_placeholder")}
+            onChangeText={(value) => {
+              setName(value);
+              setUserToken("");
+            }}
+            style={{ width: "65%" }}
+            //onSubmitEditing={() => Keyboard.dismiss()}
+            //onBlur={() => Keyboard.dismiss()}
+            //secureTextEntry
+          />
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            //backgroundColor: "yellow",
+            width: "90%",
+            //height: "15%",
+            marginVertical: 5,
+            padding: 5,
+          }}
+        >
+          <Text>{t("Settings.password_text")}</Text>
+          <TextInput
+            mode="outlined"
+            //focused={true}
+            value={password}
+            label={t("Settings.password_input_value")}
+            placeholder={t("Settings.password_placeholder")}
+            onChangeText={(value) => {
+              setPassword(value);
+              setUserToken("");
+            }}
+            style={{ width: "65%" }}
+            right={
+              <TextInput.Icon
+                icon={({ color, size }) => (
+                  <MaterialCommunityIcons
+                    disabled={serverAddress && password && name ? false : true}
+                    name="account-check"
+                    color={checkTokenColor}
+                    size={size}
+                    onPress={getToken}
+                  />
+                )}
+              />
+            }
+            //onSubmitEditing={() => Keyboard.dismiss()}
+            //onBlur={() => Keyboard.dismiss()}
+            //secureTextEntry
+          />
+        </View>
+        <TouchableRipple onPress={() => setIsHotelDefault(!isHotelDefault)}>
+          <View style={{ ...styles.preference, width: "90%" }}>
+            <Text style={styles.preferenceTitle}>
+              {t("Settings.defaulthotel")}
+            </Text>
+
+            <Switch
+              color={theme.colors.primary}
+              value={isHotelDefault}
+              onValueChange={() => setIsHotelDefault(!isHotelDefault)}
+            />
+          </View>
+        </TouchableRipple>
+        <View
+          style={{
+            flexDirection: "row",
+            //backgroundColor: "red",
+            alignItems: "center",
+            width: "90%",
+            justifyContent: "space-between",
+            padding: 5,
+          }}
+        >
+          <Text>{t("Settings.select_language")}</Text>
+
+          <View style={styles.container}>
+            <Picker
+              ref={pickerRef}
+              mode="dropdown"
+              //mode="dialog"
+              selectedValue={selectedLanguage}
+              onValueChange={handleLanguageChange}
+              style={styles.pickerStyles}
+              dropdownIconColor={"red"}
+              dropdownIconRippleColor={"yellow"}
+              prompt="Выберите язык" // header окна в режиме dialog
+            >
+              {sortedLanguages.map((item) => (
+                <Picker.Item
+                  key={supportedLngs[item].code}
+                  label={supportedLngs[item].locale}
+                  value={item}
+                  style={{
+                    color:
+                      appLanguage === supportedLngs[item].code
+                        ? "green"
+                        : "blue",
+                  }}
+                />
+              ))}
+            </Picker>
+          </View>
+        </View>*/}
+
+        <View style={{ width: "95%"}}>
+          {/*<Text>{t("Settings.point_of_sale")}</Text>*/}
+          <FlatList
+            data={activePointOfSales}
+            renderItem={renderPointOfSaleItem}
+            removeClippedSubviews={true}
+            //initialNumToRender={15}
+            keyExtractor={(item) => item.Id}
+            keyboardShouldPersistTaps={"handled"}
+            ListHeaderComponent={() => <HeaderComponent />}
+            ListFooterComponent={() => <FooterComponent />}
+            //justifyContent="space-between"
+            //contentContainerStyle={{ alignItems: "center" }}
+          />
+        </View>
+        {/*<View style={{ width: "90%", padding: 5 }}>
+          <Text>{t("Settings.default_folio_pocket")}</Text>
+          <FlatList
+            data={activeFolioPockets}
+            renderItem={renderFolioPocketItem}
+            removeClippedSubviews={true}
+            //initialNumToRender={15}
+            keyExtractor={(item) => item.Id}
+            keyboardShouldPersistTaps={"handled"}
+            //justifyContent="space-between"
+          />
+        </View>
+        <View style={{ width: "25%" }}>
+          <Button
+            loading={settingsIsLoading}
+            mode="contained"
+            onPress={saveSettings}
+            disabled={userToken ? false : true}
+            //style={{ width: "55%" }}
+          >
+            {settingsIsLoading
+              ? `${t("Settings.saving_settings")}`
+              : `${t("Settings.save_settings")}`}
+          </Button>
+        </View>
+        <Portal>
+          <Snackbar
+            visible={visibleSnackBar}
+            duration={2000}
+            onDismiss={() => {
+              setVisibleSnackBar(false);
+              setErrorFlag(false);
+              setNetworkError(false);
+              setNetworkCheck(false);
+            }}
+          >
+            {snackbarMessage}
+          </Snackbar>
+        </Portal>*/}
+      </View>
+    
   );
 };
 
