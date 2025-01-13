@@ -12,6 +12,9 @@ const en = {
     LoginScreen: {
       login_placeholder: "Enter your login",
       password_placeholder: "Enter your password",
+      login: "Name",
+      password: "Password",
+      hotel_name: "Hotel",
     },
     DrawerContent: {
       settings: "Settings",

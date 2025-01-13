@@ -204,7 +204,7 @@ export const SettingsScreen = () => {
             justifyContent: "space-between",
             width: "100%",
             paddingHorizontal: 5,
-            height: 18,
+            height: 16,
             //backgroundColor: "yellow",
           }}
         >
@@ -238,7 +238,7 @@ export const SettingsScreen = () => {
             justifyContent: "space-between",
             width: "100%",
             paddingHorizontal: 5,
-            height: 18,
+            height: 16,
           }}
         >
           <Text>{item.Code}</Text>
@@ -255,8 +255,6 @@ export const SettingsScreen = () => {
       </TouchableRipple>
     );
   };
-
-
 
   const saveSettings = () => {
     Keyboard.dismiss();
@@ -523,10 +521,9 @@ export const SettingsScreen = () => {
 
   const checkTokenColor = userToken ? "green" : "red";
 
-
   /*const renderPointOfSaleItem = ({ item }) => <PointOfSalesItem item={item} />;
   const renderFolioPocketItem = ({ item }) => <FolioPocketItem item={item} />;
-  
+
   const HeaderComponent = () => {
     return (
       <View>
@@ -811,7 +808,6 @@ export const SettingsScreen = () => {
         >
           {activePointOfSales.map((item) => (
             <List.Item
-              contentStyle={{ color: "red" }}
               title={() => <PointOfSalesItem item={item} />}
               key={item.Id}
             />

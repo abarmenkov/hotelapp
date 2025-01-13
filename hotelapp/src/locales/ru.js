@@ -12,6 +12,9 @@ const ru = {
     LoginScreen: {
       login_placeholder: "Введите Ваш логин",
       password_placeholder: "Введите Ваш пароль",
+      login: "Логин",
+      password: "Пароль",
+      hotel_name: "Название отеля",
     },
     DrawerContent: {
       settings: "Настройки",
