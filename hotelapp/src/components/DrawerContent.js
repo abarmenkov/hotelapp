@@ -110,9 +110,7 @@ export const DrawerContent = (props) => {
           <DrawerItemList {...props} />
         </Drawer.Section>
         <Drawer.Section
-          title={
-            <Text style={styles.settings}>{t("DrawerContent.settings")}</Text>
-          }
+          //title={<Text style={styles.settings}>{t("DrawerContent.settings")}</Text>}
           style={styles.drawerSection}
         >
           <TouchableRipple

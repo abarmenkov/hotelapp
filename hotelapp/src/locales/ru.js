@@ -10,8 +10,8 @@ const ru = {
       },
     },
     LoginScreen: {
-      login_placeholder: "Введите Ваш логин",
-      password_placeholder: "Введите Ваш пароль",
+      login_placeholder: "Логин",
+      password_placeholder: "Пароль",
       login: "Логин",
       password: "Пароль",
       hotel_name: "Название отеля",
@@ -41,8 +41,8 @@ const ru = {
     Settings: {
       add_hotel: "Добавить отель",
       select_language: "Выбрать язык по умолчанию",
-      hotel_name: "Название Отеля",
-      server_address: "Адрес сервера",
+      hotel_name: "Отель",
+      server_address: "Сервер",
       point_of_sale: "Точки отпуска услуг",
       default_folio_pocket: "Карман счета для начисления по умолчанию",
       save_settings: "Сохранить",

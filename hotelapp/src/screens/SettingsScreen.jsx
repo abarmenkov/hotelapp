@@ -29,7 +29,11 @@ import { token } from "../API/route";
 import { fetchData } from "../API/FetchData";
 import { saveData } from "../API/asyncStorageMethods";
 
-import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import {
+  MaterialCommunityIcons,
+  MaterialIcons,
+  FontAwesome,
+} from "@expo/vector-icons";
 import axios from "axios";
 import { SettingsContext } from "../context/SettingsContext";
 import { ScrollView } from "react-native-gesture-handler";
@@ -196,6 +200,7 @@ export const SettingsScreen = () => {
           setPointOfSalesChecked(item.Id);
           //setDefaultPointOfSales(item.Id);
         }}
+        //rippleColor={"yellow"}
       >
         <View
           style={{
@@ -204,7 +209,6 @@ export const SettingsScreen = () => {
             justifyContent: "space-between",
             width: "100%",
             paddingHorizontal: 5,
-            height: 16,
             //backgroundColor: "yellow",
           }}
         >
@@ -230,6 +234,8 @@ export const SettingsScreen = () => {
           setFolioPocketChecked(item.Code);
           //setDefaultPocketCode(item.Code);
         }}
+        //rippleColor={"yellow"}
+        //style={{ backgroundColor: "green" }}
       >
         <View
           style={{
@@ -238,10 +244,14 @@ export const SettingsScreen = () => {
             justifyContent: "space-between",
             width: "100%",
             paddingHorizontal: 5,
-            height: 16,
+            //height: 18,
+            //backgroundColor: "yellow",
+            //fontSize: 12,
+            //marginVertical: 0,
+            //padding: 0,
           }}
         >
-          <Text>{item.Code}</Text>
+          <Text style={{ fontSize: 12 }}>{item.Code}</Text>
           <RadioButton
             value={item.Code}
             status={checkedFolioPocket === item.Code ? "checked" : "unchecked"}
@@ -250,6 +260,7 @@ export const SettingsScreen = () => {
               setFolioPocketChecked(item.Code);
               //setDefaultPocketCode(item.Code);
             }}
+            //style={{ fontSize: 12 }}
           />
         </View>
       </TouchableRipple>
@@ -754,76 +765,131 @@ export const SettingsScreen = () => {
           />
         </View>
       </TouchableRipple>
-      <View
-        style={{
-          flexDirection: "row",
-          //backgroundColor: "red",
-          alignItems: "center",
-          width: "90%",
-          justifyContent: "space-between",
-          padding: 5,
-        }}
-      >
-        <Text>{t("Settings.select_language")}</Text>
+      <TouchableRipple onPress={() => openPicker()}>
+        <View
+          style={{
+            flexDirection: "row",
+            //backgroundColor: "red",
+            alignItems: "center",
+            width: "90%",
+            justifyContent: "space-between",
+            padding: 5,
+          }}
+        >
+          <Text>{t("Settings.select_language")}</Text>
 
-        <View style={styles.container}>
-          <Picker
-            ref={pickerRef}
-            mode="dropdown"
-            //mode="dialog"
-            selectedValue={selectedLanguage}
-            onValueChange={handleLanguageChange}
-            style={styles.pickerStyles}
-            dropdownIconColor={"red"}
-            dropdownIconRippleColor={"yellow"}
-            prompt="Выберите язык" // header окна в режиме dialog
-          >
-            {sortedLanguages.map((item) => (
-              <Picker.Item
-                key={supportedLngs[item].code}
-                label={supportedLngs[item].locale}
-                value={item}
-                style={{
-                  color:
-                    appLanguage === supportedLngs[item].code ? "green" : "blue",
-                }}
-              />
-            ))}
-          </Picker>
+          <View style={styles.pickerContainer}>
+            <Picker
+              ref={pickerRef}
+              mode="dropdown"
+              //mode="dialog"
+              
+              selectedValue={selectedLanguage}
+              onValueChange={handleLanguageChange}
+              style={styles.pickerStyles}
+              dropdownIconColor={theme.colors.primary}
+              dropdownIconRippleColor={"yellow"}
+              prompt="Выберите язык" // header окна в режиме dialog
+            >
+              {sortedLanguages.map((item) => (
+                <Picker.Item
+                  key={supportedLngs[item].code}
+                  label={supportedLngs[item].locale}
+                  value={item}
+                  style={{
+                    color:
+                      appLanguage === supportedLngs[item].code
+                        ? theme.colors.primary
+                        : 'black',
+                    fontSize: 14,
+                  }}
+                />
+              ))}
+            </Picker>
+          </View>
         </View>
-      </View>
+      </TouchableRipple>
 
-      <ScrollView style={{ width: "95%", paddingHorizontal: 5 }}>
+      <ScrollView style={{ width: "95%", paddingHorizontal: 0 }}>
         <List.Accordion
           title={t("Settings.point_of_sale")}
+          //theme={{ colors: theme.colors.onSurface }}
+          titleStyle={{
+            fontSize: 14,
+            //color: !expandedPointOfSaleSection ? theme.colors.onSurface : theme.colors.primary,
+          }}
           expanded={expandedPointOfSaleSection}
           onPress={() =>
             setExpandedPointOfSaleSection(!expandedPointOfSaleSection)
           }
-          style={{
-            width: "100%",
-            //alignItems: "center",
-            //FjustifyContent: "space-between",
-          }}
+          right={(props) => (
+            <List.Icon
+              {...props}
+              icon={({ color, size }) => (
+                <MaterialCommunityIcons
+                  name={
+                    !expandedPointOfSaleSection ? "chevron-down" : "chevron-up"
+                  }
+                  size={24}
+                  color={
+                    !expandedPointOfSaleSection
+                      ? theme.colors.onSurface
+                      : theme.colors.primary
+                  }
+                />
+              )}
+              //color={"green"}
+              //style={{ color: "green" }}
+            />
+          )}
         >
           {activePointOfSales.map((item) => (
             <List.Item
               title={() => <PointOfSalesItem item={item} />}
               key={item.Id}
+              contentStyle={{
+                marginVertical: -15,
+              }}
             />
           ))}
         </List.Accordion>
         <List.Accordion
           title={t("Settings.default_folio_pocket")}
+          titleStyle={{ fontSize: 14 }}
+          //rippleColor={"green"}
           expanded={expandedFolioPocketsSection}
           onPress={() =>
             setExpandedFolioPocketsSection(!expandedFolioPocketsSection)
           }
+          right={(props) => (
+            <List.Icon
+              {...props}
+              icon={({ color, size }) => (
+                <MaterialCommunityIcons
+                  name={
+                    !expandedFolioPocketsSection ? "chevron-down" : "chevron-up"
+                  }
+                  size={24}
+                  color={
+                    !expandedFolioPocketsSection
+                      ? theme.colors.onSurface
+                      : theme.colors.primary
+                  }
+                  //color={color}
+                />
+              )}
+              //color={"green"}
+              //style={{ color: "red",textAlign:'center' }}
+            />
+          )}
           //style={{ width: "90%" }}
         >
           {activeFolioPockets.map((item) => (
             <List.Item
               title={() => <FolioPocketItem item={item} />}
+              contentStyle={{
+                marginVertical: -15,
+              }}
               key={item.Id}
             />
           ))}
@@ -895,8 +961,8 @@ export const SettingsScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "lightgrey",
+  pickerContainer: {
+    //backgroundColor: "lightgrey",
     alignItems: "center",
     justifyContent: "center",
     marginVertical: 5,
@@ -904,8 +970,9 @@ const styles = StyleSheet.create({
   pickerStyles: {
     //width: "90%",
     //backgroundColor: "green",
-    color: "green",
-    width: 135,
+    //color: "green",
+    fontSize: 12,
+    width: 140,
     //padding: 15,
   },
   preference: {
