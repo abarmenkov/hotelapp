@@ -66,6 +66,7 @@ export const DrawerContent = (props) => {
     setTimeout(() => navigation.closeDrawer(), 1000);
   };
 
+  useEffect(() => setSelectedLanguage(appLanguage), [i18n.language]);
   /*useEffect(() => {
     const saveTheme = async () => {
       try {

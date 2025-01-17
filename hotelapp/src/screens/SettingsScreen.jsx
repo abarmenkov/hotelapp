@@ -176,6 +176,8 @@ export const SettingsScreen = () => {
     setSelectedLanguage(value);
     i18n.changeLanguage(value);
   };
+
+  useEffect(() => setSelectedLanguage(appLanguage), [i18n.language]);
   const pickerRef = useRef();
 
   const openPicker = () => pickerRef.current.focus();
@@ -783,7 +785,7 @@ export const SettingsScreen = () => {
               ref={pickerRef}
               mode="dropdown"
               //mode="dialog"
-              
+
               selectedValue={selectedLanguage}
               onValueChange={handleLanguageChange}
               style={styles.pickerStyles}
@@ -800,7 +802,7 @@ export const SettingsScreen = () => {
                     color:
                       appLanguage === supportedLngs[item].code
                         ? theme.colors.primary
-                        : 'black',
+                        : "black",
                     fontSize: 14,
                   }}
                 />
