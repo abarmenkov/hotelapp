@@ -148,6 +148,7 @@ export const DrawerContent = (props) => {
               <Text style={styles.preferenceTitle}>
                 {t("DrawerContent.select_language")}
               </Text>
+              
               <View>
                 <Picker
                   ref={pickerRef}

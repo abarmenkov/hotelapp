@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Keyboard,
   SafeAreaView,
+  ScrollView,
 } from "react-native";
 import {
   RadioButton,
@@ -36,7 +37,9 @@ import {
 } from "@expo/vector-icons";
 import axios from "axios";
 import { SettingsContext } from "../context/SettingsContext";
-import { ScrollView } from "react-native-gesture-handler";
+//import { ScrollView } from "react-native-gesture-handler";
+import { LanguagePicker } from "../components/Languagepicker";
+import { AppStyles, WIDTH } from "../utils/constants";
 
 export const SettingsScreen = () => {
   const theme = useTheme();
@@ -179,6 +182,7 @@ export const SettingsScreen = () => {
 
   useEffect(() => setSelectedLanguage(appLanguage), [i18n.language]);
   const pickerRef = useRef();
+  const pickerRefTest = useRef();
 
   const openPicker = () => pickerRef.current.focus();
 
@@ -756,9 +760,15 @@ export const SettingsScreen = () => {
       </View>
       <TouchableRipple onPress={() => setIsHotelDefault(!isHotelDefault)}>
         <View style={{ ...styles.preference, width: "90%" }}>
-          <Text style={styles.preferenceTitle}>
-            {t("Settings.defaulthotel")}
-          </Text>
+          <View style={{ width: "60%" }}>
+            <Text
+              style={styles.preferenceTitle}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {t("Settings.defaulthotel")}
+            </Text>
+          </View>
 
           <Switch
             color={theme.colors.primary}
@@ -778,7 +788,11 @@ export const SettingsScreen = () => {
             padding: 5,
           }}
         >
-          <Text>{t("Settings.select_language")}</Text>
+          <View style={{ width: "60%" }}>
+            <Text numberOfLines={1} ellipsizeMode="tail">
+              {t("Settings.select_language")}
+            </Text>
+          </View>
 
           <View style={styles.pickerContainer}>
             <Picker
@@ -811,8 +825,14 @@ export const SettingsScreen = () => {
           </View>
         </View>
       </TouchableRipple>
+      <LanguagePicker
+        ref={pickerRefTest}
+        lngPickerStyle={styles.lngPickerStyle}
+        lngPickerContainerStyle={styles.lngPickerContainerStyle}
+        lngPickerViewStyle={styles.lngPickerViewStyle}
+      />
 
-      <ScrollView style={{ width: "95%", paddingHorizontal: 0 }}>
+      <ScrollView style={{ width: "95%", paddingHorizontal: 5 }}>
         <List.Accordion
           title={t("Settings.point_of_sale")}
           //theme={{ colors: theme.colors.onSurface }}
@@ -965,16 +985,20 @@ export const SettingsScreen = () => {
 const styles = StyleSheet.create({
   pickerContainer: {
     //backgroundColor: "lightgrey",
-    alignItems: "center",
+    alignItems: "flex-end",
     justifyContent: "center",
     marginVertical: 5,
+    width: "40%",
+    //backgroundColor: "red",
+    //width: "50%",
   },
   pickerStyles: {
     //width: "90%",
     //backgroundColor: "green",
     //color: "green",
     fontSize: 12,
-    width: 140,
+    width: "90%",
+    //width: 140,
     //padding: 15,
   },
   preference: {
@@ -985,4 +1009,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
   },
   preferenceTitle: { fontSize: 14 },
+
+  lngPickerContainerStyle: {
+    width: "40%",
+    //backgroundColor: "red",
+  },
+  lngPickerStyle: {
+    width: "90%",
+  },
+  lngPickerViewStyle: {
+    width: "90%",
+    //backgroundColor: "yellow",
+  },
 });

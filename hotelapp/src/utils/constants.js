@@ -1,4 +1,6 @@
 import { Dimensions, StyleSheet } from "react-native";
+import { create } from "./normalize";
+//import { longPressGestureHandlerProps } from "react-native-gesture-handler/lib/typescript/handlers/LongPressGestureHandler";
 
 export const appDarkColors = {
   colors: {
@@ -92,7 +94,7 @@ export const appDefaultColors = {
 
 export const WIDTH = Dimensions.get("window").width;
 
-export const AppStyles = StyleSheet.create({
+export const AppStyles = create({
   container: {
     flex: 1,
     flexDirection: "column",
@@ -141,5 +143,22 @@ export const AppStyles = StyleSheet.create({
     borderRadius: 12,
     marginHorizontal: 12,
     textAlign: "center",
+  },
+  lngPickerView: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: 5,
+  },
+  lngPickerTitle: {},
+  lngPickerContainer: {
+    alignItems: "flex-end",
+    marginVertical: 5,
+  },
+  lngPicker: {
+    fontSize: 12,
+  },
+  lngPickerItem: {
+    fontSize: 14,
   },
 });
