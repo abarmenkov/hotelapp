@@ -13,6 +13,7 @@ export const LanguagePicker = forwardRef(
       lngPickerStyle,
       lngPickerItemStyle,
       lngPickerTitleStyle,
+      lngPickerTitleViewStyle,
       ...otherProps
     },
     ref
@@ -48,9 +49,17 @@ export const LanguagePicker = forwardRef(
             ...lngPickerViewStyle,
           }}
         >
-          <View style={{ width: "60%" }}>
+          <View
+            style={{
+              ...AppStyles.lngPickerTitleView,
+              ...lngPickerTitleViewStyle,
+            }}
+          >
             <Text
-              style={{ ...AppStyles.lngPickerTitle, ...lngPickerTitleStyle }}
+              style={{
+                ...AppStyles.lngPickerTitle,
+                ...lngPickerTitleStyle,
+              }}
               numberOfLines={1}
               ellipsizeMode="tail"
             >

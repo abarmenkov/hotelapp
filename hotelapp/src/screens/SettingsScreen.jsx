@@ -23,28 +23,21 @@ import {
 } from "react-native-paper";
 import { useTranslation } from "react-i18next";
 //import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Picker } from "@react-native-picker/picker";
 import { postData } from "../API/PostData";
 import { appRoutes } from "../API/route";
 import { token } from "../API/route";
 import { fetchData } from "../API/FetchData";
 import { saveData } from "../API/asyncStorageMethods";
 
-import {
-  MaterialCommunityIcons,
-  MaterialIcons,
-  FontAwesome,
-} from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import axios from "axios";
 import { SettingsContext } from "../context/SettingsContext";
-//import { ScrollView } from "react-native-gesture-handler";
-import { LanguagePicker } from "../components/Languagepicker";
+import { LanguagePicker } from "../components/LanguagePicker";
 import { AppStyles, WIDTH } from "../utils/constants";
 
 export const SettingsScreen = () => {
   const theme = useTheme();
   const { t } = useTranslation();
-  const { i18n } = useTranslation();
 
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setErrorFlag] = useState(false);
@@ -166,27 +159,7 @@ export const SettingsScreen = () => {
     (item) => item.IsActive && !item.DeletedDate
   );
 
-  const supportedLngs = i18n.services.resourceStore.data;
-  const languageKeys = Object.keys(supportedLngs);
-  const appLanguage = i18n.language;
-  const sortedLanguages = [
-    ...languageKeys.filter((item) => item === appLanguage),
-    ...languageKeys.filter((item) => item !== appLanguage),
-  ];
-  const [selectedLanguage, setSelectedLanguage] = useState(appLanguage);
-
-  const handleLanguageChange = (value, index) => {
-    setSelectedLanguage(value);
-    i18n.changeLanguage(value);
-  };
-
-  useEffect(() => setSelectedLanguage(appLanguage), [i18n.language]);
   const pickerRef = useRef();
-  const pickerRefTest = useRef();
-
-  const openPicker = () => pickerRef.current.focus();
-
-  const closePicker = () => pickerRef.current.blur();
 
   //const checkNetworkColor = hasError ? "red" : "green";
   const snackbarMessage =
@@ -777,59 +750,13 @@ export const SettingsScreen = () => {
           />
         </View>
       </TouchableRipple>
-      <TouchableRipple onPress={() => openPicker()}>
-        <View
-          style={{
-            flexDirection: "row",
-            //backgroundColor: "red",
-            alignItems: "center",
-            width: "90%",
-            justifyContent: "space-between",
-            padding: 5,
-          }}
-        >
-          <View style={{ width: "60%" }}>
-            <Text numberOfLines={1} ellipsizeMode="tail">
-              {t("Settings.select_language")}
-            </Text>
-          </View>
 
-          <View style={styles.pickerContainer}>
-            <Picker
-              ref={pickerRef}
-              mode="dropdown"
-              //mode="dialog"
-
-              selectedValue={selectedLanguage}
-              onValueChange={handleLanguageChange}
-              style={styles.pickerStyles}
-              dropdownIconColor={theme.colors.primary}
-              dropdownIconRippleColor={"yellow"}
-              prompt="Выберите язык" // header окна в режиме dialog
-            >
-              {sortedLanguages.map((item) => (
-                <Picker.Item
-                  key={supportedLngs[item].code}
-                  label={supportedLngs[item].locale}
-                  value={item}
-                  style={{
-                    color:
-                      appLanguage === supportedLngs[item].code
-                        ? theme.colors.primary
-                        : "black",
-                    fontSize: 14,
-                  }}
-                />
-              ))}
-            </Picker>
-          </View>
-        </View>
-      </TouchableRipple>
       <LanguagePicker
-        ref={pickerRefTest}
+        ref={pickerRef}
         lngPickerStyle={styles.lngPickerStyle}
         lngPickerContainerStyle={styles.lngPickerContainerStyle}
         lngPickerViewStyle={styles.lngPickerViewStyle}
+        lngPickerTitleViewStyle={styles.lngPickerTitleViewStyle}
       />
 
       <ScrollView style={{ width: "95%", paddingHorizontal: 5 }}>
@@ -983,24 +910,6 @@ export const SettingsScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  pickerContainer: {
-    //backgroundColor: "lightgrey",
-    alignItems: "flex-end",
-    justifyContent: "center",
-    marginVertical: 5,
-    width: "40%",
-    //backgroundColor: "red",
-    //width: "50%",
-  },
-  pickerStyles: {
-    //width: "90%",
-    //backgroundColor: "green",
-    //color: "green",
-    fontSize: 12,
-    width: "90%",
-    //width: 140,
-    //padding: 15,
-  },
   preference: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -1012,13 +921,14 @@ const styles = StyleSheet.create({
 
   lngPickerContainerStyle: {
     width: "40%",
-    //backgroundColor: "red",
   },
   lngPickerStyle: {
     width: "90%",
   },
   lngPickerViewStyle: {
     width: "90%",
-    //backgroundColor: "yellow",
+  },
+  lngPickerTitleViewStyle: {
+    width: "60%",
   },
 });

@@ -148,17 +148,18 @@ export const AppStyles = create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    padding: 5,
+    paddingHorizontal: 5,
   },
-  lngPickerTitle: {},
+  lngPickerTitle: { fontSize: 18 },
+  lngPickerTitleView: {},
   lngPickerContainer: {
     alignItems: "flex-end",
     marginVertical: 5,
   },
   lngPicker: {
-    fontSize: 12,
+    fontSize: 14,
   },
   lngPickerItem: {
-    fontSize: 14,
+    fontSize: 16,
   },
 });
