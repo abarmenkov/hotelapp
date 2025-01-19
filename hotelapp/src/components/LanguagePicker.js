@@ -14,6 +14,7 @@ export const LanguagePicker = forwardRef(
       lngPickerItemStyle,
       lngPickerTitleStyle,
       lngPickerTitleViewStyle,
+      pickerTitle,
       ...otherProps
     },
     ref
@@ -63,7 +64,7 @@ export const LanguagePicker = forwardRef(
               numberOfLines={1}
               ellipsizeMode="tail"
             >
-              {t("Settings.select_language")}
+              {t(pickerTitle)}
             </Text>
           </View>
 

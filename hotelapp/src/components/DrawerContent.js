@@ -33,6 +33,7 @@ import { WIDTH } from "../utils/constants";
 import { create } from "../utils/normalize";
 import { saveData } from "../API/asyncStorageMethods";
 import { SettingsContext } from "../context/SettingsContext";
+import { LanguagePicker } from "./LanguagePicker";
 
 export const DrawerContent = (props) => {
   //const { fontScale, width } = useWindowDimensions();
@@ -49,24 +50,7 @@ export const DrawerContent = (props) => {
   //const { user } = useContext(UserContext);
   //const [dark, setDark] = useState(isThemeDark);
   //const { userName } = user;
-  const supportedLngs = i18n.services.resourceStore.data;
-  const languageKeys = Object.keys(supportedLngs);
-  const appLanguage = i18n.language;
-  //сортируем массив языков для отображения языка приложения первым в Picker(е)
-  const sortedLanguages = [
-    ...languageKeys.filter((item) => item === appLanguage),
-    ...languageKeys.filter((item) => item !== appLanguage),
-  ];
 
-  const [selectedLanguage, setSelectedLanguage] = useState(appLanguage);
-
-  const handleLanguageChange = (value, index) => {
-    setSelectedLanguage(value);
-    i18n.changeLanguage(value);
-    setTimeout(() => navigation.closeDrawer(), 1000);
-  };
-
-  useEffect(() => setSelectedLanguage(appLanguage), [i18n.language]);
   /*useEffect(() => {
     const saveTheme = async () => {
       try {
@@ -80,16 +64,16 @@ export const DrawerContent = (props) => {
 
   const pickerRef = useRef();
 
-  const openPicker = () => pickerRef.current.focus();
-
-  const closePicker = () => pickerRef.current.blur();
-
   {
     /*source={require("../../assets/images/Avatar.png")}*/
   }
   return (
-    <DrawerContentScrollView {...props}>
-      <View style={styles.drawerContent}>
+    <DrawerContentScrollView
+      style={{ width: "90%" }}
+      //contentContainerStyle={{ alignItems: "center" }}
+      {...props}
+    >
+      <View style={{ ...styles.drawerContent }}>
         <View style={styles.userInfoSection}>
           <View style={styles.headerRow}>
             <Image
@@ -107,12 +91,18 @@ export const DrawerContent = (props) => {
             </View>
           </View>
         </View>
-        <Drawer.Section style={styles.drawerSection}>
+        <Drawer.Section style={{ ...styles.drawerSection }}>
           <DrawerItemList {...props} />
         </Drawer.Section>
         <Drawer.Section
           //title={<Text style={styles.settings}>{t("DrawerContent.settings")}</Text>}
-          style={styles.drawerSection}
+          style={{
+            ...styles.drawerSection,
+            //width: "100%",
+            //paddingHorizontal: 40,
+            //alignItems: "center"
+            //justifyContent: "space-between",
+          }}
         >
           <TouchableRipple
             onPress={() => {
@@ -123,9 +113,11 @@ export const DrawerContent = (props) => {
             }}
           >
             <View style={styles.preference}>
-              <Text style={styles.preferenceTitle}>
-                {t("DrawerContent.darkTheme")}
-              </Text>
+              <View>
+                <Text style={styles.preferenceTitle}>
+                  {t("DrawerContent.darkTheme")}
+                </Text>
+              </View>
 
               <Switch
                 color={theme.colors.primary}
@@ -139,17 +131,25 @@ export const DrawerContent = (props) => {
               />
             </View>
           </TouchableRipple>
-          <TouchableRipple
+          {/*<TouchableRipple
             onPress={() => {
               openPicker();
             }}
           >
-            <View style={styles.preference}>
-              <Text style={styles.preferenceTitle}>
-                {t("DrawerContent.select_language")}
-              </Text>
-              
+            <View
+              style={{
+                ...styles.preference,
+                width: "90%",
+                backgroundColor: "red",
+              }}
+            >
               <View>
+                <Text style={styles.preferenceTitle}>
+                  {t("DrawerContent.select_language")}
+                </Text>
+              </View>
+
+              <View style={{ alignItems: "flex-end", marginVertical: 5 }}>
                 <Picker
                   ref={pickerRef}
                   mode="dropdown"
@@ -178,7 +178,17 @@ export const DrawerContent = (props) => {
                 </Picker>
               </View>
             </View>
-          </TouchableRipple>
+          </TouchableRipple>*/}
+          <LanguagePicker
+            ref={pickerRef}
+            lngPickerStyle={styles.lngPickerStyle}
+            lngPickerContainerStyle={styles.lngPickerContainerStyle}
+            lngPickerViewStyle={styles.lngPickerViewStyle}
+            lngPickerTitleViewStyle={styles.lngPickerTitleViewStyle}
+            lngPickerTitleStyle={styles.lngPickerTitleStyle}
+            lngPickerItemStyle={styles.lngPickerItemStyle}
+            pickerTitle={"DrawerContent.select_language"}
+          />
         </Drawer.Section>
         <Drawer.Section style={styles.drawerSection}>
           <DrawerItem
@@ -197,20 +207,21 @@ export const DrawerContent = (props) => {
   );
 };
 
-const styles = create({
+const styles = StyleSheet.create({
   drawerContent: {
     flex: 1,
+    //alignItems: "center",
+    //width: '70%',
+    //justifyContent: "center",
   },
   drawerSection: {
-    //paddingVertical: 25,
+    //paddingHorizontal: -20,
     //marginTop: 15,
     //paddingVertical: 5,
   },
-  pickerStyles: {
-    width: 175,
-  },
+
   userInfoSection: {
-    paddingLeft: 20,
+    //paddingLeft: 20,
   },
   title: {
     fontWeight: "bold",
@@ -223,11 +234,13 @@ const styles = create({
     //marginTop: 20,
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "space-between",
   },
   headerRow: {
     //marginVertical: 15,
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "space-between",
   },
   section: {
     flexDirection: "row",
@@ -249,16 +262,42 @@ const styles = create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    //backgroundColor: "green",
     //paddingVertical: 120,
-    paddingHorizontal: 22,
+    //paddingHorizontal: 22,
   },
   preferenceTitle: { fontSize: 14 },
+  pickerStyles: {
+    //width: 140,
+    //backgroundColor: "green",
+  },
   drawerItem: {
-    fontSize: 16,
+    fontSize: 14,
   },
   logo: {
     width: 30,
     height: 30,
-    marginRight: 35,
+    //marginRight: 35,
+  },
+
+  lngPickerContainerStyle: {
+    width: "40%",
+  },
+  lngPickerStyle: {
+    width: "90%",
+    //backgroundColor: "red",
+  },
+  lngPickerViewStyle: {
+    width: "100%",
+    //backgroundColor: "green",
+  },
+  lngPickerTitleViewStyle: {
+    width: "60%",
+  },
+  lngPickerTitleStyle: {
+    fontSize: 14,
+  },
+  lngPickerItemStyle: {
+    fontSize: 16,
   },
 });

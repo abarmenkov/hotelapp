@@ -13,7 +13,8 @@ import { TasksStackNavigator } from "./TasksScreenStack";
 import { SettingsStackNavigator } from "./SettingsScreenStack";
 import { Text, useTheme } from "react-native-paper";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
-import { create } from "../utils/normalize";
+
+import { AppStyles } from "../utils/constants";
 
 const Drawer = createDrawerNavigator();
 
@@ -38,6 +39,8 @@ export const UserStack = ({ navigation, route }) => {
         headerShown: true,
         drawerStyle: {
           width: width > 768 ? width * 0.55 : width * 0.8,
+          alignItems: "center",
+          fontSize: 12,
         },
         drawerActiveTintColor: theme.colors.onSecondaryContainer,
         drawerInactiveTintColor: theme.colors.onSurfaceVariant,
@@ -60,7 +63,7 @@ export const UserStack = ({ navigation, route }) => {
           //headerShown: true,
           //drawerActiveTintColor: "red", // цвет активной вкладки иконки и текста для конкретного элемента
           drawerLabel: ({ color }) => (
-            <Text style={{ ...styles.label, color }}>
+            <Text style={{ ...AppStyles.drawerLabel, color }}>
               {t("DrawerContent.reservations")}
             </Text>
           ),
@@ -69,13 +72,13 @@ export const UserStack = ({ navigation, route }) => {
               name="account-outline"
               color={color}
               //size={iconSize}
-              style={styles.labelIcon}
+              style={AppStyles.drawerLabelIcon}
             />
           ),
 
           title: "Reservations", //header
           headerTitle: () => (
-            <Text style={styles.headerTitle}>
+            <Text style={{ ...AppStyles.drawerHeaderTitle }}>
               {t("DrawerContent.reservations")}
             </Text>
           ),
@@ -87,7 +90,7 @@ export const UserStack = ({ navigation, route }) => {
         component={HousekeepingStackNavigator}
         options={{
           drawerLabel: ({ color }) => (
-            <Text style={{ ...styles.label, color }}>
+            <Text style={{ ...AppStyles.drawerLabel, color }}>
               {t("DrawerContent.housekeeping")}
             </Text>
           ),
@@ -98,13 +101,13 @@ export const UserStack = ({ navigation, route }) => {
             <MaterialIcons
               name="cleaning-services"
               color={color}
-              style={styles.labelIcon}
+              style={AppStyles.drawerLabelIcon}
               //size={iconSize}
             />
           ),
           title: "Housekeeping", //header
           headerTitle: () => (
-            <Text style={styles.headerTitle}>
+            <Text style={{ ...AppStyles.drawerHeaderTitle }}>
               {t("DrawerContent.housekeeping")}
             </Text>
           ),
@@ -117,7 +120,7 @@ export const UserStack = ({ navigation, route }) => {
         component={FastPostStackNavigator}
         options={{
           drawerLabel: ({ color }) => (
-            <Text style={{ ...styles.label, color }}>
+            <Text style={{ ...AppStyles.drawerLabel, color }}>
               {t("DrawerContent.fast_post")}
             </Text>
           ),
@@ -126,13 +129,13 @@ export const UserStack = ({ navigation, route }) => {
             <MaterialCommunityIcons
               name="credit-card-plus"
               color={color}
-              style={styles.labelIcon}
+              style={AppStyles.drawerLabelIcon}
               //size={iconSize}
             />
           ),
           title: "FastPost", //header
           headerTitle: () => (
-            <Text style={styles.headerTitle}>
+            <Text style={{ ...AppStyles.drawerHeaderTitle }}>
               {t("DrawerContent.fast_post")}
             </Text>
           ),
@@ -143,7 +146,7 @@ export const UserStack = ({ navigation, route }) => {
         component={ServicesControlStackNavigator}
         options={{
           drawerLabel: ({ color }) => (
-            <Text style={{ ...styles.label, color }}>
+            <Text style={{ ...AppStyles.drawerLabel, color }}>
               {t("DrawerContent.services_control")}
             </Text>
           ),
@@ -152,13 +155,13 @@ export const UserStack = ({ navigation, route }) => {
             <MaterialCommunityIcons
               name="cash-check"
               color={color}
-              style={styles.labelIcon}
+              style={AppStyles.drawerLabelIcon}
               //size={iconSize}
             />
           ),
           title: "ServicesControl", //header
           headerTitle: () => (
-            <Text style={styles.headerTitle}>
+            <Text style={{ ...AppStyles.drawerHeaderTitle }}>
               {t("DrawerContent.services_control")}
             </Text>
           ),
@@ -169,7 +172,7 @@ export const UserStack = ({ navigation, route }) => {
         component={ServiceRequestsStackNavigator}
         options={{
           drawerLabel: ({ color }) => (
-            <Text style={{ ...styles.label, color }}>
+            <Text style={{ ...AppStyles.drawerLabel, color }}>
               {t("DrawerContent.service_requests")}
             </Text>
           ),
@@ -178,13 +181,13 @@ export const UserStack = ({ navigation, route }) => {
             <MaterialCommunityIcons
               name="room-service"
               color={color}
-              style={styles.labelIcon}
+              style={AppStyles.drawerLabelIcon}
               //size={iconSize}
             />
           ),
           title: "ServiceRequests", //header
           headerTitle: () => (
-            <Text style={styles.headerTitle}>
+            <Text style={{ ...AppStyles.drawerHeaderTitle }}>
               {t("DrawerContent.service_requests")}
             </Text>
           ),
@@ -195,7 +198,7 @@ export const UserStack = ({ navigation, route }) => {
         component={TasksStackNavigator}
         options={{
           drawerLabel: ({ color }) => (
-            <Text style={{ ...styles.label, color }}>
+            <Text style={{ ...AppStyles.drawerLabel, color }}>
               {t("DrawerContent.tasks")}
             </Text>
           ),
@@ -204,13 +207,15 @@ export const UserStack = ({ navigation, route }) => {
             <MaterialIcons
               name="task"
               color={color}
-              style={styles.labelIcon}
+              style={AppStyles.drawerLabelIcon}
               //size={iconSize}
             />
           ),
           title: "Tasks", //header
           headerTitle: () => (
-            <Text style={styles.headerTitle}>{t("DrawerContent.tasks")}</Text>
+            <Text style={{ ...AppStyles.drawerHeaderTitle }}>
+              {t("DrawerContent.tasks")}
+            </Text>
           ),
         }}
       />
@@ -219,7 +224,7 @@ export const UserStack = ({ navigation, route }) => {
         component={SettingsStackNavigator}
         options={{
           drawerLabel: ({ color }) => (
-            <Text style={{ ...styles.label, color }}>
+            <Text style={{ ...AppStyles.drawerLabel, color }}>
               {t("DrawerContent.settings")}
             </Text>
           ),
@@ -228,13 +233,13 @@ export const UserStack = ({ navigation, route }) => {
             <MaterialIcons
               name="settings"
               color={color}
-              style={styles.labelIcon}
+              style={AppStyles.drawerLabelIcon}
               //size={iconSize}
             />
           ),
           title: "Settings", //header
           headerTitle: () => (
-            <Text style={styles.headerTitle}>
+            <Text style={{ ...AppStyles.drawerHeaderTitle }}>
               {t("DrawerContent.settings")}
             </Text>
           ),
@@ -243,16 +248,3 @@ export const UserStack = ({ navigation, route }) => {
     </Drawer.Navigator>
   );
 };
-
-const styles = create({
-  headerTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  labelIcon: {
-    fontSize: 24,
-  },
-  label: {
-    fontSize: 18,
-  },
-});

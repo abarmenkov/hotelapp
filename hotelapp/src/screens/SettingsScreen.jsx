@@ -757,6 +757,9 @@ export const SettingsScreen = () => {
         lngPickerContainerStyle={styles.lngPickerContainerStyle}
         lngPickerViewStyle={styles.lngPickerViewStyle}
         lngPickerTitleViewStyle={styles.lngPickerTitleViewStyle}
+        lngPickerTitleStyle={styles.lngPickerTitleStyle}
+        lngPickerItemStyle={styles.lngPickerItemStyle}
+        pickerTitle={"Settings.select_language"}
       />
 
       <ScrollView style={{ width: "95%", paddingHorizontal: 5 }}>
@@ -924,11 +927,18 @@ const styles = StyleSheet.create({
   },
   lngPickerStyle: {
     width: "90%",
+    //backgroundColor: "red",
   },
   lngPickerViewStyle: {
     width: "90%",
   },
   lngPickerTitleViewStyle: {
     width: "60%",
+  },
+  lngPickerTitleStyle: {
+    fontSize: 14,
+  },
+  lngPickerItemStyle: {
+    fontSize: 16,
   },
 });

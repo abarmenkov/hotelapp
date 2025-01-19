@@ -144,17 +144,31 @@ export const AppStyles = create({
     marginHorizontal: 12,
     textAlign: "center",
   },
+  //DrawerContent styles
+
+  drawerHeaderTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  drawerLabelIcon: {
+    fontSize: 24,
+  },
+  drawerLabel: {
+    fontSize: 18,
+  },
+
+  //LanguagePicker styles
   lngPickerView: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 5,
+    //paddingHorizontal: 5,
   },
-  lngPickerTitle: { fontSize: 18 },
+  lngPickerTitle: { fontSize: 16 },
   lngPickerTitleView: {},
   lngPickerContainer: {
     alignItems: "flex-end",
-    marginVertical: 5,
+    //marginVertical: 5,
   },
   lngPicker: {
     fontSize: 14,
