@@ -26,8 +26,6 @@ export const UserStack = ({ navigation, route }) => {
   //const iconSize = width > 768 ? 24 / fontScale : 18 / fontScale;
   //const labelFontSize = width > 768 ? 18 / fontScale : 16 / fontScale;
   const theme = useTheme();
-  //console.log(route);
-  //console.log(routeName);
 
   return (
     <Drawer.Navigator
@@ -40,8 +38,10 @@ export const UserStack = ({ navigation, route }) => {
         drawerStyle: {
           width: width > 768 ? width * 0.55 : width * 0.8,
           alignItems: "center",
-          fontSize: 12,
+          //backgroundColor: "red",
+          //paddingHorizontal: 15,
         },
+
         drawerActiveTintColor: theme.colors.onSecondaryContainer,
         drawerInactiveTintColor: theme.colors.onSurfaceVariant,
         headerTintColor: theme.colors.onSurface, //цвет иконки меню
@@ -94,9 +94,7 @@ export const UserStack = ({ navigation, route }) => {
               {t("DrawerContent.housekeeping")}
             </Text>
           ),
-          /*drawerLabelStyle: {
-            fontSize: width > 768 ? 18 / fontScale : 16 / fontScale,
-          },*/
+
           drawerIcon: ({ color }) => (
             <MaterialIcons
               name="cleaning-services"

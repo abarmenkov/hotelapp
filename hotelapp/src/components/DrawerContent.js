@@ -21,6 +21,7 @@ import {
   Text,
   TouchableRipple,
   Switch,
+  Icon,
 } from "react-native-paper";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { PreferencesContext } from "../context/PreferencesContext";
@@ -34,6 +35,7 @@ import { create } from "../utils/normalize";
 import { saveData } from "../API/asyncStorageMethods";
 import { SettingsContext } from "../context/SettingsContext";
 import { LanguagePicker } from "./LanguagePicker";
+import { AppStyles } from "../utils/constants";
 
 export const DrawerContent = (props) => {
   //const { fontScale, width } = useWindowDimensions();
@@ -73,35 +75,34 @@ export const DrawerContent = (props) => {
       //contentContainerStyle={{ alignItems: "center" }}
       {...props}
     >
-      <View style={{ ...styles.drawerContent }}>
-        <View style={styles.userInfoSection}>
-          <View style={styles.headerRow}>
+      <View style={{ ...AppStyles.drawerContent }}>
+        <View style={AppStyles.drawerHeaderSection}>
+          <View style={AppStyles.drawerHeaderSectionRow}>
             <Image
               source={require("../../assets/images/Logo.png")}
-              style={styles.logo}
+              style={AppStyles.drawerHeaderImg}
             />
-            <Title style={styles.title}>HotelApp</Title>
+            <Title style={AppStyles.drawerHeaderTitleText}>HotelApp</Title>
           </View>
-          <View style={styles.row}>
-            <View style={styles.section}>
-              <Paragraph style={[styles.paragraph, styles.caption]}>
-                User name
-              </Paragraph>
-              <Caption style={styles.caption}>{userName}</Caption>
-            </View>
+
+          <View style={AppStyles.drawerHeaderSectionRow}>
+            <Paragraph
+              style={{
+                ...AppStyles.drawerHeaderParagraph,
+                ...AppStyles.drawerHeaderCaption,
+              }}
+            >
+              User name
+            </Paragraph>
+            <Caption style={AppStyles.drawerHeaderCaption}>{userName}</Caption>
           </View>
         </View>
-        <Drawer.Section style={{ ...styles.drawerSection }}>
+        <Drawer.Section style={{ ...AppStyles.drawerSection }}>
           <DrawerItemList {...props} />
         </Drawer.Section>
         <Drawer.Section
-          //title={<Text style={styles.settings}>{t("DrawerContent.settings")}</Text>}
           style={{
-            ...styles.drawerSection,
-            //width: "100%",
-            //paddingHorizontal: 40,
-            //alignItems: "center"
-            //justifyContent: "space-between",
+            ...AppStyles.drawerSection,
           }}
         >
           <TouchableRipple
@@ -112,9 +113,13 @@ export const DrawerContent = (props) => {
               setTimeout(() => navigation.closeDrawer(), 1000);
             }}
           >
-            <View style={styles.preference}>
+            <View style={AppStyles.drawerThemeSwitcherView}>
               <View>
-                <Text style={styles.preferenceTitle}>
+                <Text
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+                  style={AppStyles.drawerThemeSwitcherTitle}
+                >
                   {t("DrawerContent.darkTheme")}
                 </Text>
               </View>
@@ -131,54 +136,7 @@ export const DrawerContent = (props) => {
               />
             </View>
           </TouchableRipple>
-          {/*<TouchableRipple
-            onPress={() => {
-              openPicker();
-            }}
-          >
-            <View
-              style={{
-                ...styles.preference,
-                width: "90%",
-                backgroundColor: "red",
-              }}
-            >
-              <View>
-                <Text style={styles.preferenceTitle}>
-                  {t("DrawerContent.select_language")}
-                </Text>
-              </View>
 
-              <View style={{ alignItems: "flex-end", marginVertical: 5 }}>
-                <Picker
-                  ref={pickerRef}
-                  mode="dropdown"
-                  //mode="dialog"
-                  selectedValue={selectedLanguage}
-                  onValueChange={handleLanguageChange}
-                  style={styles.pickerStyles}
-                  dropdownIconColor={"red"}
-                  dropdownIconRippleColor={"yellow"}
-                  prompt="Выберите язык" // header окна в режиме dialog
-                >
-                  {sortedLanguages.map((item) => (
-                    <Picker.Item
-                      key={supportedLngs[item].code}
-                      label={supportedLngs[item].locale}
-                      value={item}
-                      style={{
-                        color:
-                          appLanguage === supportedLngs[item].code
-                            ? "red"
-                            : "blue",
-                        fontSize: 14,
-                      }}
-                    />
-                  ))}
-                </Picker>
-              </View>
-            </View>
-          </TouchableRipple>*/}
           <LanguagePicker
             ref={pickerRef}
             lngPickerStyle={styles.lngPickerStyle}
@@ -190,98 +148,27 @@ export const DrawerContent = (props) => {
             pickerTitle={"DrawerContent.select_language"}
           />
         </Drawer.Section>
-        <Drawer.Section style={styles.drawerSection}>
-          <DrawerItem
-            icon={({ color, size }) => (
-              <MaterialCommunityIcons name="logout" color={color} size={size} />
-            )}
-            label={t("DrawerContent.logout")}
-            labelStyle={styles.logOut}
-            onPress={() => {
-              console.log("Pressed Logout");
-            }}
-          />
-        </Drawer.Section>
+
+        <TouchableRipple
+          onPress={() => {
+            console.log("Pressed Logout");
+          }}
+        >
+          <View style={AppStyles.drawerLogoutView}>
+            <Icon source="logout" size={24} color={theme.colors.onSurface} />
+            <Text style={{ ...AppStyles.drawerLogoutText }}>
+              {t("DrawerContent.logout")}
+            </Text>
+          </View>
+        </TouchableRipple>
       </View>
     </DrawerContentScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  drawerContent: {
-    flex: 1,
-    //alignItems: "center",
-    //width: '70%',
-    //justifyContent: "center",
-  },
-  drawerSection: {
-    //paddingHorizontal: -20,
-    //marginTop: 15,
-    //paddingVertical: 5,
-  },
-
-  userInfoSection: {
-    //paddingLeft: 20,
-  },
-  title: {
-    fontWeight: "bold",
-  },
-  caption: {
-    fontSize: 14,
-    lineHeight: 14,
-  },
-  row: {
-    //marginTop: 20,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  headerRow: {
-    //marginVertical: 15,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  section: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    //marginRight: 15,
-  },
-  paragraph: {
-    fontWeight: "bold",
-    marginRight: 20,
-    paddingVertical: 15,
-  },
-
-  settings: {
-    fontSize: 14,
-  },
-  logOut: { fontSize: 14 },
-  preference: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    //backgroundColor: "green",
-    //paddingVertical: 120,
-    //paddingHorizontal: 22,
-  },
-  preferenceTitle: { fontSize: 14 },
-  pickerStyles: {
-    //width: 140,
-    //backgroundColor: "green",
-  },
-  drawerItem: {
-    fontSize: 14,
-  },
-  logo: {
-    width: 30,
-    height: 30,
-    //marginRight: 35,
-  },
-
   lngPickerContainerStyle: {
-    width: "40%",
+    width: "60%",
   },
   lngPickerStyle: {
     width: "90%",
@@ -289,15 +176,14 @@ const styles = StyleSheet.create({
   },
   lngPickerViewStyle: {
     width: "100%",
-    //backgroundColor: "green",
   },
   lngPickerTitleViewStyle: {
-    width: "60%",
+    width: "40%",
   },
   lngPickerTitleStyle: {
-    fontSize: 14,
+    //fontSize: 14,
   },
   lngPickerItemStyle: {
-    fontSize: 16,
+    //fontSize: 16,
   },
 });

@@ -144,8 +144,8 @@ export const AppStyles = create({
     marginHorizontal: 12,
     textAlign: "center",
   },
-  //DrawerContent styles
 
+  //UserStack
   drawerHeaderTitle: {
     fontSize: 18,
     fontWeight: "bold",
@@ -157,15 +157,77 @@ export const AppStyles = create({
     fontSize: 18,
   },
 
+  //DrawerContent styles
+  drawerContent: {
+    flex: 1,
+    paddingTop: 10,
+  },
+  drawerSection: {
+    //backgroundColor: "yellow",
+    //paddingHorizontal: 10,
+    //marginTop: 15,
+    //paddingVertical: 5,
+  },
+  drawerHeaderSection: {
+    paddingHorizontal: 10,
+  },
+  drawerHeaderSectionRow: {
+    //marginVertical: 15,
+    flexDirection: "row",
+    alignItems: "center",
+    //justifyContent: "space-between",
+  },
+  drawerHeaderImg: {
+    width: 30,
+    height: 30,
+    //paddingHorizontal: 100,
+    marginRight: 25,
+  },
+  drawerHeaderTitleText: {
+    fontWeight: "bold",
+    //fontSize: 14,
+  },
+  drawerHeaderParagraph: {
+    fontWeight: "bold",
+    marginRight: 35,
+    paddingVertical: 10,
+  },
+  drawerHeaderCaption: {
+    fontSize: 14,
+    //lineHeight: 14,
+  },
+  drawerThemeSwitcherView: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    //backgroundColor: "red",
+    paddingHorizontal: 5,
+    //paddingHorizontal: 10,
+  },
+  drawerThemeSwitcherTitle: { fontSize: 14 },
+  drawerLogoutView: {
+    flexDirection: "row",
+    alignItems: "center",
+    //backgroundColor: "blue",
+    paddingHorizontal: 5,
+    paddingVertical: 10,
+  },
+  drawerLogoutText: {
+    fontSize: 14,
+    paddingHorizontal: 20,
+  },
+
   //LanguagePicker styles
   lngPickerView: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    //paddingHorizontal: 5,
+    paddingHorizontal: 5,
   },
-  lngPickerTitle: { fontSize: 16 },
+  lngPickerTitle: { fontSize: 14 },
+
   lngPickerTitleView: {},
+
   lngPickerContainer: {
     alignItems: "flex-end",
     //marginVertical: 5,
