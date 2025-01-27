@@ -39,6 +39,7 @@ const en = {
       pricemodal_set_price: "Set Price",
     },
     Settings: {
+      hotels: "Hotels",
       add_hotel: "Add hotel",
       select_language: "Select default language",
       hotel_name: "Hotel",

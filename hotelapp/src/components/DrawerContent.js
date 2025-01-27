@@ -23,35 +23,28 @@ import {
   Switch,
   Icon,
 } from "react-native-paper";
-import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+
 import { PreferencesContext } from "../context/PreferencesContext";
 import { UserContext } from "../context/UserContext";
 import { useTranslation } from "react-i18next";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Picker } from "@react-native-picker/picker";
+
 //import { useAuth } from "../hooks/useAuth";
-import { WIDTH } from "../utils/constants";
-import { create } from "../utils/normalize";
+
 import { saveData } from "../API/asyncStorageMethods";
 import { SettingsContext } from "../context/SettingsContext";
 import { LanguagePicker } from "./LanguagePicker";
 import { AppStyles } from "../utils/constants";
 
 export const DrawerContent = (props) => {
-  //const { fontScale, width } = useWindowDimensions();
   const { navigation, isFocused } = props;
-  //const initialRouteName = getFocusedRouteNameFromRoute(props);
-  //console.log(initialRouteName);
+
   const { t } = useTranslation();
-  const { i18n } = useTranslation();
+
   const theme = useTheme();
   const { toggleTheme, isThemeDark } = useContext(PreferencesContext);
   const { settings, setSettings } = useContext(SettingsContext);
-  //const { user, setUser } = useContext(UserContext);
+
   const { userName, userPassword } = settings[0].user;
-  //const { user } = useContext(UserContext);
-  //const [dark, setDark] = useState(isThemeDark);
-  //const { userName } = user;
 
   /*useEffect(() => {
     const saveTheme = async () => {
@@ -66,15 +59,8 @@ export const DrawerContent = (props) => {
 
   const pickerRef = useRef();
 
-  {
-    /*source={require("../../assets/images/Avatar.png")}*/
-  }
   return (
-    <DrawerContentScrollView
-      style={{ width: "90%" }}
-      //contentContainerStyle={{ alignItems: "center" }}
-      {...props}
-    >
+    <DrawerContentScrollView style={{ width: "90%" }} {...props}>
       <View style={{ ...AppStyles.drawerContent }}>
         <View style={AppStyles.drawerHeaderSection}>
           <View style={AppStyles.drawerHeaderSectionRow}>
@@ -131,7 +117,7 @@ export const DrawerContent = (props) => {
                   toggleTheme();
                   saveData("@theme", !isThemeDark);
                   //setDark(!dark);
-                  setTimeout(() => navigation.closeDrawer(), 1000);
+                  //setTimeout(() => navigation.closeDrawer(), 1000);
                 }}
               />
             </View>

@@ -1,9 +1,8 @@
 import { createContext, useContext } from "react";
-import { token } from "../API/route";
 
 export const SettingsContext = createContext([
   {
-    hotelName: "",
+    hotelName: "Add Hotel",
     serverAddress: "",
     defaultPointOfSales: "",
     defaultPocketCode: "",
@@ -11,6 +10,7 @@ export const SettingsContext = createContext([
     language: "",
     isDefault: false,
     PropertyId: null,
+    id: 1,
   },
 ]);
 

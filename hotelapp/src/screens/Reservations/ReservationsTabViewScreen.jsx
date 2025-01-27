@@ -7,7 +7,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import { TabView, TabBar } from "react-native-tab-view";
+import { TabView, TabBar, TabBarItem } from "react-native-tab-view";
 import { SearchbarComponent } from "../../components/SearchBar";
 import { Text } from "react-native-paper";
 import { fetchData } from "../../API/FetchData";
@@ -171,18 +171,11 @@ export const ReservationsTabViewScreen = ({ navigation }) => {
   };*/
 
   const RenderTabBar = (props) => {
-    const { id, key, ...rest } = props;
-    //console.log(id);
-    //console.log(rest);
-
     return (
       <TabBar
-        {...rest}
-        key={id}
+        {...props}
         activeColor={"white"}
         inactiveColor={"black"}
-        //style={{  }}
-
         indicatorStyle={{
           backgroundColor: "white",
         }}
@@ -197,6 +190,10 @@ export const ReservationsTabViewScreen = ({ navigation }) => {
         getLabelText={({ route }) =>
           t(`ReservationsTabViewScreen.${route.title}`)
         }
+        //to avoid error: A props object containing a "key" prop is being spread into JSX
+        renderTabBarItem={({ key, ...props }) => (
+          <TabBarItem {...props} key={key} />
+        )}
       />
     );
   };
@@ -230,11 +227,11 @@ export const ReservationsTabViewScreen = ({ navigation }) => {
             initialLayout={{ width: WIDTH }}
             //style={{ backgroundColor: "red" }}
             //renderTabBar={(props) => <TabBar {...props} />}
-            renderTabBar={(props) => {
-              const { key, ...rest } = props;
-              return <RenderTabBar id={uid()} key={key} {...rest} />;
-            }}
-            //renderTabBar={RenderTabBar}
+            //renderTabBar={(props) => {
+            //const { key, ...rest } = props;
+            //return <RenderTabBar id={uid()} key={key} {...rest} />;
+            //}}
+            renderTabBar={RenderTabBar}
             swipeEnabled={false}
             animationEnabled={true}
             lazy

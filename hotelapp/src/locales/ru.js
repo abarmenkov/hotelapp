@@ -39,6 +39,7 @@ const ru = {
       pricemodal_set_price: "Установить цену",
     },
     Settings: {
+      hotels: "Отели",
       add_hotel: "Добавить отель",
       select_language: "Выбрать язык по умолчанию",
       hotel_name: "Отель",
