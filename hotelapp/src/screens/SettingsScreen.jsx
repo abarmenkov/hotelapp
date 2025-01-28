@@ -648,7 +648,10 @@ export const SettingsScreen = () => {
       >
         {hotelsArray.map((item, index) => {
           return (
-            <View style={{ width: "95%" }} key={uid()}>
+            <View
+              style={{ width: "95%",  }}
+              key={uid()}
+            >
               <SettingsScreenHotelInfo item={item} />
             </View>
           );

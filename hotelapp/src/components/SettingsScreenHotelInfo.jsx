@@ -32,7 +32,9 @@ import { SettingsContext } from "../context/SettingsContext";
 export const SettingsScreenHotelInfo = ({ item }) => {
   const theme = useTheme();
   const { t } = useTranslation();
+
   const checkTokenColor = userToken ? "green" : "red";
+
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setErrorFlag] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -64,7 +66,7 @@ export const SettingsScreenHotelInfo = ({ item }) => {
   const [userToken, setUserToken] = useState(item.user.token);
 
   const [visibleSnackBar, setVisibleSnackBar] = useState(false);
-  
+
   const [expandedAccordion, setExpandedAccordion] = useState(true);
   const [expandedPointOfSaleSection, setExpandedPointOfSaleSection] =
     useState(false);
@@ -423,7 +425,7 @@ export const SettingsScreenHotelInfo = ({ item }) => {
       method: "get",
       url: "https://api-hms.logus.pro/api/Account",
       //url: `${serverAddress}${endPoint}`,
-      signal: newAbortSignal(15000),
+      signal: newAbortSignal(20000),
       params: {
         userName: name,
         password: password,
@@ -474,35 +476,97 @@ export const SettingsScreenHotelInfo = ({ item }) => {
       key={item.id}
       title={hotelName ? hotelName : t("Settings.hotel_name")}
       //theme={{ colors: theme.colors.onSurface }}
-
+      style={
+        {
+          //flex: 1,
+          //display: "flex",
+          //flexDirection: "row",
+          //backgroundColor: "yellow",
+          //justifyContent: "space-around",
+          //alignItems: "center",
+          //width: "100%",
+        }
+      }
       titleStyle={{
-        fontSize: 14,
-        color: !expandedPointOfSaleSection
+        fontSize: 16,
+        color: !expandedAccordion
           ? theme.colors.onSurface
           : theme.colors.primary,
-        //backgroundColor: "yellow",
-        alignItems: "center",
+        //backgroundColor: "green",
+        //alignItems: "center",
+        //width: "80%",
       }}
       expanded={expandedAccordion}
       onPress={() => setExpandedAccordion(!expandedAccordion)}
       //left={(props) => <Text {...props}>{t("Settings.hotel_name")}</Text>}
       right={(props) => (
-        <List.Icon
-          {...props}
-          icon={({ color, size }) => (
-            <MaterialCommunityIcons
-              name={!expandedAccordion ? "chevron-down" : "chevron-up"}
-              size={24}
-              color={
-                !expandedPointOfSaleSection
-                  ? theme.colors.onSurface
-                  : theme.colors.primary
-              }
-            />
-          )}
-          //color={"green"}
-          //style={{ color: "green" }}
-        />
+        <View
+          style={{
+            //backgroundColor: "red",
+            flexDirection: "row",
+            justifyContent: expandedAccordion ? "space-between" : "flex-end",
+            alignItems: "center",
+            width: 150,
+          }}
+        >
+          {expandedAccordion ? (
+            <View
+              style={{
+                //backgroundColor: "yellow",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                width: "50%",
+              }}
+            >
+              <List.Icon
+                {...props}
+                icon={({ color, size }) => (
+                  <MaterialCommunityIcons
+                    name={"content-save-outline"}
+                    size={size}
+                    color={
+                      !expandedAccordion
+                        ? theme.colors.onSurface
+                        : theme.colors.primary
+                    }
+                  />
+                )}
+              />
+              <List.Icon
+                {...props}
+                icon={({ color, size }) => (
+                  <MaterialCommunityIcons
+                    name={"delete-circle-outline"}
+                    size={size}
+                    color={
+                      !expandedAccordion
+                        ? theme.colors.onSurface
+                        : theme.colors.primary
+                    }
+                  />
+                )}
+              />
+            </View>
+          ) : null}
+
+          <List.Icon
+            {...props}
+            icon={({ color, size }) => (
+              <MaterialCommunityIcons
+                name={!expandedAccordion ? "chevron-down" : "chevron-up"}
+                size={size}
+                color={
+                  !expandedAccordion
+                    ? theme.colors.onSurface
+                    : theme.colors.primary
+                }
+              />
+            )}
+            //color={"green"}
+            //style={{ color: "green" }}
+          />
+        </View>
       )}
     >
       <List.Item
@@ -554,9 +618,9 @@ export const SettingsScreenHotelInfo = ({ item }) => {
                             name="check-network"
                             color={checkNetworkColor}
                             size={size}
-                            onPress={checkNetwork}
                           />
                         )}
+                        onPress={checkNetwork}
                       />
                     ) : (
                       <TextInput.Icon
@@ -662,9 +726,10 @@ export const SettingsScreenHotelInfo = ({ item }) => {
                           name="account-check"
                           color={checkTokenColor}
                           size={size}
-                          onPress={getToken}
+                          //onPress={() => console.log("pressed")}
                         />
                       )}
+                      onPress={getToken}
                     />
                   }
                   //onSubmitEditing={() => Keyboard.dismiss()}
