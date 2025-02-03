@@ -53,8 +53,13 @@ export const SettingsScreen = () => {
   const [networkIsLoading, setNetworkIsLoading] = useState(false);
 
   const { settings, setSettings } = useContext(SettingsContext);
+  const { isDefaultHotelId, hotels } = settings;
+  const [hotelsArray, setHotelsArray] = useState([]);
+  useEffect(() => setHotelsArray(hotels), [settings]);
 
-  const [pointsOfSales, setPointsOfSales] = useState([]);
+  //console.log(settings);
+
+  /*const [pointsOfSales, setPointsOfSales] = useState([]);
   const [checkedPointOfSales, setPointOfSalesChecked] = useState(
     settings[0].defaultPointOfSales
   );
@@ -71,25 +76,14 @@ export const SettingsScreen = () => {
   const [name, setName] = useState(settings[0].user.userName);
   const [password, setPassword] = useState(settings[0].user.userPassword);
   const [userToken, setUserToken] = useState(settings[0].user.token);
-
-  const [visibleSnackBar, setVisibleSnackBar] = useState(false);
   const [expandedPointOfSaleSection, setExpandedPointOfSaleSection] =
     useState(false);
   const [expandedFolioPocketsSection, setExpandedFolioPocketsSection] =
     useState(false);
 
-  const newHotel = {
-    hotelName: "New Hotel",
-    serverAddress: "",
-    defaultPointOfSales: "",
-    defaultPocketCode: "",
-    user: { userName: "", userPassword: "", token: "" },
-    language: "",
-    isDefault: false,
-    PropertyId: null,
-    id: uid(),
-  };
-  const [hotelsArray, setHotelsArray] = useState(settings);
+*/
+  const [visibleSnackBar, setVisibleSnackBar] = useState(false);
+
   const addHotel = () => {
     setHotelsArray([
       ...hotelsArray,
@@ -100,19 +94,26 @@ export const SettingsScreen = () => {
         defaultPocketCode: "",
         user: { userName: "", userPassword: "", token: "" },
         language: "",
-        isDefault: false,
         PropertyId: null,
         id: uid(),
       },
     ]);
   };
+  const snackbarMessage =
+    hasError && !networkCheck
+      ? t("Settings.snackbar_failed")
+      : !hasError && !networkCheck
+      ? t("Settings.snackbar")
+      : !hasError && networkCheck && !networkError
+      ? t("Settings.snackbar_network_checked")
+      : t("Settings.snackbar_network_failed");
   //"http://109.236.70.42:9090"
 
   //получить данные отеля data[0].Name
   ///Logus.HMS.Entities.Dictionaries.Property
 
   //получить точки продаж
-  useEffect(() => {
+  /*useEffect(() => {
     const endPoint = "/Logus.HMS.Entities.Dictionaries.PointOfSale";
     const controller = new AbortController();
     const newAbortSignal = (timeoutMs) => {
@@ -193,14 +194,7 @@ export const SettingsScreen = () => {
   const pickerRef = useRef();
 
   //const checkNetworkColor = hasError ? "red" : "green";
-  const snackbarMessage =
-    hasError && !networkCheck
-      ? t("Settings.snackbar_failed")
-      : !hasError && !networkCheck
-      ? t("Settings.snackbar")
-      : !hasError && networkCheck && !networkError
-      ? t("Settings.snackbar_network_checked")
-      : t("Settings.snackbar_network_failed");
+
 
   const PointOfSalesItem = ({ item }) => {
     return (
@@ -333,7 +327,7 @@ export const SettingsScreen = () => {
 
       params: {
         propertyId: 1,
-      },*/
+      },
     };
     try {
       const response = await axios(configurationObject);
@@ -398,7 +392,7 @@ export const SettingsScreen = () => {
 
       /*params: {
         propertyId: 1,
-      },*/
+      },
     };
     try {
       const response = await axios(configurationObject);
@@ -446,7 +440,7 @@ export const SettingsScreen = () => {
     /*const params = new URLSearchParams();
     params.append("userName", name);
     params.append("password", password);
-    console.log(params);*/
+    console.log(params);
 
     const controller = new AbortController();
     const newAbortSignal = (timeoutMs) => {
@@ -475,7 +469,7 @@ export const SettingsScreen = () => {
         /*setTimeout(() => {
           setIsLoading(false);
           setVisibleSnackBar(true);
-        }, 3000);*/
+        }, 3000);
 
         return;
       } else {
@@ -540,7 +534,7 @@ export const SettingsScreen = () => {
     }
   };*/
 
-  const checkTokenColor = userToken ? "green" : "red";
+  //const checkTokenColor = userToken ? "green" : "red";
 
   /*const renderPointOfSaleItem = ({ item }) => <PointOfSalesItem item={item} />;
   const renderFolioPocketItem = ({ item }) => <FolioPocketItem item={item} />;
@@ -649,7 +643,12 @@ export const SettingsScreen = () => {
         {hotelsArray.map((item, index) => {
           return (
             <View
-              style={{ width: "95%",  }}
+              style={{
+                width: "95%",
+                //alignItems: "center",
+                //backgroundColor: "yellow",
+                //flexDirection: "row",
+              }}
               key={uid()}
             >
               <SettingsScreenHotelInfo item={item} />
@@ -657,28 +656,6 @@ export const SettingsScreen = () => {
           );
         })}
       </ScrollView>
-
-      <View
-        style={{
-          //width: "45%",
-          marginTop: 5,
-          alignItems: "center",
-        }}
-      >
-        <View style={{ width: "45%", marginVertical: 25 }}>
-          <Button
-            loading={settingsIsLoading}
-            mode="contained"
-            onPress={saveSettings}
-            disabled={userToken ? false : true}
-            //style={{ width: "55%" }}
-          >
-            {settingsIsLoading
-              ? `${t("Settings.saving_settings")}`
-              : `${t("Settings.save_settings")}`}
-          </Button>
-        </View>
-      </View>
 
       <Portal>
         <Snackbar
@@ -1046,6 +1023,28 @@ const styles = StyleSheet.create({
           keyboardShouldPersistTaps={"handled"}
           //justifyContent="space-between"
         />
+      </View>
+
+            <View
+        style={{
+          //width: "45%",
+          marginTop: 5,
+          alignItems: "center",
+        }}
+      >
+        <View style={{ width: "45%", marginVertical: 25 }}>
+          <Button
+            loading={settingsIsLoading}
+            mode="contained"
+            onPress={saveSettings}
+            disabled={userToken ? false : true}
+            //style={{ width: "55%" }}
+          >
+            {settingsIsLoading
+              ? `${t("Settings.saving_settings")}`
+              : `${t("Settings.save_settings")}`}
+          </Button>
+        </View>
       </View>
         
 */

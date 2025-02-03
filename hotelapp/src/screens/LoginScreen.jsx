@@ -1,28 +1,52 @@
 import React, { useContext, useEffect, useState, useRef } from "react";
-import { View, Alert, Button, StyleSheet } from "react-native";
+import { View, Alert, StyleSheet, Text } from "react-native";
 import { useTranslation } from "react-i18next";
-import { useTheme, TextInput } from "react-native-paper";
-import { AppStyles } from "../utils/constants";
-import { UserContext } from "../context/UserContext";
+import { useTheme, TextInput, Button } from "react-native-paper";
+import { WIDTH, AppStyles } from "../utils/constants";
+//import { UserContext } from "../context/UserContext";
 import { saveData } from "../API/asyncStorageMethods";
 import { SettingsContext } from "../context/SettingsContext";
 import MyTextInput from "../components/MyInput";
-import { WIDTH } from "../utils/constants";
+
+import { Hotels } from "../utils/data";
+import { HotelPicker } from "../components/HotelPicker";
 
 export const LoginScreen = ({ navigation }) => {
   const { settings, setSettings } = useContext(SettingsContext);
-  //const { user, setUser } = useContext(UserContext);
-  const { userName, userPassword, token } = settings[0].user;
-  const { hotelName } = settings[0];
+  //const { hotels, isLoggedInHotelId, isDefaultHotelId } = settings;
+  // const [selectedHotelId, setSelectedHotelId] = useState("");
+  //const [hotelsArray, setHotelsArray] = useState([]);
+  /*useEffect(() => {
+    setHotelsArray(hotels);
+    setSelectedHotelId(isDefaultHotelId);
+  }, [settings]);
+
+  const filteredHotel = hotelsArray.find(
+    (hotel) => hotel.id === selectedHotelId
+  );*/
+  //console.log(`filteredHotel: `, filteredHotel);
+  const { hotels, isDefaultHotelId, isLoggedInHotelId } = Hotels;
+
+  const filteredHotel = hotels.find((hotel) => hotel.id === isDefaultHotelId);
+  //console.log(filteredHotel);
+
+  const { userName, userPassword, token } = filteredHotel.user;
+  const { hotelName } = filteredHotel;
+  const [activeHotelId, setActiveHotelId] = useState(filteredHotel.id);
+  //console.log(activeHotelId, isLoggedInHotelId);
 
   const { t } = useTranslation();
   const theme = useTheme();
   const [name, setName] = useState(userName);
   const [password, setPassword] = useState(userPassword);
+  const [hotel, setHotel] = useState(hotelName);
   const [securedPassword, setSecuredPassword] = useState(true);
-  const [secureTextEntry, setSecureTextEntry] = useState(true);
 
-  const passwordRef = useRef(null);
+  //const [secureTextEntry, setSecureTextEntry] = useState(true);
+
+  const passwordRef = useRef();
+  const pickerRef = useRef();
+  //console.log(settings);
 
   /*useEffect(() => {
     const getData = async () => {
@@ -40,10 +64,10 @@ export const LoginScreen = ({ navigation }) => {
 
   const setSecure = () => {
     setSecuredPassword(false);
-    setSecureTextEntry(false);
+    //setSecureTextEntry(false);
     setTimeout(() => {
       setSecuredPassword(true);
-      setSecureTextEntry(true);
+      //setSecureTextEntry(true);
     }, 1000);
   };
 
@@ -53,18 +77,14 @@ export const LoginScreen = ({ navigation }) => {
       //saveUser({ userName: name, userPassword: password });
       //saveData("@user", { userName: name, userPassword: password });
       //setUser({ userName: name, userPassword: password });
-      setSettings([
-        {
-          ...settings[0],
-          user: { userName: name, userPassword: password, token },
-        },
-      ]);
-      saveData("@settings", [
-        {
-          ...settings[0],
-          user: { userName: name, userPassword: password, token },
-        },
-      ]);
+      setSettings({
+        ...settings,
+        isLoggedInHotelId: activeHotelId,
+      });
+      saveData("@settings", {
+        ...settings,
+        isLoggedInHotelId: activeHotelId,
+      });
     } else if (name === "admin" && password === "admin") {
       navigation.navigate("AdminStack");
     } else {
@@ -84,24 +104,43 @@ export const LoginScreen = ({ navigation }) => {
           width: "90%",
         }}
       >
+        <HotelPicker
+          ref={pickerRef}
+          isDefaultHotelId={isDefaultHotelId}
+          hotels={hotels}
+          lngPickerStyle={styles.lngPickerStyle}
+          lngPickerContainerStyle={styles.lngPickerContainerStyle}
+          lngPickerViewStyle={styles.lngPickerViewStyle}
+          lngPickerTitleViewStyle={styles.lngPickerTitleViewStyle}
+          lngPickerTitleStyle={styles.lngPickerTitleStyle}
+          lngPickerItemStyle={styles.lngPickerItemStyle}
+          pickerLabel={t("LoginScreen.hotel_name")}
+        />
+      </View>
+      {/*<View
+        style={{
+          width: "90%",
+        }}
+      >
         <TextInput
           //underlineColorAndroid="transparent"
           //placeholderTextColor="gray"
           mode="outlined"
           label={t("LoginScreen.hotel_name")}
-          value={hotelName}
+          value={hotel}
           disabled
-          //onChangeText={setName}
-          //placeholder={t("LoginScreen.login_placeholder")}
+          onChangeText={setHotel}
+          placeholder={t("LoginScreen.login_placeholder")}
+          right={hotel}
         />
-      </View>
+      </View>*/}
 
       <View style={styles.textInputContainer}>
         <TextInput
           mode="outlined"
           //underlineColorAndroid="transparent"
           //placeholderTextColor="gray"
-          style={{ width: "45%" }}
+          style={{ width: "45%", backgroundColor: theme.colors.onSecondary }}
           value={name}
           onChangeText={setName}
           label={t("LoginScreen.login")}
@@ -113,14 +152,20 @@ export const LoginScreen = ({ navigation }) => {
           returnKeyLabel="next"
           enablesReturnKeyAutomatically={true}
           onSubmitEditing={() => passwordRef.current?.focus()}
+          textColor={theme.colors.onSurface}
+          //contentStyle={{ backgroundColor: theme.colors.onSecondary }}
+          //underlineColor="red"
+          //outlineColor="red"
+          activeOutlineColor={theme.colors.primary}
+
           //showSoftInputOnFocus={false}
         />
         <TextInput
-          //ref={passwordRef}
+          ref={passwordRef}
           mode="outlined"
           //underlineColorAndroid="transparent"
           //placeholderTextColor="gray"
-          style={{ width: "45%" }}
+          style={{ width: "45%", backgroundColor: theme.colors.onSecondary }}
           value={password}
           onChangeText={setPassword}
           secureTextEntry={securedPassword}
@@ -131,7 +176,15 @@ export const LoginScreen = ({ navigation }) => {
           keyboardAppearance="dark"
           returnKeyType="done"
           returnKeyLabel="done"
-          right={<TextInput.Icon icon="eye" onPress={() => setSecure()} />}
+          right={
+            <TextInput.Icon
+              icon="eye"
+              onPress={() => setSecure()}
+              color={
+                securedPassword ? theme.colors.primary : theme.colors.outline
+              }
+            />
+          }
         />
       </View>
       {/*<View
@@ -205,7 +258,15 @@ export const LoginScreen = ({ navigation }) => {
         />
       </View>*/}
 
-      <Button title="Enter" onPress={onButtonPress} disabled={buttonDisabled} />
+      <Button
+        //title="Enter"
+        onPress={onButtonPress}
+        disabled={buttonDisabled}
+        mode="contained"
+        style={{ width: "30%" }}
+      >
+        {t("LoginScreen.enterBtn")}
+      </Button>
     </View>
   );
 };
@@ -226,5 +287,40 @@ const styles = StyleSheet.create({
   textInput: {
     fontSize: 16,
     //width: "45%",
+  },
+  preference: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    //paddingVertical: 120,
+    paddingHorizontal: 5,
+  },
+  preferenceTitle: { fontSize: 14 },
+
+  lngPickerContainerStyle: {
+    width: "100%",
+    borderColor: "grey",
+
+    borderRadius: 5,
+  },
+  lngPickerStyle: {
+    width: "100%",
+    //backgroundColor: "red",
+  },
+  lngPickerViewStyle: {
+    //width: "90%",
+    //backgroundColor: "red",
+    //borderColor: "grey",
+    //borderWidth: 1,
+    //borderRadius: 5,
+  },
+  lngPickerTitleViewStyle: {
+    //width: "60%",
+  },
+  lngPickerTitleStyle: {
+    //fontSize: 14,
+  },
+  lngPickerItemStyle: {
+    fontSize: 16,
   },
 });

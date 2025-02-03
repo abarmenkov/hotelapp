@@ -22,7 +22,7 @@ import { appRoutes } from "../API/route";
 import { token } from "../API/route";
 import { fetchData } from "../API/FetchData";
 import { postData } from "../API/PostData";
-import { DefaultPocketCodeContext } from "../context/DefaultPocketCodeContext";
+//import { DefaultPocketCodeContext } from "../context/DefaultPocketCodeContext";
 import { SettingsContext } from "../context/SettingsContext";
 
 // чтобы отключить ошибку, не получилось, возможно в другом месте нужно

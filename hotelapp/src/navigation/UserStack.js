@@ -38,7 +38,6 @@ export const UserStack = ({ navigation, route }) => {
         drawerStyle: {
           width: width > 768 ? width * 0.55 : width * 0.8,
           alignItems: "center",
-
         },
 
         drawerActiveTintColor: theme.colors.onSecondaryContainer,

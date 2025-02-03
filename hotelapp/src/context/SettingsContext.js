@@ -1,8 +1,12 @@
 import { createContext, useContext } from "react";
 
-export const SettingsContext = createContext([
+export const SettingsContext = createContext();
+
+//export const useSettingsContext = () => useContext(SettingsContext);
+/*
+[
   {
-    hotelName: "Add Hotel",
+    hotelName: "New Hotel",
     serverAddress: "",
     defaultPointOfSales: "",
     defaultPocketCode: "",
@@ -12,6 +16,5 @@ export const SettingsContext = createContext([
     PropertyId: null,
     id: 1,
   },
-]);
-
-export const useSettingsContext = () => useContext(SettingsContext);
+]
+*/

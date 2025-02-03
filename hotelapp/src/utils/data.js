@@ -164,3 +164,43 @@ export const Cleanings = [
     AllowRefusal: true,
   },
 ];
+
+export const Hotels = {
+  isDefaultHotelId: "3",
+  isLoggedInHotelId: "",
+  hotels: [
+    {
+      hotelName: "Hotel1",
+      serverAddress: "1111",
+      defaultPointOfSales: "",
+      defaultPocketCode: "",
+      user: { userName: "ab", userPassword: "1", token: "" },
+      language: "",
+      isLoggedIn: false,
+      PropertyId: null,
+      id: "1",
+    },
+    {
+      hotelName: "Hotel2",
+      serverAddress: "222",
+      defaultPointOfSales: "",
+      defaultPocketCode: "",
+      user: { userName: "abb", userPassword: "1", token: "" },
+      language: "",
+      isLoggedIn: false,
+      PropertyId: null,
+      id: "2",
+    },
+    {
+      hotelName: "Hotel3",
+      serverAddress: "3333",
+      defaultPointOfSales: "",
+      defaultPocketCode: "",
+      user: { userName: "abbbb", userPassword: "1", token: "" },
+      language: "",
+      isLoggedIn: false,
+      PropertyId: null,
+      id: "3",
+    },
+  ],
+};

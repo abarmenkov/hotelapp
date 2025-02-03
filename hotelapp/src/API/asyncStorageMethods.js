@@ -24,26 +24,29 @@ export const getSettings = async (key, cb, setIsLoading, initialState) => {
     const value = await AsyncStorage.getItem(key);
 
     if (value !== null) {
-      //console.log(JSON.parse(value), value);
+      //console.log(value);
       cb(JSON.parse(value));
-      setIsLoading(false);
+      setTimeout(() => setIsLoading(false), 5000);
+      //setIsLoading(false);
     } else {
       //console.log(initialState);
       cb(initialState);
-      setIsLoading(false);
+      setTimeout(() => setIsLoading(false), 5000);
+      //setIsLoading(false);
     }
   } catch (e) {
     console.log(e);
     console.log("Failed to load data");
     cb(initialState);
-    setIsLoading(false);
+    setTimeout(() => setIsLoading(false), 3000);
+    //setIsLoading(false);
   }
 };
 
 export const saveData = async (key, data) => {
   try {
     await AsyncStorage.setItem(key, JSON.stringify(data));
-    //console.log("Data is saved");
+    console.log("Data is saved!");
   } catch (e) {
     console.log("Failed to save data");
   }

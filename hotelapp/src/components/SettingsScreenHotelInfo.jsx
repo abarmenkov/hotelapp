@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext } from "react";
+import React, { useState, useEffect, useRef, useContext, useMemo } from "react";
 import {
   View,
   FlatList,
@@ -18,6 +18,7 @@ import {
   ActivityIndicator,
   useTheme,
   List,
+  IconButton,
 } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
@@ -25,6 +26,7 @@ import { LanguagePicker } from "./LanguagePicker";
 import { appRoutes } from "../API/route";
 import { token } from "../API/route";
 import { fetchData } from "../API/FetchData";
+
 import { saveData } from "../API/asyncStorageMethods";
 import axios from "axios";
 import { SettingsContext } from "../context/SettingsContext";
@@ -32,6 +34,12 @@ import { SettingsContext } from "../context/SettingsContext";
 export const SettingsScreenHotelInfo = ({ item }) => {
   const theme = useTheme();
   const { t } = useTranslation();
+
+  const { settings, setSettings } = useContext(SettingsContext);
+  const { isDefaultHotelId, hotels } = settings;
+
+  //const item = settings.find((item) => item.id == itemId);
+  //console.log(item.id);
 
   const checkTokenColor = userToken ? "green" : "red";
 
@@ -45,8 +53,6 @@ export const SettingsScreenHotelInfo = ({ item }) => {
   const [checkNetworkColor, setCheckNetworkColor] = useState("grey");
   const [networkIsLoading, setNetworkIsLoading] = useState(false);
 
-  const { settings, setSettings } = useContext(SettingsContext);
-
   const [pointsOfSales, setPointsOfSales] = useState([]);
   const [checkedPointOfSales, setPointOfSalesChecked] = useState(
     item.defaultPointOfSales
@@ -59,7 +65,9 @@ export const SettingsScreenHotelInfo = ({ item }) => {
 
   const [hotelName, setHotelName] = useState(item.hotelName);
   const [serverAddress, setServerAddress] = useState(item.serverAddress);
-  const [isHotelDefault, setIsHotelDefault] = useState(item.isDefault);
+  const [isHotelDefault, setIsHotelDefault] = useState(
+    isDefaultHotelId === item.id
+  );
 
   const [name, setName] = useState(item.user.userName);
   const [password, setPassword] = useState(item.user.userPassword);
@@ -72,6 +80,20 @@ export const SettingsScreenHotelInfo = ({ item }) => {
     useState(false);
   const [expandedFolioPocketsSection, setExpandedFolioPocketsSection] =
     useState(false);
+
+  const hotelData = {
+    hotelName: hotelName,
+    serverAddress: serverAddress,
+    defaultPointOfSales: checkedPointOfSales,
+    defaultPocketCode: checkedFolioPocket,
+    user: { userName: name, userPassword: password, token: userToken },
+    language: "",
+    isLoggedIn: false,
+    PropertyId: null,
+    id: item.id,
+  };
+
+  const defaultHotelId = isHotelDefault ? item.id : isDefaultHotelId;
 
   //"http://109.236.70.42:9090"
 
@@ -245,35 +267,40 @@ export const SettingsScreenHotelInfo = ({ item }) => {
   };
 
   const saveSettings = () => {
-    Keyboard.dismiss();
+    const hotel = hotels.find((elem) => elem.id == item.id);
+    //Keyboard.dismiss();
     setSettingsIsLoading(true);
-    //saveData("@pointofsales", checkedPointOfSales);
-    setSettings([
-      {
-        ...settings[0],
-        hotelName,
-        serverAddress,
-        defaultPointOfSales: checkedPointOfSales,
-        defaultPocketCode: checkedFolioPocket,
-        user: { userName: name, userPassword: password, token: userToken },
-        isDefault: isHotelDefault,
-      },
-    ]);
-    saveData("@settings", [
-      {
-        ...settings[0],
-        hotelName,
-        serverAddress,
-        defaultPointOfSales: checkedPointOfSales,
-        defaultPocketCode: checkedFolioPocket,
-        user: { userName: name, userPassword: password, token: userToken },
-        isDefault: isHotelDefault,
-      },
-    ]);
-    //saveData("@defaultpocket", checkedFolioPocket);
+    //console.log(hotel);
+    //console.log(`это: ${hotelData.serverAddress}`);
+
+    if (hotel) {
+      const filteredSettings = hotels.filter((elem) => elem.id !== item.id);
+      setSettings({
+        ...settings,
+        isDefaultHotelId: defaultHotelId,
+        hotels: [...filteredSettings, hotelData],
+      });
+      saveData("@settings", {
+        ...settings,
+        isDefaultHotelId: defaultHotelId,
+        hotels: [...filteredSettings, hotelData],
+      });
+    } else {
+      setSettings({
+        ...settings,
+        isDefaultHotelId: defaultHotelId,
+        hotels: [...hotels, hotelData],
+      });
+      saveData("@settings", {
+        ...settings,
+        isDefaultHotelId: defaultHotelId,
+        hotels: [...hotels, hotelData],
+      });
+    }
+
     setTimeout(() => {
       setSettingsIsLoading(false);
-      setVisibleSnackBar(true);
+      //setVisibleSnackBar(true);
     }, 3000);
   };
 
@@ -471,22 +498,21 @@ export const SettingsScreenHotelInfo = ({ item }) => {
       }
     }
   };
+
   return (
     <List.Accordion
       key={item.id}
       title={hotelName ? hotelName : t("Settings.hotel_name")}
       //theme={{ colors: theme.colors.onSurface }}
-      style={
-        {
-          //flex: 1,
-          //display: "flex",
-          //flexDirection: "row",
-          //backgroundColor: "yellow",
-          //justifyContent: "space-around",
-          //alignItems: "center",
-          //width: "100%",
-        }
-      }
+      style={{
+        //flex: 1,
+        //display: "flex",
+        //flexDirection: "row",
+        //backgroundColor: "yellow",
+        //justifyContent: "space-around",
+        //alignItems: "center",
+        width: "100%",
+      }}
       titleStyle={{
         fontSize: 16,
         color: !expandedAccordion
@@ -497,59 +523,23 @@ export const SettingsScreenHotelInfo = ({ item }) => {
         //width: "80%",
       }}
       expanded={expandedAccordion}
-      onPress={() => setExpandedAccordion(!expandedAccordion)}
+      onPress={() => {
+        setExpandedAccordion(!expandedAccordion);
+      }}
+      onLongPress={() => console.log("Delete Alert")}
       //left={(props) => <Text {...props}>{t("Settings.hotel_name")}</Text>}
       right={(props) => (
         <View
-          style={{
-            //backgroundColor: "red",
-            flexDirection: "row",
-            justifyContent: expandedAccordion ? "space-between" : "flex-end",
-            alignItems: "center",
-            width: 150,
-          }}
+          style={
+            {
+              //backgroundColor: "red",
+              //flexDirection: "row",
+              //justifyContent: expandedAccordion ? "space-between" : "flex-end",
+              //alignItems: "center",
+              //width: 150,
+            }
+          }
         >
-          {expandedAccordion ? (
-            <View
-              style={{
-                //backgroundColor: "yellow",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                width: "50%",
-              }}
-            >
-              <List.Icon
-                {...props}
-                icon={({ color, size }) => (
-                  <MaterialCommunityIcons
-                    name={"content-save-outline"}
-                    size={size}
-                    color={
-                      !expandedAccordion
-                        ? theme.colors.onSurface
-                        : theme.colors.primary
-                    }
-                  />
-                )}
-              />
-              <List.Icon
-                {...props}
-                icon={({ color, size }) => (
-                  <MaterialCommunityIcons
-                    name={"delete-circle-outline"}
-                    size={size}
-                    color={
-                      !expandedAccordion
-                        ? theme.colors.onSurface
-                        : theme.colors.primary
-                    }
-                  />
-                )}
-              />
-            </View>
-          ) : null}
-
           <List.Icon
             {...props}
             icon={({ color, size }) => (
@@ -563,8 +553,6 @@ export const SettingsScreenHotelInfo = ({ item }) => {
                 }
               />
             )}
-            //color={"green"}
-            //style={{ color: "green" }}
           />
         </View>
       )}
@@ -586,10 +574,7 @@ export const SettingsScreenHotelInfo = ({ item }) => {
                   flexDirection: "row",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  //backgroundColor: "yellow",
                   width: "90%",
-                  //height: "15%",
-                  //marginVertical: 515,
                   padding: 5,
                 }}
               >
@@ -606,9 +591,6 @@ export const SettingsScreenHotelInfo = ({ item }) => {
                     setUserToken("");
                   }}
                   style={{ width: "65%" }}
-                  //onSubmitEditing={() => Keyboard.dismiss()}
-                  //onBlur={() => Keyboard.dismiss()}
-                  //secureTextEntry
                   right={
                     !networkIsLoading ? (
                       <TextInput.Icon
@@ -668,10 +650,7 @@ export const SettingsScreenHotelInfo = ({ item }) => {
                   flexDirection: "row",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  //backgroundColor: "yellow",
                   width: "90%",
-                  //height: "15%",
-                  //marginVertical: 5,
                   padding: 5,
                 }}
               >
@@ -726,7 +705,6 @@ export const SettingsScreenHotelInfo = ({ item }) => {
                           name="account-check"
                           color={checkTokenColor}
                           size={size}
-                          //onPress={() => console.log("pressed")}
                         />
                       )}
                       onPress={getToken}
@@ -792,7 +770,7 @@ export const SettingsScreenHotelInfo = ({ item }) => {
                               ? "chevron-down"
                               : "chevron-up"
                           }
-                          size={24}
+                          size={size}
                           color={
                             !expandedPointOfSaleSection
                               ? theme.colors.onSurface
@@ -800,8 +778,6 @@ export const SettingsScreenHotelInfo = ({ item }) => {
                           }
                         />
                       )}
-                      //color={"green"}
-                      //style={{ color: "green" }}
                     />
                   )}
                 >
@@ -818,7 +794,6 @@ export const SettingsScreenHotelInfo = ({ item }) => {
                 <List.Accordion
                   title={t("Settings.default_folio_pocket")}
                   titleStyle={{ fontSize: 14 }}
-                  //rippleColor={"green"}
                   expanded={expandedFolioPocketsSection}
                   onPress={() =>
                     setExpandedFolioPocketsSection(!expandedFolioPocketsSection)
@@ -833,20 +808,16 @@ export const SettingsScreenHotelInfo = ({ item }) => {
                               ? "chevron-down"
                               : "chevron-up"
                           }
-                          size={24}
+                          size={size}
                           color={
                             !expandedFolioPocketsSection
                               ? theme.colors.onSurface
                               : theme.colors.primary
                           }
-                          //color={color}
                         />
                       )}
-                      //color={"green"}
-                      //style={{ color: "red",textAlign:'center' }}
                     />
                   )}
-                  //style={{ width: "90%" }}
                 >
                   {activeFolioPockets.map((item) => (
                     <List.Item
@@ -892,6 +863,20 @@ export const SettingsScreenHotelInfo = ({ item }) => {
     //justifyContent="space-between"
   />
 </View>*/}
+
+              <View style={{ width: "50%", marginTop: 35 }}>
+                <Button
+                  loading={settingsIsLoading}
+                  mode="contained"
+                  onPress={saveSettings}
+                  //disabled={userToken ? false : true}
+                  //style={{ width: "55%" }}
+                >
+                  {settingsIsLoading
+                    ? `${t("Settings.saving_settings")}`
+                    : `${t("Settings.save_settings")}`}
+                </Button>
+              </View>
             </ScrollView>
           );
         }}
@@ -930,3 +915,64 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+
+/* 
+          {expandedAccordion ? (
+            <View
+              style={{
+                //backgroundColor: "yellow",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                width: "50%",
+              }}
+            >
+              <List.Icon
+                {...props}
+                icon={({ color, size }) => (
+                  <MaterialCommunityIcons
+                    name={"content-save-outline"}
+                    size={size}
+                    color={
+                      !expandedAccordion
+                        ? theme.colors.onSurface
+                        : theme.colors.primary
+                    }
+                  />
+                )}
+                onPress={saveHotelSettings}
+              />
+              <List.Icon
+                {...props}
+                icon={({ color, size }) => (
+                  <MaterialCommunityIcons
+                    name={"delete-circle-outline"}
+                    size={size}
+                    color={
+                      !expandedAccordion
+                        ? theme.colors.onSurface
+                        : theme.colors.primary
+                    }
+                  />
+                )}
+                onPress={() => {
+                  console.log(item, hotelData);
+                }}
+              />
+              <IconButton
+                icon={({ color, size }) => (
+                  <MaterialCommunityIcons
+                    name={"delete-circle-outline"}
+                    size={size}
+                    color={
+                      !expandedAccordion
+                        ? theme.colors.onSurface
+                        : theme.colors.primary
+                    }
+                  />
+                )}
+                onPress={() => console.log("test")}
+              />
+            </View>
+          ) : null}
+*/

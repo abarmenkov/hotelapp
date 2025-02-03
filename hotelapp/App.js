@@ -38,6 +38,7 @@ import {
 import { LoadingIndicator } from "./src/components/LoadingIndicator";
 import { useTranslation } from "react-i18next";
 import { SettingsContext } from "./src/context/SettingsContext";
+import { uid } from "uid";
 
 const CombinedDefaultTheme = {
   ...MD3LightTheme,
@@ -60,19 +61,24 @@ const CombinedDarkTheme = {
 
 export default function App() {
   const [isThemeDark, setIsThemeDark] = useState(null);
-
-  const [settings, setSettings] = useState([
-    {
-      hotelName: "",
-      serverAddress: "",
-      defaultPointOfSales: "",
-      defaultPocketCode: "",
-      user: { userName: "", userPassword: "", token: "" },
-      language: "",
-      isDefault: false,
-      PropertyId: null,
-    },
-  ]);
+  const initialSettings = {
+    isDefaultHotelId: "",
+    isLoggedInHotelId: "",
+    hotels: [
+      {
+        hotelName: "New Hotel!",
+        serverAddress: "",
+        defaultPointOfSales: "",
+        defaultPocketCode: "",
+        user: { userName: "", userPassword: "", token: "" },
+        language: "",
+        isLoggedIn: false,
+        PropertyId: null,
+        id: uid(),
+      },
+    ],
+  };
+  const [settings, setSettings] = useState(initialSettings);
 
   const [themeIsLoading, setThemeIsLoading] = useState(false);
   const [settingsIsLoading, setSettingsIsLoading] = useState(false);
@@ -83,7 +89,12 @@ export default function App() {
     //clearStorage();
     // долго загружается user(причина???), передаю в функцию isLoading, либо здесь по setTimeout
     setSettingsIsLoading(true);
-    getSettings("@settings", setSettings, setSettingsIsLoading, settings);
+    getSettings(
+      "@settings",
+      setSettings,
+      setSettingsIsLoading,
+      initialSettings
+    );
     //setTimeout(() => setSettingsIsLoading(false), 5000);
   }, []);
 

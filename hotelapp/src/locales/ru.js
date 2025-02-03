@@ -15,6 +15,7 @@ const ru = {
       login: "Логин",
       password: "Пароль",
       hotel_name: "Название отеля",
+      enterBtn: "Войти",
     },
     DrawerContent: {
       settings: "Настройки",
