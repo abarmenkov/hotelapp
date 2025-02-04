@@ -8,14 +8,12 @@ import { AppStyles } from "../utils/constants";
 export const HotelPicker = forwardRef(
   (
     {
-      lngPickerViewStyle,
       lngPickerContainerStyle,
       lngPickerStyle,
       lngPickerItemStyle,
-      lngPickerTitleStyle,
-      lngPickerTitleViewStyle,
       pickerLabel,
-      isDefaultHotelId,
+      activeHotelId,
+      setActiveHotelId,
       hotels,
       ...otherProps
     },
@@ -40,10 +38,10 @@ export const HotelPicker = forwardRef(
 */
 
     const defaultHotelName = hotels.find(
-      (item) => item.id === isDefaultHotelId
+      (item) => item.id === activeHotelId
     ).hotelName;
     const [selectedHotel, setSelectedHotel] = useState(defaultHotelName);
-    const [selectedHotelId, setSelectedHotelId] = useState(isDefaultHotelId);
+    const [selectedHotelId, setSelectedHotelId] = useState(activeHotelId);
     const [isFocused, setIsFocused] = useState(false);
 
     const sortedHotels = [
@@ -54,6 +52,7 @@ export const HotelPicker = forwardRef(
     const handleHotelChange = (value, index) => {
       setSelectedHotel(value.hotelName);
       setSelectedHotelId(value.id);
+      setActiveHotelId(value.id);
       //i18n.changeLanguage(value);
     };
 
@@ -100,7 +99,7 @@ export const HotelPicker = forwardRef(
             mode="dropdown"
             //mode="dialog"
 
-            selectedValue={"selectedHotel"}
+            selectedValue={selectedHotel}
             onValueChange={handleHotelChange}
             style={{
               ...AppStyles.lngPicker,

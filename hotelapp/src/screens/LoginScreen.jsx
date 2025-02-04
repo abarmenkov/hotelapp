@@ -12,6 +12,8 @@ import { Hotels } from "../utils/data";
 import { HotelPicker } from "../components/HotelPicker";
 
 export const LoginScreen = ({ navigation }) => {
+  const { t } = useTranslation();
+  const theme = useTheme();
   const { settings, setSettings } = useContext(SettingsContext);
   //const { hotels, isLoggedInHotelId, isDefaultHotelId } = settings;
   // const [selectedHotelId, setSelectedHotelId] = useState("");
@@ -26,27 +28,36 @@ export const LoginScreen = ({ navigation }) => {
   );*/
   //console.log(`filteredHotel: `, filteredHotel);
   const { hotels, isDefaultHotelId, isLoggedInHotelId } = Hotels;
-
-  const filteredHotel = hotels.find((hotel) => hotel.id === isDefaultHotelId);
-  //console.log(filteredHotel);
-
-  const { userName, userPassword, token } = filteredHotel.user;
-  const { hotelName } = filteredHotel;
-  const [activeHotelId, setActiveHotelId] = useState(filteredHotel.id);
-  //console.log(activeHotelId, isLoggedInHotelId);
-
-  const { t } = useTranslation();
-  const theme = useTheme();
-  const [name, setName] = useState(userName);
-  const [password, setPassword] = useState(userPassword);
-  const [hotel, setHotel] = useState(hotelName);
+  const [activeHotelId, setActiveHotelId] = useState(isDefaultHotelId);
+  const [hotelsArray, setHotelsArray] = useState([]);
+  const [name, setName] = useState('');
+  const [password, setPassword] = useState('');
+  const [token, setToken] = useState();
   const [securedPassword, setSecuredPassword] = useState(true);
+  useEffect(() => {
+    const filteredHotel = hotels.find((hotel) => hotel.id === activeHotelId);
+    setHotelsArray(filteredHotel);
+    //setSelectedHotelId(isDefaultHotelId);
+  }, [activeHotelId]);
 
-  //const [secureTextEntry, setSecureTextEntry] = useState(true);
+  //const filteredHotel = hotels.find((hotel) => hotel.id === activeHotelId);
+  //console.log(hotelsArray);
+
+  //const { userName, userPassword, token } = hotelsArray.user;
+  //const { hotelName } = filteredHotel;
+  //const [activeHotelId, setActiveHotelId] = useState(isDefaultHotelId);
+  //console.log(activeHotelId);
+
+  //const [hotel, setHotel] = useState(hotelName);
+
+  useEffect(() => {
+    setName(hotelsArray.user?.userName);
+    setPassword(hotelsArray.user?.userPassword);
+    setToken(hotelsArray.user?.token);
+  }, [hotelsArray]);
 
   const passwordRef = useRef();
   const pickerRef = useRef();
-  //console.log(settings);
 
   /*useEffect(() => {
     const getData = async () => {
@@ -60,7 +71,8 @@ export const LoginScreen = ({ navigation }) => {
     getData();
   }, []);*/
 
-  const buttonDisabled = name.length > 0 && password.length > 0 ? false : true;
+  const buttonDisabled = name?.length > 0 && password?.length > 0 ? false : true;
+  //const buttonDisabled = true;
 
   const setSecure = () => {
     setSecuredPassword(false);
@@ -106,13 +118,11 @@ export const LoginScreen = ({ navigation }) => {
       >
         <HotelPicker
           ref={pickerRef}
-          isDefaultHotelId={isDefaultHotelId}
+          activeHotelId={activeHotelId}
+          setActiveHotelId={setActiveHotelId}
           hotels={hotels}
           lngPickerStyle={styles.lngPickerStyle}
           lngPickerContainerStyle={styles.lngPickerContainerStyle}
-          lngPickerViewStyle={styles.lngPickerViewStyle}
-          lngPickerTitleViewStyle={styles.lngPickerTitleViewStyle}
-          lngPickerTitleStyle={styles.lngPickerTitleStyle}
           lngPickerItemStyle={styles.lngPickerItemStyle}
           pickerLabel={t("LoginScreen.hotel_name")}
         />
