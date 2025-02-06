@@ -16,6 +16,8 @@ const en = {
       password: "Password",
       hotel_name: "Hotel",
       enterBtn: "Enter",
+      server: "Server",
+      server_placeholder: "Server address",
     },
     DrawerContent: {
       settings: "Settings",

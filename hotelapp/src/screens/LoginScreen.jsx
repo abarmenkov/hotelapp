@@ -1,12 +1,18 @@
 import React, { useContext, useEffect, useState, useRef } from "react";
-import { View, Alert, StyleSheet, Text } from "react-native";
+import {
+  View,
+  Alert,
+  StyleSheet,
+  Keyboard,
+  TouchableWithoutFeedback,
+} from "react-native";
 import { useTranslation } from "react-i18next";
 import { useTheme, TextInput, Button } from "react-native-paper";
 import { WIDTH, AppStyles } from "../utils/constants";
 //import { UserContext } from "../context/UserContext";
 import { saveData } from "../API/asyncStorageMethods";
 import { SettingsContext } from "../context/SettingsContext";
-import MyTextInput from "../components/MyInput";
+//import MyTextInput from "../components/MyInput";
 
 import { Hotels } from "../utils/data";
 import { HotelPicker } from "../components/HotelPicker";
@@ -30,15 +36,28 @@ export const LoginScreen = ({ navigation }) => {
   const { hotels, isDefaultHotelId, isLoggedInHotelId } = Hotels;
   const [activeHotelId, setActiveHotelId] = useState(isDefaultHotelId);
   const [hotelsArray, setHotelsArray] = useState([]);
-  const [name, setName] = useState('');
-  const [password, setPassword] = useState('');
-  const [token, setToken] = useState();
+  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
+  const [token, setToken] = useState("");
+  const [serverAddress, setServerAddress] = useState("");
   const [securedPassword, setSecuredPassword] = useState(true);
+  const loginRef = useRef();
+  const passwordRef = useRef();
+  const pickerRef = useRef();
+  const serverRef = useRef();
+
   useEffect(() => {
     const filteredHotel = hotels.find((hotel) => hotel.id === activeHotelId);
     setHotelsArray(filteredHotel);
     //setSelectedHotelId(isDefaultHotelId);
   }, [activeHotelId]);
+
+  useEffect(() => {
+    setServerAddress(hotelsArray?.serverAddress);
+    setName(hotelsArray?.user?.userName);
+    setPassword(hotelsArray?.user?.userPassword);
+    setToken(hotelsArray?.user?.token);
+  }, [hotelsArray]);
 
   //const filteredHotel = hotels.find((hotel) => hotel.id === activeHotelId);
   //console.log(hotelsArray);
@@ -49,15 +68,6 @@ export const LoginScreen = ({ navigation }) => {
   //console.log(activeHotelId);
 
   //const [hotel, setHotel] = useState(hotelName);
-
-  useEffect(() => {
-    setName(hotelsArray.user?.userName);
-    setPassword(hotelsArray.user?.userPassword);
-    setToken(hotelsArray.user?.token);
-  }, [hotelsArray]);
-
-  const passwordRef = useRef();
-  const pickerRef = useRef();
 
   /*useEffect(() => {
     const getData = async () => {
@@ -71,7 +81,8 @@ export const LoginScreen = ({ navigation }) => {
     getData();
   }, []);*/
 
-  const buttonDisabled = name?.length > 0 && password?.length > 0 ? false : true;
+  const buttonDisabled =
+    name?.length > 0 && password?.length > 0 ? false : true;
   //const buttonDisabled = true;
 
   const setSecure = () => {
@@ -104,100 +115,133 @@ export const LoginScreen = ({ navigation }) => {
     }
   };
 
+  const focusPassword = () => passwordRef.current.focus();
+  const blurLogin = () => {
+    loginRef.current.blur();
+    Keyboard.dismiss();
+  };
+  const blurPassword = () => {
+    passwordRef.current.blur();
+  };
+
   return (
-    <View
-      style={{
-        ...AppStyles.container,
-        backgroundColor: theme.colors.onSecondary,
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss();
       }}
+      accessible={false}
     >
       <View
         style={{
-          width: "90%",
+          ...AppStyles.container,
+          backgroundColor: theme.colors.onSecondary,
         }}
       >
-        <HotelPicker
-          ref={pickerRef}
-          activeHotelId={activeHotelId}
-          setActiveHotelId={setActiveHotelId}
-          hotels={hotels}
-          lngPickerStyle={styles.lngPickerStyle}
-          lngPickerContainerStyle={styles.lngPickerContainerStyle}
-          lngPickerItemStyle={styles.lngPickerItemStyle}
-          pickerLabel={t("LoginScreen.hotel_name")}
-        />
-      </View>
-      {/*<View
-        style={{
-          width: "90%",
-        }}
-      >
-        <TextInput
-          //underlineColorAndroid="transparent"
-          //placeholderTextColor="gray"
-          mode="outlined"
-          label={t("LoginScreen.hotel_name")}
-          value={hotel}
-          disabled
-          onChangeText={setHotel}
-          placeholder={t("LoginScreen.login_placeholder")}
-          right={hotel}
-        />
-      </View>*/}
+        <View
+          style={{
+            width: "90%",
+          }}
+        >
+          <HotelPicker
+            ref={pickerRef}
+            activeHotelId={activeHotelId}
+            setActiveHotelId={setActiveHotelId}
+            hotels={hotels}
+            lngPickerStyle={styles.lngPickerStyle}
+            lngPickerContainerStyle={styles.lngPickerContainerStyle}
+            lngPickerItemStyle={styles.lngPickerItemStyle}
+            pickerLabel={t("LoginScreen.hotel_name")}
+            focusPassword={focusPassword}
+            blurLogin={blurLogin}
+            blurPassword={blurPassword}
+          />
+        </View>
+        <View
+          style={{
+            width: "90%",
+          }}
+        >
+          <TextInput
+            //underlineColorAndroid="transparent"
+            //placeholderTextColor="gray"
+            ref={serverRef}
+            mode="outlined"
+            label={t("LoginScreen.server")}
+            value={serverAddress}
+            style={{
+              backgroundColor: theme.colors.onSecondary,
+              marginVertical: 30,
+            }}
+            textColor={theme.colors.onSurface}
+            onChangeText={setServerAddress}
+            placeholder={t("LoginScreen.server_placeholder")}
+            autoCapitalize="none"
+            keyboardType="default"
+            keyboardAppearance="dark"
+            returnKeyType="next"
+            returnKeyLabel="next"
+            enablesReturnKeyAutomatically={true}
+            onSubmitEditing={() => loginRef.current?.focus()}
+            //right={hotel}
+            //disabled
+          />
+        </View>
 
-      <View style={styles.textInputContainer}>
-        <TextInput
-          mode="outlined"
-          //underlineColorAndroid="transparent"
-          //placeholderTextColor="gray"
-          style={{ width: "45%", backgroundColor: theme.colors.onSecondary }}
-          value={name}
-          onChangeText={setName}
-          label={t("LoginScreen.login")}
-          placeholder={t("LoginScreen.login_placeholder")}
-          autoCapitalize="none"
-          keyboardType="default"
-          keyboardAppearance="dark"
-          returnKeyType="next"
-          returnKeyLabel="next"
-          enablesReturnKeyAutomatically={true}
-          onSubmitEditing={() => passwordRef.current?.focus()}
-          textColor={theme.colors.onSurface}
-          //contentStyle={{ backgroundColor: theme.colors.onSecondary }}
-          //underlineColor="red"
-          //outlineColor="red"
-          activeOutlineColor={theme.colors.primary}
-
-          //showSoftInputOnFocus={false}
-        />
-        <TextInput
-          ref={passwordRef}
-          mode="outlined"
-          //underlineColorAndroid="transparent"
-          //placeholderTextColor="gray"
-          style={{ width: "45%", backgroundColor: theme.colors.onSecondary }}
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry={securedPassword}
-          label={t("LoginScreen.password")}
-          placeholder={t("LoginScreen.password_placeholder")}
-          autoCapitalize="none"
-          keyboardType="default"
-          keyboardAppearance="dark"
-          returnKeyType="done"
-          returnKeyLabel="done"
-          right={
-            <TextInput.Icon
-              icon="eye"
-              onPress={() => setSecure()}
-              color={
-                securedPassword ? theme.colors.primary : theme.colors.outline
-              }
-            />
-          }
-        />
-      </View>
-      {/*<View
+        <View style={styles.textInputContainer}>
+          <TextInput
+            ref={loginRef}
+            mode="outlined"
+            //underlineColorAndroid="transparent"
+            //placeholderTextColor="gray"
+            style={{ width: "45%", backgroundColor: theme.colors.onSecondary }}
+            value={name}
+            onChangeText={setName}
+            label={t("LoginScreen.login")}
+            placeholder={t("LoginScreen.login_placeholder")}
+            autoCapitalize="none"
+            keyboardType="default"
+            keyboardAppearance="dark"
+            returnKeyType="next"
+            returnKeyLabel="next"
+            enablesReturnKeyAutomatically={true}
+            onSubmitEditing={() => passwordRef.current?.focus()}
+            textColor={theme.colors.onSurface}
+            //contentStyle={{ backgroundColor: theme.colors.onSecondary }}
+            //underlineColor="red"
+            //outlineColor="red"
+            activeOutlineColor={theme.colors.primary}
+            //onBlur={() => Keyboard.dismiss()}
+            //showSoftInputOnFocus={false}
+          />
+          <TextInput
+            ref={passwordRef}
+            mode="outlined"
+            //underlineColorAndroid="transparent"
+            //placeholderTextColor="gray"
+            style={{ width: "45%", backgroundColor: theme.colors.onSecondary }}
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={securedPassword}
+            label={t("LoginScreen.password")}
+            placeholder={t("LoginScreen.password_placeholder")}
+            autoCapitalize="none"
+            keyboardType="default"
+            keyboardAppearance="dark"
+            returnKeyType="done"
+            returnKeyLabel="done"
+            right={
+              <TextInput.Icon
+                icon="eye"
+                onPress={() => setSecure()}
+                color={
+                  securedPassword ? theme.colors.primary : theme.colors.outline
+                }
+              />
+            }
+            //onBlur={() => passwordRef.current?.blur()}
+          />
+        </View>
+        {/*<View
         style={{
           width: "90%",
           flexDirection: "row",
@@ -268,16 +312,17 @@ export const LoginScreen = ({ navigation }) => {
         />
       </View>*/}
 
-      <Button
-        //title="Enter"
-        onPress={onButtonPress}
-        disabled={buttonDisabled}
-        mode="contained"
-        style={{ width: "30%" }}
-      >
-        {t("LoginScreen.enterBtn")}
-      </Button>
-    </View>
+        <Button
+          //title="Enter"
+          onPress={onButtonPress}
+          disabled={buttonDisabled}
+          mode="contained"
+          style={{ width: "30%" }}
+        >
+          {t("LoginScreen.enterBtn")}
+        </Button>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -286,7 +331,7 @@ const styles = StyleSheet.create({
     width: "90%",
     flexDirection: "row",
     justifyContent: "space-between",
-    marginVertical: 30,
+    marginBottom: 50,
   },
   textInputView: {
     width: WIDTH * 0.4,

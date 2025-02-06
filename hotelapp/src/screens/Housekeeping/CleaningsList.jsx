@@ -15,6 +15,7 @@ import { reservationsFilter } from "../../utils/reservationsFilter";
 import { create } from "../../utils/normalize";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import Swipeable from "react-native-gesture-handler/Swipeable";
+//import Swipeable from "react-native-gesture-handler/ReanimatedSwipeable";
 import { useTranslation } from "react-i18next";
 import { getDuration } from "../../utils/getDuration";
 

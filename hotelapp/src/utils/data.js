@@ -166,7 +166,7 @@ export const Cleanings = [
 ];
 
 export const Hotels = {
-  isDefaultHotelId: "3",
+  isDefaultHotelId: "2",
   isLoggedInHotelId: "",
   hotels: [
     {
@@ -182,7 +182,7 @@ export const Hotels = {
     },
     {
       hotelName: "Hotel2",
-      serverAddress: "222",
+      serverAddress: "2222",
       defaultPointOfSales: "",
       defaultPocketCode: "",
       user: { userName: "abb", userPassword: "1", token: "" },

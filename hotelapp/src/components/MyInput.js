@@ -1,8 +1,9 @@
 import React, { forwardRef } from "react";
-import { TextInput as RNTextInput, View, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { MaterialCommunityIcons as Icon } from "@expo/vector-icons";
-import { useTheme } from "react-native-paper";
+import { useTheme, TextInput } from "react-native-paper";
 //import { useTranslation } from "react-i18next";
+//import { TextInput } from "react-native-paper";
 
 const MyTextInput = forwardRef(
   (
@@ -31,7 +32,7 @@ const MyTextInput = forwardRef(
         }}
       >
         <View style={{ flex: 1 }}>
-          <RNTextInput
+          <TextInput
             underlineColorAndroid="transparent"
             placeholderTextColor="gray"
             ref={ref}

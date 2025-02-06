@@ -1,7 +1,7 @@
 import React, { useState, useEffect, forwardRef } from "react";
 //import { useTranslation } from "react-i18next";
 import { useTheme, TouchableRipple, Text } from "react-native-paper";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Keyboard } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { AppStyles } from "../utils/constants";
 
@@ -15,6 +15,9 @@ export const HotelPicker = forwardRef(
       activeHotelId,
       setActiveHotelId,
       hotels,
+      focusPassword,
+      blurLogin,
+      blurPassword,
       ...otherProps
     },
     ref
@@ -37,9 +40,9 @@ export const HotelPicker = forwardRef(
     useEffect(() => setSelectedLanguage(appLanguage), [i18n.language]);
 */
 
-    const defaultHotelName = hotels.find(
-      (item) => item.id === activeHotelId
-    ).hotelName;
+    const defaultHotelName = activeHotelId
+      ? hotels.find((item) => item.id === activeHotelId).hotelName
+      : "";
     const [selectedHotel, setSelectedHotel] = useState(defaultHotelName);
     const [selectedHotelId, setSelectedHotelId] = useState(activeHotelId);
     const [isFocused, setIsFocused] = useState(false);
@@ -53,12 +56,15 @@ export const HotelPicker = forwardRef(
       setSelectedHotel(value.hotelName);
       setSelectedHotelId(value.id);
       setActiveHotelId(value.id);
-      //i18n.changeLanguage(value);
+      focusPassword();
     };
 
-    //const pickerRef = useRef();
-
-    const openPicker = () => ref.current.focus();
+    const openPicker = () => {
+      ref.current.focus();
+      blurLogin();
+      blurPassword();
+      //Keyboard.dismiss();
+    };
 
     const closePicker = () => ref.current.blur();
     const renderLabel = () => (
