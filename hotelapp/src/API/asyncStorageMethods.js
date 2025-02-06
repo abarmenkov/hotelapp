@@ -26,12 +26,12 @@ export const getSettings = async (key, cb, setIsLoading, initialState) => {
     if (value !== null) {
       //console.log(value);
       cb(JSON.parse(value));
-      setTimeout(() => setIsLoading(false), 5000);
+      setTimeout(() => setIsLoading(false), 3000);
       //setIsLoading(false);
     } else {
       //console.log(initialState);
       cb(initialState);
-      setTimeout(() => setIsLoading(false), 5000);
+      setTimeout(() => setIsLoading(false), 3000);
       //setIsLoading(false);
     }
   } catch (e) {

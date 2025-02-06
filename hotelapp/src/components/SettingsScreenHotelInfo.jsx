@@ -81,6 +81,11 @@ export const SettingsScreenHotelInfo = ({ item }) => {
   const [expandedFolioPocketsSection, setExpandedFolioPocketsSection] =
     useState(false);
 
+  const loginRef = useRef();
+  const passwordRef = useRef();
+  const pickerRef = useRef();
+  const serverRef = useRef();
+
   const hotelData = {
     hotelName: hotelName,
     serverAddress: serverAddress,
@@ -178,8 +183,6 @@ export const SettingsScreenHotelInfo = ({ item }) => {
   const activeFolioPockets = folioPockets.filter(
     (item) => item.IsActive && !item.DeletedDate
   );
-
-  const pickerRef = useRef();
 
   //const checkNetworkColor = hasError ? "red" : "green";
   const snackbarMessage =
@@ -580,8 +583,9 @@ export const SettingsScreenHotelInfo = ({ item }) => {
               >
                 <Text>{t("Settings.server_address")}</Text>
                 <TextInput
+                  ref={serverRef}
                   mode="outlined"
-                  //focused={true}
+                  focused={true}
                   value={serverAddress}
                   label={t("Settings.server_address")}
                   placeholder={t("Settings.server_address")}
@@ -591,6 +595,13 @@ export const SettingsScreenHotelInfo = ({ item }) => {
                     setUserToken("");
                   }}
                   style={{ width: "65%" }}
+                  autoCapitalize="none"
+                  keyboardType="default"
+                  keyboardAppearance="dark"
+                  returnKeyType="next"
+                  returnKeyLabel="next"
+                  enablesReturnKeyAutomatically={true}
+                  onSubmitEditing={() => loginRef.current?.focus()}
                   right={
                     !networkIsLoading ? (
                       <TextInput.Icon
@@ -656,6 +667,7 @@ export const SettingsScreenHotelInfo = ({ item }) => {
               >
                 <Text>{t("Settings.login_text")}</Text>
                 <TextInput
+                  ref={loginRef}
                   mode="outlined"
                   //focused={true}
                   value={name}
@@ -665,7 +677,14 @@ export const SettingsScreenHotelInfo = ({ item }) => {
                     setName(value);
                     setUserToken("");
                   }}
+                  autoCapitalize="none"
+                  keyboardType="default"
+                  keyboardAppearance="dark"
+                  returnKeyType="next"
+                  returnKeyLabel="next"
+                  enablesReturnKeyAutomatically={true}
                   style={{ width: "65%" }}
+                  onSubmitEditing={() => passwordRef.current?.focus()}
                   //onSubmitEditing={() => Keyboard.dismiss()}
                   //onBlur={() => Keyboard.dismiss()}
                   //secureTextEntry
@@ -685,6 +704,7 @@ export const SettingsScreenHotelInfo = ({ item }) => {
               >
                 <Text>{t("Settings.password_text")}</Text>
                 <TextInput
+                  ref={passwordRef}
                   mode="outlined"
                   //focused={true}
                   value={password}
@@ -695,6 +715,12 @@ export const SettingsScreenHotelInfo = ({ item }) => {
                     setUserToken("");
                   }}
                   style={{ width: "65%" }}
+                  autoCapitalize="none"
+                  keyboardType="default"
+                  keyboardAppearance="dark"
+                  returnKeyType="done"
+                  returnKeyLabel="done"
+                  enablesReturnKeyAutomatically={true}
                   right={
                     <TextInput.Icon
                       icon={({ color, size }) => (

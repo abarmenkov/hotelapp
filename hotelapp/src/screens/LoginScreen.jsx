@@ -21,19 +21,9 @@ export const LoginScreen = ({ navigation }) => {
   const { t } = useTranslation();
   const theme = useTheme();
   const { settings, setSettings } = useContext(SettingsContext);
-  //const { hotels, isLoggedInHotelId, isDefaultHotelId } = settings;
-  // const [selectedHotelId, setSelectedHotelId] = useState("");
-  //const [hotelsArray, setHotelsArray] = useState([]);
-  /*useEffect(() => {
-    setHotelsArray(hotels);
-    setSelectedHotelId(isDefaultHotelId);
-  }, [settings]);
+  const { hotels, isLoggedInHotelId, isDefaultHotelId } = settings;
 
-  const filteredHotel = hotelsArray.find(
-    (hotel) => hotel.id === selectedHotelId
-  );*/
-  //console.log(`filteredHotel: `, filteredHotel);
-  const { hotels, isDefaultHotelId, isLoggedInHotelId } = Hotels;
+  //const { hotels, isDefaultHotelId, isLoggedInHotelId } = Hotels;
   const [activeHotelId, setActiveHotelId] = useState(isDefaultHotelId);
   const [hotelsArray, setHotelsArray] = useState([]);
   const [name, setName] = useState("");
@@ -41,6 +31,7 @@ export const LoginScreen = ({ navigation }) => {
   const [token, setToken] = useState("");
   const [serverAddress, setServerAddress] = useState("");
   const [securedPassword, setSecuredPassword] = useState(true);
+
   const loginRef = useRef();
   const passwordRef = useRef();
   const pickerRef = useRef();

@@ -43,7 +43,7 @@ export const DrawerContent = (props) => {
   const theme = useTheme();
   const { toggleTheme, isThemeDark } = useContext(PreferencesContext);
   const { settings, setSettings } = useContext(SettingsContext);
-  console.log(settings);
+  //console.log(settings);
  /* const { hotels, isLoggedInHotelId } = settings;
 
   const loggedInHotel = hotels.find((hotel) => hotel.id === isLoggedInHotelId);
