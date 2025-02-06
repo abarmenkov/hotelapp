@@ -66,7 +66,7 @@ export default function App() {
     isLoggedInHotelId: "",
     hotels: [
       {
-        hotelName: "New Hotel!",
+        hotelName: "New Hotel",
         serverAddress: "",
         defaultPointOfSales: "",
         defaultPocketCode: "",

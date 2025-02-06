@@ -38,7 +38,9 @@ export const LoginScreen = ({ navigation }) => {
   const serverRef = useRef();
 
   useEffect(() => {
-    const filteredHotel = hotels.find((hotel) => hotel.id === activeHotelId);
+    const filteredHotel = activeHotelId
+      ? hotels.find((hotel) => hotel.id === activeHotelId)
+      : hotels[0];
     setHotelsArray(filteredHotel);
     //setSelectedHotelId(isDefaultHotelId);
   }, [activeHotelId]);

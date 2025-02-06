@@ -43,25 +43,12 @@ export const DrawerContent = (props) => {
   const theme = useTheme();
   const { toggleTheme, isThemeDark } = useContext(PreferencesContext);
   const { settings, setSettings } = useContext(SettingsContext);
-  //console.log(settings);
- /* const { hotels, isLoggedInHotelId } = settings;
 
-  const loggedInHotel = hotels.find((hotel) => hotel.id === isLoggedInHotelId);
-  //console.log(typeof(hotels[0].id), typeof(isLoggedInHotelId));
+  const { hotels, isLoggedInHotelId } = settings;
   //console.log(isLoggedInHotelId);
-
-  const { userName } = loggedInHotel.user;*/
-
-  /*useEffect(() => {
-    const saveTheme = async () => {
-      try {
-        await AsyncStorage.setItem("@theme", JSON.stringify(dark));
-      } catch (e) {
-        alert("Failed to save data");
-      }
-    };
-    saveTheme();
-  }, [dark]);*/
+  const loggedInUser = isLoggedInHotelId
+    ? hotels.find((hotel) => hotel.id === isLoggedInHotelId).user.userName
+    : "USER";
 
   const pickerRef = useRef();
 
@@ -86,7 +73,9 @@ export const DrawerContent = (props) => {
             >
               User name
             </Paragraph>
-            <Caption style={AppStyles.drawerHeaderCaption}>{'TEST-userName'}</Caption>
+            <Caption style={AppStyles.drawerHeaderCaption}>
+              {loggedInUser}
+            </Caption>
           </View>
         </View>
         <Drawer.Section style={{ ...AppStyles.drawerSection }}>
