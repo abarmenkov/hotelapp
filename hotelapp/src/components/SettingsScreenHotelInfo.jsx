@@ -23,7 +23,7 @@ import {
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { LanguagePicker } from "./LanguagePicker";
-import { appRoutes } from "../API/route";
+import { appRoutes, endPoints } from "../API/route";
 import { token } from "../API/route";
 import { fetchData, fetchDataTest } from "../API/FetchData";
 
@@ -107,11 +107,23 @@ export const SettingsScreenHotelInfo = ({ item }) => {
 
   //получить точки продаж
   useEffect(() => {
-    if (userToken) {
-      const endPoint = "/Logus.HMS.Entities.Dictionaries.PointOfSale";
-      const url = `${appRoutes.dictionariesPath()}${endPoint}`;
+    if (!userToken) {
+      const url = `${appRoutes.dictionariesPath()}${endPoints.pointOfSale()}`;
       const method = "get";
-      /*const controller = new AbortController();
+
+      fetchDataTest(
+        setIsLoading,
+        setPointsOfSales,
+        setErrorFlag,
+        setRefreshing,
+        refreshing,
+        method,
+        url,
+        token
+      );
+    }
+    /*const endPoint = "/Logus.HMS.Entities.Dictionaries.PointOfSale";
+      const controller = new AbortController();
       const newAbortSignal = (timeoutMs) => {
         setTimeout(() => controller.abort(), timeoutMs || 0);
   
@@ -132,10 +144,17 @@ export const SettingsScreenHotelInfo = ({ item }) => {
           propertyId: 1,
         },
       };*/
+  }, [userToken]);
+
+  //загрузка словаря карманов(секций) счета(фолио)
+  useEffect(() => {
+    if (!userToken) {
+      const url = `${appRoutes.dictionariesPath()}${endPoints.folioPocket()}`;
+      const method = "get";
 
       fetchDataTest(
         setIsLoading,
-        setPointsOfSales,
+        setFolioPockets,
         setErrorFlag,
         setRefreshing,
         refreshing,
@@ -144,16 +163,9 @@ export const SettingsScreenHotelInfo = ({ item }) => {
         token
       );
     }
-  }, [userToken]);
-
-  //загрузка словаря карманов(секций) счета(фолио)
-  useEffect(() => {
-    if (userToken) {
+    /*
       const endPoint = "/Logus.HMS.Entities.Dictionaries.StandardFolioPocket";
-      const url = `${appRoutes.dictionariesPath()}${endPoint}`;
-      const method = "get";
-
-      /*const controller = new AbortController();
+      const controller = new AbortController();
       const newAbortSignal = (timeoutMs) => {
         setTimeout(() => controller.abort(), timeoutMs || 0);
   
@@ -180,20 +192,64 @@ export const SettingsScreenHotelInfo = ({ item }) => {
         setRefreshing,
         refreshing,
         controller
-      );*/
+      )
+    return () => {
+      setErrorFlag(false);
+      controller.abort("Data fetching cancelled");
+    };*/
+  }, [userToken]);
+
+  // получить название отеля
+
+  useEffect(() => {
+    if (!userToken) {
+      const url = `${appRoutes.dictionariesPath()}${endPoints.property()}`;
+      const method = "get";
+      const type = "property";
+
       fetchDataTest(
         setIsLoading,
-        setFolioPockets,
+        setHotelName,
         setErrorFlag,
         setRefreshing,
         refreshing,
         method,
         url,
-        token
+        token,
+        type
       );
     }
-
-    /*return () => {
+    /*
+      const endPoint = "/Logus.HMS.Entities.Dictionaries.StandardFolioPocket";
+      const controller = new AbortController();
+      const newAbortSignal = (timeoutMs) => {
+        setTimeout(() => controller.abort(), timeoutMs || 0);
+  
+        return controller.signal;
+      };
+      const configurationObject = {
+        method: "get",
+        url: `${appRoutes.dictionariesPath()}${endPoint}`,
+        signal: newAbortSignal(5000),
+        headers: {
+          Authorization: `Token ${token}`,
+          "Content-Type": "application/json",
+        },
+  
+        params: {
+          propertyId: 1,
+        },
+      };
+      fetchData(
+        setIsLoading,
+        setFolioPockets,
+        configurationObject,
+        setErrorFlag,
+        setRefreshing,
+        refreshing,
+        controller
+      )
+    return () => {
       setErrorFlag(false);
       controller.abort("Data fetching cancelled");
     };*/

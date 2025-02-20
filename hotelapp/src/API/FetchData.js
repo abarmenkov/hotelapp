@@ -50,7 +50,8 @@ export const fetchDataTest = async (
   refreshing,
   method,
   url,
-  token
+  token,
+  type
 ) => {
   //console.log(token);
   const controller = new AbortController();
@@ -83,9 +84,13 @@ export const fetchDataTest = async (
     //console.log(response.data);
 
     if (response.status === 200) {
-      setData(response.data);
-      setIsLoading(false);
-      setRefreshing(false);
+      if (type === "property") {
+        setData(response.data[0].Name);
+      } else {
+        setData(response.data);
+        setIsLoading(false);
+        setRefreshing(false);
+      }
 
       return;
     } else {
