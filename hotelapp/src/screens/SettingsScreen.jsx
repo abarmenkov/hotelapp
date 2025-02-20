@@ -57,31 +57,6 @@ export const SettingsScreen = () => {
   const [hotelsArray, setHotelsArray] = useState([]);
   useEffect(() => setHotelsArray(hotels), [settings]);
 
-  //console.log(settings);
-
-  /*const [pointsOfSales, setPointsOfSales] = useState([]);
-  const [checkedPointOfSales, setPointOfSalesChecked] = useState(
-    settings[0].defaultPointOfSales
-  );
-
-  const [folioPockets, setFolioPockets] = useState([]);
-  const [checkedFolioPocket, setFolioPocketChecked] = useState(
-    settings[0].defaultPocketCode
-  );
-
-  const [hotelName, setHotelName] = useState(settings[0].hotelName);
-  const [serverAddress, setServerAddress] = useState(settings[0].serverAddress);
-  const [isHotelDefault, setIsHotelDefault] = useState(settings[0].isDefault);
-
-  const [name, setName] = useState(settings[0].user.userName);
-  const [password, setPassword] = useState(settings[0].user.userPassword);
-  const [userToken, setUserToken] = useState(settings[0].user.token);
-  const [expandedPointOfSaleSection, setExpandedPointOfSaleSection] =
-    useState(false);
-  const [expandedFolioPocketsSection, setExpandedFolioPocketsSection] =
-    useState(false);
-
-*/
   const [visibleSnackBar, setVisibleSnackBar] = useState(false);
 
   const addHotel = () => {

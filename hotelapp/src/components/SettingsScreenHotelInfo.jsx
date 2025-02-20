@@ -25,7 +25,7 @@ import { useTranslation } from "react-i18next";
 import { LanguagePicker } from "./LanguagePicker";
 import { appRoutes } from "../API/route";
 import { token } from "../API/route";
-import { fetchData } from "../API/FetchData";
+import { fetchData, fetchDataTest } from "../API/FetchData";
 
 import { saveData } from "../API/asyncStorageMethods";
 import axios from "axios";
@@ -107,75 +107,97 @@ export const SettingsScreenHotelInfo = ({ item }) => {
 
   //получить точки продаж
   useEffect(() => {
-    const endPoint = "/Logus.HMS.Entities.Dictionaries.PointOfSale";
-    const controller = new AbortController();
-    const newAbortSignal = (timeoutMs) => {
-      setTimeout(() => controller.abort(), timeoutMs || 0);
+    if (userToken) {
+      const endPoint = "/Logus.HMS.Entities.Dictionaries.PointOfSale";
+      const url = `${appRoutes.dictionariesPath()}${endPoint}`;
+      const method = "get";
+      /*const controller = new AbortController();
+      const newAbortSignal = (timeoutMs) => {
+        setTimeout(() => controller.abort(), timeoutMs || 0);
+  
+        return controller.signal;
+      };
+  
+      const configurationObject = {
+        method: "get",
+        url: `${appRoutes.dictionariesPath()}${endPoint}`,
+        //url: appRoutes.dictionariesPath(),
+        signal: newAbortSignal(5000),
+        headers: {
+          Authorization: `Token ${token}`,
+          "Content-Type": "application/json",
+        },
+  
+        params: {
+          propertyId: 1,
+        },
+      };*/
 
-      return controller.signal;
-    };
+      fetchDataTest(
+        setIsLoading,
+        setPointsOfSales,
+        setErrorFlag,
+        setRefreshing,
+        refreshing,
+        method,
+        url,
+        token
+      );
+    }
+  }, [userToken]);
 
-    const configurationObject = {
-      method: "get",
-      url: `${appRoutes.dictionariesPath()}${endPoint}`,
-      //url: appRoutes.dictionariesPath(),
-      signal: newAbortSignal(5000),
-      headers: {
-        Authorization: `Token ${token}`,
-        "Content-Type": "application/json",
-      },
-
-      params: {
-        propertyId: 1,
-      },
-    };
-    fetchData(
-      setIsLoading,
-      setPointsOfSales,
-      configurationObject,
-      setErrorFlag,
-      setRefreshing,
-      refreshing,
-      controller
-    );
-  }, []);
   //загрузка словаря карманов(секций) счета(фолио)
   useEffect(() => {
-    const endPoint = "/Logus.HMS.Entities.Dictionaries.StandardFolioPocket";
-    const controller = new AbortController();
-    const newAbortSignal = (timeoutMs) => {
-      setTimeout(() => controller.abort(), timeoutMs || 0);
+    if (userToken) {
+      const endPoint = "/Logus.HMS.Entities.Dictionaries.StandardFolioPocket";
+      const url = `${appRoutes.dictionariesPath()}${endPoint}`;
+      const method = "get";
 
-      return controller.signal;
-    };
-    const configurationObject = {
-      method: "get",
-      url: `${appRoutes.dictionariesPath()}${endPoint}`,
-      signal: newAbortSignal(5000),
-      headers: {
-        Authorization: `Token ${token}`,
-        "Content-Type": "application/json",
-      },
+      /*const controller = new AbortController();
+      const newAbortSignal = (timeoutMs) => {
+        setTimeout(() => controller.abort(), timeoutMs || 0);
+  
+        return controller.signal;
+      };
+      const configurationObject = {
+        method: "get",
+        url: `${appRoutes.dictionariesPath()}${endPoint}`,
+        signal: newAbortSignal(5000),
+        headers: {
+          Authorization: `Token ${token}`,
+          "Content-Type": "application/json",
+        },
+  
+        params: {
+          propertyId: 1,
+        },
+      };
+      fetchData(
+        setIsLoading,
+        setFolioPockets,
+        configurationObject,
+        setErrorFlag,
+        setRefreshing,
+        refreshing,
+        controller
+      );*/
+      fetchDataTest(
+        setIsLoading,
+        setFolioPockets,
+        setErrorFlag,
+        setRefreshing,
+        refreshing,
+        method,
+        url,
+        token
+      );
+    }
 
-      params: {
-        propertyId: 1,
-      },
-    };
-    fetchData(
-      setIsLoading,
-      setFolioPockets,
-      configurationObject,
-      setErrorFlag,
-      setRefreshing,
-      refreshing,
-      controller
-    );
-
-    return () => {
+    /*return () => {
       setErrorFlag(false);
       controller.abort("Data fetching cancelled");
-    };
-  }, []);
+    };*/
+  }, [userToken]);
 
   const activePointOfSales = pointsOfSales.filter(
     (item) => item.IsActive && !item.DeletedDate
