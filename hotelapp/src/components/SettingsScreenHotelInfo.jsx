@@ -23,7 +23,7 @@ import {
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { LanguagePicker } from "./LanguagePicker";
-import { appRoutes, endPoints } from "../API/route";
+import { appRoutes, endPoints, apiRequestTypes } from "../API/route";
 import { token } from "../API/route";
 import { fetchData, fetchDataTest } from "../API/FetchData";
 
@@ -110,6 +110,9 @@ export const SettingsScreenHotelInfo = ({ item }) => {
     if (!userToken) {
       const url = `${appRoutes.dictionariesPath()}${endPoints.pointOfSale()}`;
       const method = "get";
+      const params = {
+        propertyId: 1,
+      };
 
       fetchDataTest(
         setIsLoading,
@@ -119,7 +122,8 @@ export const SettingsScreenHotelInfo = ({ item }) => {
         refreshing,
         method,
         url,
-        token
+        token,
+        params
       );
     }
     /*const endPoint = "/Logus.HMS.Entities.Dictionaries.PointOfSale";
@@ -151,6 +155,9 @@ export const SettingsScreenHotelInfo = ({ item }) => {
     if (!userToken) {
       const url = `${appRoutes.dictionariesPath()}${endPoints.folioPocket()}`;
       const method = "get";
+      const params = {
+        propertyId: 1,
+      };
 
       fetchDataTest(
         setIsLoading,
@@ -160,7 +167,8 @@ export const SettingsScreenHotelInfo = ({ item }) => {
         refreshing,
         method,
         url,
-        token
+        token,
+        params
       );
     }
     /*
@@ -205,7 +213,8 @@ export const SettingsScreenHotelInfo = ({ item }) => {
     if (!userToken) {
       const url = `${appRoutes.dictionariesPath()}${endPoints.property()}`;
       const method = "get";
-      const type = "property";
+      const type = apiRequestTypes.getHotelName();
+      const params = {};
 
       fetchDataTest(
         setIsLoading,
@@ -216,6 +225,7 @@ export const SettingsScreenHotelInfo = ({ item }) => {
         method,
         url,
         token,
+        params,
         type
       );
     }
@@ -388,7 +398,8 @@ export const SettingsScreenHotelInfo = ({ item }) => {
   const checkNetwork = async () => {
     setNetworkCheck(true);
     Keyboard.dismiss();
-    const endPoint = "/api/Account/Ping";
+    //const endPoint = "/api/Account/Ping";
+    const url = `${serverAddress}${endPoints.pingServer()}`;
     setNetworkIsLoading(true);
     const controller = new AbortController();
     const newAbortSignal = (timeoutMs) => {
@@ -398,8 +409,8 @@ export const SettingsScreenHotelInfo = ({ item }) => {
 
     const configurationObject = {
       method: "get",
-      url: `${serverAddress}${endPoint}`,
-      //url: appRoutes.dictionariesPath(),
+      //url: `${serverAddress}${endPoint}`,
+      url,
       signal: newAbortSignal(15000),
       /*headers: {
         Authorization: `Token ${token}`,
@@ -513,15 +524,38 @@ export const SettingsScreenHotelInfo = ({ item }) => {
     }
   };
 
-  const getToken = async () => {
-    setIsLoading(true);
-    Keyboard.dismiss();
-    const endPoint = "/api/Account";
+  const getToken = () => {
+    //const url = appRoutes.accountPath();
+    const url = "https://api-hms.logus.pro/api/Account";
+    const method = "get";
+    const type = apiRequestTypes.getToken();
+
+    const params = {
+      userName: name,
+      password: password,
+      //propertyId: 1,
+    };
+
+    fetchDataTest(
+      setIsLoading,
+      setUserToken,
+      setErrorFlag,
+      setRefreshing,
+      refreshing,
+      method,
+      url,
+      token,
+      params,
+      type
+    );
 
     /*const params = new URLSearchParams();
     params.append("userName", name);
     params.append("password", password);
-    console.log(params);*/
+    console.log(params);
+    setIsLoading(true);
+    Keyboard.dismiss();
+    const endPoint = "/api/Account";
 
     const controller = new AbortController();
     const newAbortSignal = (timeoutMs) => {
@@ -547,10 +581,7 @@ export const SettingsScreenHotelInfo = ({ item }) => {
         setUserToken(response.data.Token);
         getHotelName();
         setCheckNetworkColor("green");
-        /*setTimeout(() => {
-          setIsLoading(false);
-          setVisibleSnackBar(true);
-        }, 3000);*/
+
 
         return;
       } else {
@@ -577,7 +608,7 @@ export const SettingsScreenHotelInfo = ({ item }) => {
           setVisibleSnackBar(true);
         }, 3000);
       }
-    }
+    }*/
   };
 
   return (

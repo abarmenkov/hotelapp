@@ -51,9 +51,9 @@ export const fetchDataTest = async (
   method,
   url,
   token,
+  params,
   type
 ) => {
-  //console.log(token);
   const controller = new AbortController();
   const newAbortSignal = (timeoutMs) => {
     setTimeout(() => controller.abort(), timeoutMs || 0);
@@ -61,10 +61,9 @@ export const fetchDataTest = async (
     return controller.signal;
   };
 
-  const configurationObject = {
+  /*const configurationObject = {
     method,
     url,
-    //url: appRoutes.dictionariesPath(),
     signal: newAbortSignal(5000),
     headers: {
       Authorization: `Token ${token}`,
@@ -74,24 +73,53 @@ export const fetchDataTest = async (
     params: {
       propertyId: 1,
     },
-  };
+  };*/
+  let configurationObject;
+
+  if (type === "ping") {
+    configurationObject = {
+      method,
+      url,
+      signal: newAbortSignal(5000),
+    };
+  } else if (type === "token") {
+    configurationObject = {
+      method,
+      url,
+      signal: newAbortSignal(5000),
+      params,
+    };
+  } else {
+    configurationObject = {
+      method,
+      url,
+      signal: newAbortSignal(5000),
+      headers: {
+        Authorization: `Token ${token}`,
+        "Content-Type": "application/json",
+      },
+
+      params,
+    };
+  }
 
   try {
     if (!refreshing) {
       setIsLoading(true);
     }
     const response = await axios(configurationObject);
-    //console.log(response.data);
 
     if (response.status === 200) {
-      if (type === "property") {
+      if (type === "hotelName") {
         setData(response.data[0].Name);
+      } else if (type === "token") {
+        setData(response.data.Token);
+        console.log(response.data.Token);
       } else {
         setData(response.data);
-        setIsLoading(false);
-        setRefreshing(false);
       }
-
+      setIsLoading(false);
+      setRefreshing(false);
       return;
     } else {
       throw new Error("Failed to fetch data");
