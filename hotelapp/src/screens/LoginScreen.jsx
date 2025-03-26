@@ -232,6 +232,9 @@ export const LoginScreen = ({ navigation }) => {
               />
             }
             //onBlur={() => passwordRef.current?.blur()}
+
+            //вызвать функцию по нажатию returnkey на клавиатуре
+            onSubmitEditing={onButtonPress}
           />
         </View>
         {/*<View

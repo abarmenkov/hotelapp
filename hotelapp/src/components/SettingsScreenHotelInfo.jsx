@@ -99,6 +99,10 @@ export const SettingsScreenHotelInfo = ({ item }) => {
   };
 
   const defaultHotelId = isHotelDefault ? item.id : isDefaultHotelId;
+  useEffect(() => {
+    const serverCheckBtnColor = userToken ? "green" : "grey";
+    setCheckNetworkColor(serverCheckBtnColor);
+  }, [userToken]);
 
   //"http://109.236.70.42:9090"
 
@@ -362,7 +366,7 @@ export const SettingsScreenHotelInfo = ({ item }) => {
 
     const hotel = hotels.find((elem) => elem.id == item.id);
     //Keyboard.dismiss();
-    
+
     //console.log(hotel);
     //console.log(`это: ${hotelData.serverAddress}`);
 
@@ -690,55 +694,67 @@ export const SettingsScreenHotelInfo = ({ item }) => {
                   alignItems: "center",
                   width: "90%",
                   padding: 5,
+                  //backgroundColor: "pink",
                 }}
               >
                 <Text>{t("Settings.server_address")}</Text>
-                <TextInput
-                  ref={serverRef}
-                  mode="outlined"
-                  focused={true}
-                  value={serverAddress}
-                  label={t("Settings.server_address")}
-                  placeholder={t("Settings.server_address")}
-                  onChangeText={(value) => {
-                    setServerAddress(value);
-                    setCheckNetworkColor("grey");
-                    setUserToken("");
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    width: "65%",
+                    //backgroundColor: "green",
+                    //padding: 5,
                   }}
-                  style={{ width: "65%" }}
-                  autoCapitalize="none"
-                  keyboardType="default"
-                  keyboardAppearance="dark"
-                  returnKeyType="next"
-                  returnKeyLabel="next"
-                  enablesReturnKeyAutomatically={true}
-                  onSubmitEditing={() => loginRef.current?.focus()}
-                  right={
-                    !networkIsLoading ? (
-                      <TextInput.Icon
-                        disabled={serverAddress ? false : true}
-                        icon={({ color, size }) => (
-                          <MaterialCommunityIcons
-                            name="check-network"
-                            color={checkNetworkColor}
-                            size={size}
-                          />
-                        )}
-                        onPress={checkNetwork}
-                      />
-                    ) : (
-                      <TextInput.Icon
-                        icon={({ color, size }) => (
-                          <MaterialCommunityIcons
-                            name="loading"
-                            color={"green"}
-                            size={size}
-                          />
-                        )}
-                      />
-                    )
-                  }
-                />
+                >
+                  <TextInput
+                    ref={serverRef}
+                    mode="outlined"
+                    focused={true}
+                    value={serverAddress}
+                    label={t("Settings.server_address")}
+                    placeholder={t("Settings.server_address")}
+                    onChangeText={(value) => {
+                      setServerAddress(value);
+                      setCheckNetworkColor("grey");
+                      setUserToken("");
+                    }}
+                    style={{ width: "90%" }}
+                    autoCapitalize="none"
+                    keyboardType="default"
+                    keyboardAppearance="dark"
+                    returnKeyType="next"
+                    returnKeyLabel="next"
+                    enablesReturnKeyAutomatically={true}
+                    onSubmitEditing={() => loginRef.current?.focus()}
+                  />
+                  {!networkIsLoading ? (
+                    <IconButton
+                      disabled={serverAddress ? false : true}
+                      icon={({ color, size }) => (
+                        <MaterialCommunityIcons
+                          name="check-network"
+                          color={checkNetworkColor}
+                          size={30}
+                          onPress={checkNetwork}
+                        />
+                      )}
+                    />
+                  ) : (
+                    /*<IconButton
+                      //disabled={serverAddress ? false : true}
+                      icon={({ color, size }) => (
+                        <MaterialCommunityIcons
+                          name="loading"
+                          color={"green"}
+                          size={30}
+                        />
+                      )}
+                    />*/
+                    <ActivityIndicator animating={true} />
+                  )}
+                </View>
               </View>
               {/*<View
                 style={{
