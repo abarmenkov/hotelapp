@@ -51,6 +51,17 @@ export const DrawerContent = (props) => {
     : "USER";
 
   const pickerRef = useRef();
+  const onPressLogOut = () => {
+    setSettings({
+      ...settings,
+      isLoggedInHotelId: "",
+    });
+    saveData("@settings", {
+      ...settings,
+      isLoggedInHotelId: "",
+    });
+    navigation.navigate("LoginScreen");
+  };
 
   return (
     <DrawerContentScrollView style={{ width: "90%" }} {...props}>
@@ -133,6 +144,7 @@ export const DrawerContent = (props) => {
         <TouchableRipple
           onPress={() => {
             console.log("Pressed Logout");
+            onPressLogOut();
           }}
         >
           <View style={AppStyles.drawerLogoutView}>
