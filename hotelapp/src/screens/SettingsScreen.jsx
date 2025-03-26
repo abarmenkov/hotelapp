@@ -53,9 +53,15 @@ export const SettingsScreen = () => {
   const [networkIsLoading, setNetworkIsLoading] = useState(false);
 
   const { settings, setSettings } = useContext(SettingsContext);
-  const { isDefaultHotelId, hotels } = settings;
+  const { isDefaultHotelId, isLoggedInHotelId, hotels } = settings;
   const [hotelsArray, setHotelsArray] = useState([]);
-  useEffect(() => setHotelsArray(hotels), [settings]);
+  useEffect(() => {
+    const filteredHotelsArray = [
+      ...hotels.filter((item) => item.id === isLoggedInHotelId),
+      ...hotels.filter((item) => item.id !== isLoggedInHotelId),
+    ];
+    setHotelsArray(filteredHotelsArray);
+  }, [settings]);
 
   const [visibleSnackBar, setVisibleSnackBar] = useState(false);
 

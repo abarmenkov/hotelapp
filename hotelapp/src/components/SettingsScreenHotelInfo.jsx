@@ -358,9 +358,11 @@ export const SettingsScreenHotelInfo = ({ item }) => {
   };
 
   const saveSettings = () => {
+    setSettingsIsLoading(true);
+
     const hotel = hotels.find((elem) => elem.id == item.id);
     //Keyboard.dismiss();
-    setSettingsIsLoading(true);
+    
     //console.log(hotel);
     //console.log(`это: ${hotelData.serverAddress}`);
 
@@ -392,7 +394,7 @@ export const SettingsScreenHotelInfo = ({ item }) => {
     setTimeout(() => {
       setSettingsIsLoading(false);
       //setVisibleSnackBar(true);
-    }, 3000);
+    }, 10000);
   };
 
   const checkNetwork = async () => {
@@ -1004,7 +1006,7 @@ export const SettingsScreenHotelInfo = ({ item }) => {
                   loading={settingsIsLoading}
                   mode="contained"
                   onPress={saveSettings}
-                  //disabled={userToken ? false : true}
+                  disabled={!userToken ? false : true}
                   //style={{ width: "55%" }}
                 >
                   {settingsIsLoading
