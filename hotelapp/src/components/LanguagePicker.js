@@ -23,12 +23,19 @@ export const LanguagePicker = forwardRef(
     const { t, i18n } = useTranslation();
 
     const supportedLngs = i18n.services.resourceStore.data;
+    console.log(supportedLngs);
     const languageKeys = Object.keys(supportedLngs);
     const appLanguage = i18n.language;
     const sortedLanguages = [
       ...languageKeys.filter((item) => item === appLanguage),
       ...languageKeys.filter((item) => item !== appLanguage),
     ];
+
+    const countryFlags = {
+      en: "\uD83C\uDDEC\uD83C\uDDE7",
+      ru: "\uD83C\uDDF7\uD83C\uDDFA",
+    };
+    //const [selectedLanguage, setSelectedLanguage] = useState(appLanguage);
     const [selectedLanguage, setSelectedLanguage] = useState(appLanguage);
 
     const handleLanguageChange = (value, index) => {
@@ -78,7 +85,7 @@ export const LanguagePicker = forwardRef(
               ref={ref}
               mode="dropdown"
               //mode="dialog"
-
+              //selectedValue="selectedLanguage"
               selectedValue={selectedLanguage}
               onValueChange={handleLanguageChange}
               style={{ ...AppStyles.lngPicker, ...lngPickerStyle }}
@@ -89,7 +96,8 @@ export const LanguagePicker = forwardRef(
               {sortedLanguages.map((item) => (
                 <Picker.Item
                   key={supportedLngs[item].code}
-                  label={supportedLngs[item].locale}
+                  //label={supportedLngs[item].locale}
+                  label={`${countryFlags[item]}   ${supportedLngs[item].locale}`}
                   value={item}
                   style={{
                     ...AppStyles.lngPickerItem,

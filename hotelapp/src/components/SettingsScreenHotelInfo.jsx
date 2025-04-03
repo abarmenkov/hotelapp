@@ -41,8 +41,6 @@ export const SettingsScreenHotelInfo = ({ item }) => {
   //const item = settings.find((item) => item.id == itemId);
   //console.log(item.id);
 
-  const checkTokenColor = userToken ? "green" : "red";
-
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setErrorFlag] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -51,7 +49,9 @@ export const SettingsScreenHotelInfo = ({ item }) => {
 
   const [networkCheck, setNetworkCheck] = useState(false);
   const [checkNetworkColor, setCheckNetworkColor] = useState("grey");
+  const [checkTokenColor, setTokenColor] = useState("grey");
   const [networkIsLoading, setNetworkIsLoading] = useState(false);
+  const [tokenIsLoading, setTokenIsLoading] = useState(false);
 
   const [pointsOfSales, setPointsOfSales] = useState([]);
   const [checkedPointOfSales, setPointOfSalesChecked] = useState(
@@ -99,9 +99,12 @@ export const SettingsScreenHotelInfo = ({ item }) => {
   };
 
   const defaultHotelId = isHotelDefault ? item.id : isDefaultHotelId;
+  //установить цвет иконок проверки адреса сервера и токена
   useEffect(() => {
     const serverCheckBtnColor = userToken ? "green" : "grey";
+    const tokenCheckColor = userToken ? "green" : "red";
     setCheckNetworkColor(serverCheckBtnColor);
+    setTokenColor(tokenCheckColor);
   }, [userToken]);
 
   //"http://109.236.70.42:9090"
@@ -402,7 +405,7 @@ export const SettingsScreenHotelInfo = ({ item }) => {
   };
 
   const checkNetwork = async () => {
-    setNetworkCheck(true);
+    //setNetworkCheck(true);
     Keyboard.dismiss();
     //const endPoint = "/api/Account/Ping";
     const url = `${serverAddress}${endPoints.pingServer()}`;
@@ -830,7 +833,67 @@ export const SettingsScreenHotelInfo = ({ item }) => {
                 }}
               >
                 <Text>{t("Settings.password_text")}</Text>
-                <TextInput
+
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    width: "65%",
+                    //backgroundColor: "green",
+                    //padding: 5,
+                  }}
+                >
+                  <TextInput
+                    ref={passwordRef}
+                    mode="outlined"
+                    focused={true}
+                    value={password}
+                    label={t("Settings.password_input_value")}
+                    placeholder={t("Settings.password_placeholder")}
+                    onChangeText={(value) => {
+                      setPassword(value);
+                      setUserToken("");
+                    }}
+                    style={{ width: "90%" }}
+                    autoCapitalize="none"
+                    keyboardType="default"
+                    keyboardAppearance="dark"
+                    returnKeyType="done"
+                    returnKeyLabel="done"
+                    enablesReturnKeyAutomatically={true}
+                    //onSubmitEditing={() => loginRef.current?.focus()}
+                  />
+                  {!tokenIsLoading ? (
+                    <IconButton
+                      disabled={
+                        serverAddress && password && name ? false : true
+                      }
+                      icon={({ color, size }) => (
+                        <MaterialCommunityIcons
+                          name="account-check"
+                          color={checkTokenColor}
+                          size={30}
+                          onPress={getToken}
+                        />
+                      )}
+                    />
+                  ) : (
+                    /*<IconButton
+                      //disabled={serverAddress ? false : true}
+                      icon={({ color, size }) => (
+                        <MaterialCommunityIcons
+                          name="loading"
+                          color={"green"}
+                          size={30}
+                        />
+                      )}
+                    />*/
+                    <ActivityIndicator animating={true} />
+                  )}
+                </View>
+
+                {/*<TextInput
                   ref={passwordRef}
                   mode="outlined"
                   //focused={true}
@@ -860,14 +923,15 @@ export const SettingsScreenHotelInfo = ({ item }) => {
                           size={size}
                         />
                       )}
-                      onPress={getToken}
+                      onPress={checkTokenColor}
                     />
                   }
                   //onSubmitEditing={() => Keyboard.dismiss()}
                   //onBlur={() => Keyboard.dismiss()}
                   //secureTextEntry
-                />
+                />*/}
               </View>
+
               <TouchableRipple
                 onPress={() => setIsHotelDefault(!isHotelDefault)}
               >
