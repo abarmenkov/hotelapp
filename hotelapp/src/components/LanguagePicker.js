@@ -15,6 +15,7 @@ export const LanguagePicker = forwardRef(
       lngPickerTitleStyle,
       lngPickerTitleViewStyle,
       pickerTitle,
+      type,
       ...otherProps
     },
     ref
@@ -23,7 +24,7 @@ export const LanguagePicker = forwardRef(
     const { t, i18n } = useTranslation();
 
     const supportedLngs = i18n.services.resourceStore.data;
-    console.log(supportedLngs);
+
     const languageKeys = Object.keys(supportedLngs);
     const appLanguage = i18n.language;
     const sortedLanguages = [
@@ -57,23 +58,25 @@ export const LanguagePicker = forwardRef(
             ...lngPickerViewStyle,
           }}
         >
-          <View
-            style={{
-              ...AppStyles.lngPickerTitleView,
-              ...lngPickerTitleViewStyle,
-            }}
-          >
-            <Text
+          {type !== "settingsHeader" && (
+            <View
               style={{
-                ...AppStyles.lngPickerTitle,
-                ...lngPickerTitleStyle,
+                ...AppStyles.lngPickerTitleView,
+                ...lngPickerTitleViewStyle,
               }}
-              numberOfLines={1}
-              ellipsizeMode="tail"
             >
-              {t(pickerTitle)}
-            </Text>
-          </View>
+              <Text
+                style={{
+                  ...AppStyles.lngPickerTitle,
+                  ...lngPickerTitleStyle,
+                }}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+              >
+                {t(pickerTitle)}
+              </Text>
+            </View>
+          )}
 
           <View
             style={{
@@ -83,9 +86,11 @@ export const LanguagePicker = forwardRef(
           >
             <Picker
               ref={ref}
-              mode="dropdown"
+              //mode={type !== "settingsHeader" ? "dropdown" : "dialog"}
               //mode="dialog"
+              mode="dropdown"
               //selectedValue="selectedLanguage"
+
               selectedValue={selectedLanguage}
               onValueChange={handleLanguageChange}
               style={{ ...AppStyles.lngPicker, ...lngPickerStyle }}
@@ -97,7 +102,12 @@ export const LanguagePicker = forwardRef(
                 <Picker.Item
                   key={supportedLngs[item].code}
                   //label={supportedLngs[item].locale}
-                  label={`${countryFlags[item]}   ${supportedLngs[item].locale}`}
+                  //label={`${countryFlags[item]}   ${supportedLngs[item].locale}`}
+                  label={
+                    type !== "settingsHeader"
+                      ? `${countryFlags[item]}   ${supportedLngs[item].locale}`
+                      : `${countryFlags[item]}`
+                  }
                   value={item}
                   style={{
                     ...AppStyles.lngPickerItem,

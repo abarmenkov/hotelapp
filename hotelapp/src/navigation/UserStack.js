@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { DrawerContent } from "../components/DrawerContent";
-import { useWindowDimensions } from "react-native";
+import { useWindowDimensions, View, StyleSheet } from "react-native";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 import { ReservationsStackNavigator } from "./ReservationsScreenStack";
@@ -13,6 +13,7 @@ import { TasksStackNavigator } from "./TasksScreenStack";
 import { SettingsStackNavigator } from "./SettingsScreenStack";
 import { Text, useTheme } from "react-native-paper";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
+import { LanguagePicker } from "../components/LanguagePicker";
 
 import { AppStyles } from "../utils/constants";
 
@@ -26,6 +27,7 @@ export const UserStack = ({ navigation, route }) => {
   //const iconSize = width > 768 ? 24 / fontScale : 18 / fontScale;
   //const labelFontSize = width > 768 ? 18 / fontScale : 16 / fontScale;
   const theme = useTheme();
+  const pickerRef = useRef();
 
   return (
     <Drawer.Navigator
@@ -235,12 +237,73 @@ export const UserStack = ({ navigation, route }) => {
           ),
           title: "Settings", //header
           headerTitle: () => (
-            <Text style={{ ...AppStyles.drawerHeaderTitle }}>
-              {t("DrawerContent.settings")}
-            </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                width: "100%",
+                //backgroundColor: "pink",
+              }}
+            >
+              <Text style={{ ...AppStyles.drawerHeaderTitle }}>
+                {t("DrawerContent.settings")}
+              </Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  //backgroundColor: "pink",
+                  justifyContent: "flex-end",
+                  width: "50%",
+                }}
+              >
+                <LanguagePicker
+                  ref={pickerRef}
+                  lngPickerStyle={styles.lngPickerStyle}
+                  lngPickerContainerStyle={styles.lngPickerContainerStyle}
+                  lngPickerViewStyle={styles.lngPickerViewStyle}
+                  lngPickerTitleViewStyle={styles.lngPickerTitleViewStyle}
+                  lngPickerTitleStyle={styles.lngPickerTitleStyle}
+                  lngPickerItemStyle={styles.lngPickerItemStyle}
+                  pickerTitle={"DrawerContent.select_language"}
+                  type={"settingsHeader"}
+                />
+              </View>
+            </View>
           ),
         }}
       />
     </Drawer.Navigator>
   );
 };
+
+const styles = StyleSheet.create({
+  lngPickerContainerStyle: {
+    width: "100%",
+    //alignItems: "center",
+    //backgroundColor: "green",
+    //alignItems: "center",
+  },
+  lngPickerStyle: {
+    width: "100%",
+    
+    //backgroundColor: "red",
+  },
+  lngPickerViewStyle: {
+    width: "60%",
+    
+    //backgroundColor: "orange",
+    //marginHorizontal: -25,
+  },
+  lngPickerTitleViewStyle: {
+    //width: "70%",
+    //backgroundColor: "blue",
+  },
+  lngPickerTitleStyle: {
+    //fontSize: 14,
+  },
+  lngPickerItemStyle: {
+    
+    //fontSize: 16,
+  },
+});

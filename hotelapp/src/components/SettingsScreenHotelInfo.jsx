@@ -954,7 +954,7 @@ export const SettingsScreenHotelInfo = ({ item }) => {
                 </View>
               </TouchableRipple>
 
-              <LanguagePicker
+              {/*<LanguagePicker
                 ref={pickerRef}
                 lngPickerStyle={styles.lngPickerStyle}
                 lngPickerContainerStyle={styles.lngPickerContainerStyle}
@@ -963,7 +963,7 @@ export const SettingsScreenHotelInfo = ({ item }) => {
                 lngPickerTitleStyle={styles.lngPickerTitleStyle}
                 lngPickerItemStyle={styles.lngPickerItemStyle}
                 pickerTitle={"Settings.select_language"}
-              />
+              />*/}
 
               <ScrollView style={{ width: "95%", paddingHorizontal: 5 }}>
                 <List.Accordion
