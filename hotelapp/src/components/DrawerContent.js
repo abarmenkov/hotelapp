@@ -6,9 +6,6 @@ import {
 } from "@react-navigation/drawer";
 import {
   useTheme,
-  Title,
-  Caption,
-  Paragraph,
   Drawer,
   Text,
   TouchableRipple,
@@ -60,21 +57,19 @@ export const DrawerContent = (props) => {
               source={require("../../assets/images/Logo.png")}
               style={AppStyles.drawerHeaderImg}
             />
-            <Title style={AppStyles.drawerHeaderTitleText}>HotelApp</Title>
+            <Text style={AppStyles.drawerHeaderTitleText}>HotelApp</Text>
           </View>
 
           <View style={AppStyles.drawerHeaderSectionRow}>
-            <Paragraph
+            <Text
               style={{
                 ...AppStyles.drawerHeaderParagraph,
                 ...AppStyles.drawerHeaderCaption,
               }}
             >
               User name
-            </Paragraph>
-            <Caption style={AppStyles.drawerHeaderCaption}>
-              {loggedInUser}
-            </Caption>
+            </Text>
+            <Text style={AppStyles.drawerHeaderCaption}>{loggedInUser}</Text>
           </View>
         </View>
         <Drawer.Section style={{ ...AppStyles.drawerSection }}>
