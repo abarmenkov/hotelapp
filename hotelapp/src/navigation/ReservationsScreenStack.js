@@ -1,4 +1,3 @@
-import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 //import { ReservationsScreen } from "../screens/Reservations/ReservationsScreen";
 import { AddReservationScreen } from "../screens/Reservations/AddReservationScreen";
@@ -9,7 +8,9 @@ import { AddServiceTaskScreen } from "../screens/Housekeeping/AddServiceTask";
 import { ReservationsTabViewScreen } from "../screens/Reservations/ReservationsTabViewScreen";
 import Account from "../screens/Account";
 import ServiceGroupScreen from "../screens/ServiceGroupScreen";
-import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+//import SimpleTestScreen from "../screens/TestScreens/SimpletestScreen";
+
 
 const Stack = createStackNavigator();
 
@@ -17,11 +18,14 @@ export const ReservationsStackNavigator = ({ route }) => {
   //console.log(route.name);
   return (
     <Stack.Navigator
+      //initialRouteName="CleaningScreen"
       initialRouteName="ReservationsScreen"
       screenOptions={{ headerShown: false }}
     >
       <Stack.Screen
         name="ReservationsScreen"
+        //component={Account}
+        //component={SimpleTestScreen}
         component={ReservationsTabViewScreen}
         //options={{ header: ({ props }) => null }}
       />

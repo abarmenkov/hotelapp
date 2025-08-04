@@ -1,15 +1,13 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   View,
-  useWindowDimensions,
-  StyleSheet,
   SafeAreaView,
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
 import { TabView, TabBar, TabBarItem } from "react-native-tab-view";
 import { SearchbarComponent } from "../../components/SearchBar";
-import { Text } from "react-native-paper";
+//import { Text } from "react-native-paper";
 import { fetchData } from "../../API/FetchData";
 import { LoadingIndicator } from "../../components/LoadingIndicator";
 import { useTranslation } from "react-i18next";
@@ -21,6 +19,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { create } from "../../utils/normalize";
 import { appRoutes } from "../../API/route";
 import { uid } from "uid";
+import { navigation } from "@react-navigation/stack";
 /*import AllReservationsList from "./AllReservationsList";
 import ArrivalList from "./ArrivalList";
 import DeparturesList from "./DeparturesList";

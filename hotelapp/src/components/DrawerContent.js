@@ -1,19 +1,11 @@
-import React, { useContext, useEffect, useState, useRef } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
+import { View, StyleSheet, Image } from "react-native";
 import {
-  View,
-  StyleSheet,
-  Image,
-  useWindowDimensions,
-  Keyboard,
-} from "react-native";
-import {
-  DrawerItem,
   DrawerContentScrollView,
   DrawerItemList,
 } from "@react-navigation/drawer";
 import {
   useTheme,
-  Avatar,
   Title,
   Caption,
   Paragraph,
@@ -25,11 +17,7 @@ import {
 } from "react-native-paper";
 
 import { PreferencesContext } from "../context/PreferencesContext";
-//import { UserContext } from "../context/UserContext";
 import { useTranslation } from "react-i18next";
-
-//import { useAuth } from "../hooks/useAuth";
-
 import { saveData } from "../API/asyncStorageMethods";
 import { SettingsContext } from "../context/SettingsContext";
 import { LanguagePicker } from "./LanguagePicker";

@@ -1,12 +1,6 @@
-import React from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-////import { StartingStack } from "./startingStack";
-import { createStackNavigator } from "@react-navigation/stack";
-//import { NavigationContainer } from "@react-navigation/native";
 import { DrawerContent } from "../components/DrawerContent";
 import { TestScreen } from "../screens/TestScreen";
-//import { LoginScreen } from "../screens/LoginScreen";
-import { WIDTH } from "../utils/constants";
 import { Dimensions } from "react-native";
 
 const Drawer = createDrawerNavigator();
